@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_app/home/cubit/home_cubit.dart';
+import 'package:alchronos/home/cubit/home_cubit.dart';
 
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({super.key});

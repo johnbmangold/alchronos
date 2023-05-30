@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_app/home/cubit/home_cubit.dart';
-import 'package:test_app/home/views/home_running_view.dart';
-import 'package:test_app/home/views/home_start_view.dart';
+import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:alchronos/home/views/home_running_view.dart';
+import 'package:alchronos/home/views/home_start_view.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

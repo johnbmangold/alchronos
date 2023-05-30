@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "test_app",
+            "name": "alchronos",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "test_app (profile mode)",
+            "name": "alchronos (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "test_app (release mode)",
+            "name": "alchronos (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

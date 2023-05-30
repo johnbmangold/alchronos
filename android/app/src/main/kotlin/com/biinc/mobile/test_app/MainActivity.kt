@@ -1,4 +1,4 @@
-package com.biinc.mobile.test_app
+package com.biinc.mobile.alchronos
 
 import io.flutter.embedding.android.FlutterActivity
 
