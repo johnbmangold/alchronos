@@ -1,0 +1,47 @@
+import 'package:animations/animations.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_app/home/cubit/home_cubit.dart';
+import 'package:test_app/home/views/home_running_view.dart';
+import 'package:test_app/home/views/home_start_view.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: InkWell(
+          child: const Icon(Icons.menu_rounded),
+          onTap: () {},
+        ),
+      ),
+      body: SafeArea(
+        child: BlocProvider(
+          create: (context) => HomeCubit(),
+          child: BlocBuilder<HomeCubit, HomeState>(
+            builder: (context, state) {
+              return PageTransitionSwitcher(
+                duration: const Duration(milliseconds: 1000),
+                transitionBuilder:
+                    (child, primaryAnimation, secondaryAnimation) {
+                  return FadeThroughTransition(
+                    animation: primaryAnimation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: child,
+                  );
+                },
+                child: switch (state) {
+                  (HomeInitial _) => const HomeStartView(),
+                  (HomeRunning _) => const HomeRunningView(),
+                  (_) => const Center(child: CircularProgressIndicator()),
+                },
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
