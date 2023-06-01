@@ -1,4 +1,4 @@
-package com.biinc.mobile.alchronos
+package com.vault.alchronos
 
 import io.flutter.embedding.android.FlutterActivity
 

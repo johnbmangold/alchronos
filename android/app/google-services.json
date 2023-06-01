@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "19097124097",
+    "project_id": "alchronos",
+    "storage_bucket": "alchronos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19097124097:android:6e65de480ce7cccc87af00",
+        "android_client_info": {
+          "package_name": "com.vault.alchronos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19097124097-u7btopl23vt3mei8i1crlm6lluphhn9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7-0q5shCrPIglnKW0lR-WlRtYknHpWSA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19097124097-u7btopl23vt3mei8i1crlm6lluphhn9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

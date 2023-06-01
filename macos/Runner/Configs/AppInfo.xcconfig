@@ -8,7 +8,7 @@
 PRODUCT_NAME = alchronos
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.biinc.mobile.testApp
+PRODUCT_BUNDLE_IDENTIFIER = com.vault.alchronos
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.biinc.mobile. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.vault. All rights reserved.
