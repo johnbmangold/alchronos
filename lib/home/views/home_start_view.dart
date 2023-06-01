@@ -16,6 +16,9 @@ class HomeStartView extends StatelessWidget {
             Icons.emoji_food_beverage,
             size: 60,
           ),
+          const SizedBox(
+            height: 16,
+          ),
           ElevatedButton(
             onPressed: () => cubit.start(),
             child: const Text(

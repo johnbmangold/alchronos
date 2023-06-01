@@ -16,10 +16,11 @@ class HomeRunningView extends StatefulWidget {
 class _HomeRunningViewState extends State<HomeRunningView> {
   late Timer _timer;
   int _timeInSeconds = 3600;
-  final oneSecond = const Duration(seconds: 1);
+  final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
   late DateTime _endingTime;
-  double opacity = 0.0;
+  double _opacity = 0.0;
+  final _drinkColor = Colors.amber.shade300;
 
   @override
   void initState() {
@@ -35,19 +36,19 @@ class _HomeRunningViewState extends State<HomeRunningView> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Column(
-            children: [
-              _buildWaveWidget(500, 20),
-              Flexible(
-                flex: 100,
-                child: Opacity(
-                  opacity: opacity,
+          Opacity(
+            opacity: _opacity,
+            child: Column(
+              children: [
+                _buildWaveWidget(double.infinity, 50),
+                Flexible(
+                  flex: 100,
                   child: Container(
-                    color: Colors.red,
+                    color: _drinkColor,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,6 +56,9 @@ class _HomeRunningViewState extends State<HomeRunningView> {
               const Icon(
                 Icons.run_circle_rounded,
                 size: 60,
+              ),
+              const SizedBox(
+                height: 16,
               ),
               Text(
                 _formattedDuration,
@@ -75,7 +79,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   void _startTimer() {
     _timer = Timer.periodic(
-      oneSecond,
+      _oneSecond,
       (timer) {
         if (_timeInSeconds == 0) {
           setState(() {
@@ -94,7 +98,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   void _calculateTimeDisplay() {
     final timeDifference = _endingTime.difference(DateTime.now());
-    opacity = (3600 - timeDifference.inSeconds) / 3600;
+    _opacity = (3600 - timeDifference.inSeconds) / 3600;
     _formattedDuration = _format(timeDifference);
   }
 
@@ -104,21 +108,16 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   }
 
   WaveWidget _buildWaveWidget(double width, double height) {
-    const backgroundColor = Color(0xFFF15BB5);
-
-    const colors = [
-      Color(0xFFFEE440),
-      Color(0xFF00BBF9),
+    final colors = [
+      _drinkColor,
     ];
 
     const durations = [
       5000,
-      4000,
     ];
 
     const heightPercentages = [
-      0.65,
-      0.66,
+      0.75,
     ];
 
     return WaveWidget(
@@ -127,9 +126,9 @@ class _HomeRunningViewState extends State<HomeRunningView> {
         durations: durations,
         heightPercentages: heightPercentages,
       ),
-      backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       size: Size(width, height),
-      waveAmplitude: 0,
+      waveAmplitude: 0.0,
     );
   }
 }
