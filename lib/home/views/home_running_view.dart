@@ -38,7 +38,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
         alignment: Alignment.center,
         children: [
           Opacity(
-            opacity: 1.0,
+            opacity: _opacity,
             child: Column(
               children: [
                 _buildWaveWidget(double.infinity, 50),
