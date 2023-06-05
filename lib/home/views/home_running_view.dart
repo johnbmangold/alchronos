@@ -20,7 +20,8 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   String _formattedDuration = '';
   late DateTime _endingTime;
   double _opacity = 0.0;
-  final _drinkColor = Colors.amber.shade300;
+  final _drinkColorStart = Colors.amber.shade300;
+  final _drinkColorEnd = Colors.amberAccent.shade700;
 
   @override
   void initState() {
@@ -37,14 +38,23 @@ class _HomeRunningViewState extends State<HomeRunningView> {
         alignment: Alignment.center,
         children: [
           Opacity(
-            opacity: _opacity,
+            opacity: 1.0,
             child: Column(
               children: [
                 _buildWaveWidget(double.infinity, 50),
                 Flexible(
                   flex: 100,
                   child: Container(
-                    color: _drinkColor,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          _drinkColorStart,
+                          _drinkColorEnd,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -109,7 +119,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   WaveWidget _buildWaveWidget(double width, double height) {
     final colors = [
-      _drinkColor,
+      _drinkColorStart,
     ];
 
     const durations = [
