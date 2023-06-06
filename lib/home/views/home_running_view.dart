@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
@@ -15,17 +16,18 @@ class HomeRunningView extends StatefulWidget {
 
 class _HomeRunningViewState extends State<HomeRunningView> {
   late Timer _timer;
-  int _timeInSeconds = 3600;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
   late DateTime _endingTime;
   double _opacity = 0.0;
   final _drinkColorStart = Colors.amber.shade300;
   final _drinkColorEnd = Colors.amberAccent.shade700;
+  late int _timeInSeconds;
 
   @override
   void initState() {
     super.initState();
+    _timeInSeconds = oneHourInSeconds;
     _endingTime = DateTime.now().add(const Duration(hours: 1));
     _calculateTimeDisplay();
     _startTimer();
@@ -108,7 +110,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   void _calculateTimeDisplay() {
     final timeDifference = _endingTime.difference(DateTime.now());
-    _opacity = (3600 - timeDifference.inSeconds) / 3600;
+    _opacity = (oneHourInSeconds - timeDifference.inSeconds) / oneHourInSeconds;
     _formattedDuration = _format(timeDifference);
   }
 
