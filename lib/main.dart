@@ -1,11 +1,11 @@
 import 'package:alchronos/firebase_options.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:logger/logger.dart';
-import 'package:workmanager/workmanager.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
 const taskName = 'drinkTimerName';
@@ -30,11 +30,6 @@ Future<void> main() async {
     return true;
   };
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: true,
-  );
-
   runApp(const MyApp());
 }
 
@@ -54,10 +49,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
+// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
 @pragma('vm:entry-point')
-void callbackDispatcher() {
-  Workmanager().executeTask((executedTaskName, inputData) {
-    logger.i('Background task executed: $executedTaskName');
-    return Future.value(true);
-  });
+void backgroundFetchHeadlessTask(HeadlessTask task) async {
+  String taskId = task.taskId;
+  bool isTimeout = task.timeout;
+  if (isTimeout) {
+    // This task has exceeded its allowed running-time.
+    // You must stop what you're doing and immediately .finish(taskId)
+    logger.i('[BackgroundFetch] Headless task timed-out: $taskId');
+    BackgroundFetch.finish(taskId);
+    return;
+  }
+  logger.i('[BackgroundFetch] Headless event received: $taskId');
+  // Do your work here...
+  BackgroundFetch.finish(taskId);
 }
