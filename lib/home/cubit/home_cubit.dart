@@ -26,7 +26,7 @@ class HomeCubit extends Cubit<HomeState> {
     // Configure BackgroundFetch.
     int status = await BackgroundFetch.configure(
       BackgroundFetchConfig(
-        minimumFetchInterval: 15,
+        minimumFetchInterval: oneHourInMinutes,
         stopOnTerminate: false,
         enableHeadless: true,
         requiresBatteryNotLow: false,

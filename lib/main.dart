@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
 const taskName = 'drinkTimerName';
+const oneHourInMinutes = 60;
 const oneHourInSeconds = 3600;
 final Logger logger = Logger(
   printer: PrettyPrinter(),
