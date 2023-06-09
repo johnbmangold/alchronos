@@ -10,13 +10,69 @@ class LocalNotifications {
     /// A notification action which triggers a App navigation event
     const String navigationActionId = 'id_3';
 
-    /// Defines a iOS/MacOS notification category for text input actions.
-    const String darwinNotificationCategoryText = 'textCategory';
-
-    /// Defines a iOS/MacOS notification category for plain actions.
-    const String darwinNotificationCategoryPlain = 'plainCategory';
-
     // details of app launch
+    await _checkAppLaunch();
+
+    // Android notification settings
+    final AndroidInitializationSettings initializationSettingsAndroid =
+        _getAndroidSettings();
+
+    // Darwin notification categories (channels)
+    final List<DarwinNotificationCategory> darwinNotificationCategories =
+        _getDarwinCategories(navigationActionId);
+
+    // Darwin notification settings
+    final DarwinInitializationSettings initializationSettingsDarwin =
+        _getDarwinSettings(darwinNotificationCategories);
+
+    // Linux Notification Settings
+    final LinuxInitializationSettings initializationSettingsLinux =
+        _getLinuxSettings();
+
+    // Notification settings
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+      macOS: initializationSettingsDarwin,
+      linux: initializationSettingsLinux,
+    );
+
+    // initialize notifications
+    await _initializeFlutterLocalNotificationsPlugin(
+      initializationSettings,
+      navigationActionId,
+    );
+
+    await _requestAndroidNotificationPermission();
+  }
+
+  static Future<void> _initializeFlutterLocalNotificationsPlugin(
+    InitializationSettings initializationSettings,
+    String navigationActionId,
+  ) async {
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            // user selected a notification
+            selectNotificationStream.add(notificationResponse.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            // user selected notification action i.e. 'Mark as Read'
+            if (notificationResponse.actionId == navigationActionId) {
+              selectNotificationStream.add(notificationResponse.payload);
+            }
+            break;
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+    );
+  }
+
+  static Future<void> _checkAppLaunch() async {
     final NotificationAppLaunchDetails? notificationAppLaunchDetails =
         !kIsWeb && Platform.isLinux
             ? null
@@ -28,14 +84,31 @@ class LocalNotifications {
       // handle notification selection
       //notificationAppLaunchDetails!.notificationResponse?.payload;
     }
+  }
 
-    // Android notification settings
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+  static Future<void> _requestAndroidNotificationPermission() async {
+    if (!Platform.isAndroid) return;
 
-    // Darwin notification categories (channels)
-    final List<DarwinNotificationCategory> darwinNotificationCategories =
-        <DarwinNotificationCategory>[
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+  }
+
+  static AndroidInitializationSettings _getAndroidSettings() {
+    return const AndroidInitializationSettings('app_icon');
+  }
+
+  static List<DarwinNotificationCategory> _getDarwinCategories(
+    String navigationActionId,
+  ) {
+    /// Defines a iOS/MacOS notification category for text input actions.
+    const String darwinNotificationCategoryText = 'textCategory';
+
+    /// Defines a iOS/MacOS notification category for plain actions.
+    const String darwinNotificationCategoryPlain = 'plainCategory';
+
+    return <DarwinNotificationCategory>[
       DarwinNotificationCategory(
         darwinNotificationCategoryText,
         actions: <DarwinNotificationAction>[
@@ -78,10 +151,12 @@ class LocalNotifications {
         },
       )
     ];
+  }
 
-    // Darwin notification settings
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
+  static DarwinInitializationSettings _getDarwinSettings(
+    List<DarwinNotificationCategory> darwinNotificationCategories,
+  ) {
+    return DarwinInitializationSettings(
       onDidReceiveLocalNotification:
           (int id, String? title, String? body, String? payload) async {
         didReceiveLocalNotificationStream.add(
@@ -95,42 +170,12 @@ class LocalNotifications {
       },
       notificationCategories: darwinNotificationCategories,
     );
+  }
 
-    // Linux Notification Settings
-    final LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(
+  static LinuxInitializationSettings _getLinuxSettings() {
+    return LinuxInitializationSettings(
       defaultActionName: 'Open notification',
-      defaultIcon: AssetsLinuxIcon('icons/app_icon.png'),
-    );
-
-    // Notification settings
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-      macOS: initializationSettingsDarwin,
-      linux: initializationSettingsLinux,
-    );
-
-    // initialize notifications
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
-        switch (notificationResponse.notificationResponseType) {
-          case NotificationResponseType.selectedNotification:
-            // user selected a notification
-            selectNotificationStream.add(notificationResponse.payload);
-            break;
-          case NotificationResponseType.selectedNotificationAction:
-            // user selected notification action i.e. 'Mark as Read'
-            if (notificationResponse.actionId == navigationActionId) {
-              selectNotificationStream.add(notificationResponse.payload);
-            }
-            break;
-        }
-      },
-      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+      defaultIcon: AssetsLinuxIcon('icon/app_icon.png'),
     );
   }
 }

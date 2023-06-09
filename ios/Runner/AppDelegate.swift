@@ -1,4 +1,5 @@
 import UIKit
+import flutter_local_notifications
 import Flutter
 
 @UIApplicationMain
