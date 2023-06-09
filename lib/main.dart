@@ -1,19 +1,37 @@
+import 'dart:async';
+
 import 'package:alchronos/firebase_options.dart';
+import 'package:alchronos/local_notifications.dart';
+import 'package:alchronos/received_notification.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:alchronos/home/views/home_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
 const taskName = 'drinkTimerName';
 const oneHourInMinutes = 60;
 const oneHourInSeconds = 3600;
+
+// Logger
 final Logger logger = Logger(
   printer: PrettyPrinter(),
 );
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+/// Streams are created so that app can respond to notification-related events
+/// since the plugin is initialised in the `main` function
+final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+    StreamController<ReceivedNotification>.broadcast();
+
+final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +48,8 @@ Future<void> main() async {
     FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
+
+  await LocalNotifications.initialize();
 
   runApp(const MyApp());
 }
@@ -66,4 +86,16 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   logger.i('[BackgroundFetch] Headless event received: $taskId');
   // Do your work here...
   BackgroundFetch.finish(taskId);
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  logger.i('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}');
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    logger.i(
+      'notification action tapped with input: ${notificationResponse.input}',
+    );
+  }
 }

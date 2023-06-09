@@ -10,7 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> start() async {
     await initPlatformState();
-    BackgroundFetch.start().then((int status) {
+    await BackgroundFetch.start().then((int status) {
       logger.i('[BackgroundFetch] start success: $status');
     }).catchError((e) {
       logger.e('[BackgroundFetch] start FAILURE: $e');
@@ -40,7 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
         // This is the fetch-event callback.
         logger.i('[BackgroundFetch] Event received $taskId');
 
-        BackgroundFetch.stop(taskId);
+        await BackgroundFetch.stop(taskId);
 
         // IMPORTANT:  You must signal completion of your task or the OS can punish your app
         // for taking too long in the background.
@@ -50,7 +50,7 @@ class HomeCubit extends Cubit<HomeState> {
         // <-- Task timeout handler.
         // This task has exceeded its allowed running-time.  You must stop what you're doing and immediately .finish(taskId)
         logger.i('[BackgroundFetch] TASK TIMEOUT taskId: $taskId');
-        BackgroundFetch.stop(taskId);
+        await BackgroundFetch.stop(taskId);
         BackgroundFetch.finish(taskId);
       },
     );
