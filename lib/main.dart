@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:logger/logger.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
@@ -34,7 +35,8 @@ final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -52,6 +54,8 @@ Future<void> main() async {
   await LocalNotifications.initialize();
 
   runApp(const MyApp());
+
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
@@ -61,8 +65,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Alchronos',
+      themeMode: ThemeMode.system,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink.shade100),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink.shade100,
+          brightness: Brightness.light,
+        ),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink.shade100,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       home: const HomeScreen(),
