@@ -10,7 +10,7 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
   Future<void> start() async {
-    await initPlatformState();
+    await _initPlatformState();
     await BackgroundFetch.start().then((int status) {
       logger.i('[BackgroundFetch] start success: $status');
     }).catchError((e) {
@@ -20,17 +20,10 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> stop() async {
-    await flutterLocalNotificationsPlugin.show(
-      LocalNotifications.getNotificationId(),
-      'Drink Timer Complete',
-      'You can order another drink when you\'re feeling up to it.',
-      LocalNotifications.getNotificationDetailsTimesUp(),
-      payload: 1.toString(),
-    );
     emit(HomeInitial());
   }
 
-  Future<void> initPlatformState() async {
+  Future<void> _initPlatformState() async {
     // Configure BackgroundFetch.
     int status = await BackgroundFetch.configure(
       BackgroundFetchConfig(
@@ -48,6 +41,9 @@ class HomeCubit extends Cubit<HomeState> {
         // This is the fetch-event callback.
         logger.i('[BackgroundFetch] Event received $taskId');
 
+        // show notification that timer is done
+        await showNotification();
+
         await BackgroundFetch.stop(taskId);
 
         // IMPORTANT:  You must signal completion of your task or the OS can punish your app
@@ -62,6 +58,7 @@ class HomeCubit extends Cubit<HomeState> {
         BackgroundFetch.finish(taskId);
       },
     );
+
     logger.i('[BackgroundFetch] configure success: $status');
   }
 }

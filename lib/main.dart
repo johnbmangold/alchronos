@@ -85,6 +85,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
+Future<void> showNotification() async {
+  await flutterLocalNotificationsPlugin.show(
+    LocalNotifications.getNotificationId(),
+    'Drink Timer Complete',
+    'You can order another drink when you\'re feeling up to it.',
+    LocalNotifications.getNotificationDetailsTimesUp(),
+    payload: 1.toString(),
+  );
+}
+
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
 // Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
 @pragma('vm:entry-point')
@@ -95,11 +105,14 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
     // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
     logger.i('[BackgroundFetch] Headless task timed-out: $taskId');
+    await BackgroundFetch.stop(taskId);
     BackgroundFetch.finish(taskId);
     return;
   }
+
   logger.i('[BackgroundFetch] Headless event received: $taskId');
-  // Do your work here...
+  await showNotification();
+  await BackgroundFetch.stop(taskId);
   BackgroundFetch.finish(taskId);
 }
 
