@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: SafeArea(
+        bottom: false,
         child: BlocProvider(
           create: (context) => HomeCubit(),
           child: BlocBuilder<HomeCubit, HomeState>(

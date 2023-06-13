@@ -28,7 +28,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   void initState() {
     super.initState();
     _timeInSeconds = oneHourInSeconds;
-    _endingTime = DateTime.now().add(const Duration(hours: 1));
+    _endingTime = DateTime.now().add(const Duration(seconds: oneHourInSeconds));
     _calculateTimeDisplay();
     _startTimer();
   }
