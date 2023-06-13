@@ -1,13 +1,15 @@
-import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/main.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeInitial());
+  HomeCubit({required this.logger}) : super(HomeInitial());
+
+  final Logger logger;
 
   Future<void> start() async {
     await _initPlatformState();

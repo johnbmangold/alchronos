@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
@@ -18,13 +19,7 @@ const taskName = 'drinkTimerName';
 const oneHourInMinutes = 60;
 const oneHourInSeconds = 3600;
 
-// Logger
-final Logger logger = Logger(
-  printer: PrettyPrinter(),
-);
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final getIt = GetIt.instance;
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function
@@ -51,11 +46,35 @@ Future<void> main() async {
     return true;
   };
 
-  await LocalNotifications.initialize();
+  registerDependencies();
+
+  await getIt.get<LocalNotifications>().initialize();
 
   runApp(const MyApp());
 
   FlutterNativeSplash.remove();
+}
+
+void registerDependencies() {
+  // Logger
+  getIt.registerLazySingleton<Logger>(
+    () => Logger(
+      printer: PrettyPrinter(),
+    ),
+  );
+
+  // FlutterLocalNotificationPlugin
+  getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(
+    () => FlutterLocalNotificationsPlugin(),
+  );
+
+  // LocalNotifications
+  getIt.registerLazySingleton(
+    () => LocalNotifications(
+      flutterLocalNotificationsPlugin:
+          getIt.get<FlutterLocalNotificationsPlugin>(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -86,13 +105,13 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> showNotification() async {
-  await flutterLocalNotificationsPlugin.show(
-    LocalNotifications.getNotificationId(),
-    'Drink Timer Complete',
-    'You can order another drink when you\'re feeling up to it.',
-    LocalNotifications.getNotificationDetailsTimesUp(),
-    payload: 1.toString(),
-  );
+  await getIt.get<FlutterLocalNotificationsPlugin>().show(
+        getIt.get<LocalNotifications>().getNotificationId(),
+        'Drink Timer Complete',
+        'You can order another drink when you\'re feeling up to it.',
+        getIt.get<LocalNotifications>().getNotificationDetailsTimesUp(),
+        payload: 1.toString(),
+      );
 }
 
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
@@ -104,13 +123,13 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
   if (isTimeout) {
     // This task has exceeded its allowed running-time.
     // You must stop what you're doing and immediately .finish(taskId)
-    logger.i('[BackgroundFetch] Headless task timed-out: $taskId');
+    getIt.get<Logger>().i('[BackgroundFetch] Headless task timed-out: $taskId');
     await BackgroundFetch.stop(taskId);
     BackgroundFetch.finish(taskId);
     return;
   }
 
-  logger.i('[BackgroundFetch] Headless event received: $taskId');
+  getIt.get<Logger>().i('[BackgroundFetch] Headless event received: $taskId');
   await showNotification();
   await BackgroundFetch.stop(taskId);
   BackgroundFetch.finish(taskId);
@@ -118,12 +137,14 @@ void backgroundFetchHeadlessTask(HeadlessTask task) async {
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  logger.i('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
+  getIt
+      .get<Logger>()
+      .i('notification(${notificationResponse.id}) action tapped: '
+          '${notificationResponse.actionId} with'
+          ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
-    logger.i(
-      'notification action tapped with input: ${notificationResponse.input}',
-    );
+    getIt.get<Logger>().i(
+          'notification action tapped with input: ${notificationResponse.input}',
+        );
   }
 }

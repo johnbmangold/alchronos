@@ -7,7 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotifications {
-  static Future<void> initialize() async {
+  const LocalNotifications({required this.flutterLocalNotificationsPlugin});
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  Future<void> initialize() async {
     /// A notification action which triggers a App navigation event
     const String navigationActionId = 'id_3';
 
@@ -48,18 +52,18 @@ class LocalNotifications {
     await _requestAndroidNotificationPermission();
   }
 
-  static NotificationDetails getNotificationDetailsTimesUp() {
+  NotificationDetails getNotificationDetailsTimesUp() {
     return NotificationDetails(
       android: _getAndroidNotificationDetailsTimesUp(),
     );
   }
 
-  static int getNotificationId() {
+  int getNotificationId() {
     final cryptoRandom = Random.secure();
     return cryptoRandom.nextInt(1000000);
   }
 
-  static Future<void> _initializeFlutterLocalNotificationsPlugin(
+  Future<void> _initializeFlutterLocalNotificationsPlugin(
     InitializationSettings initializationSettings,
     String navigationActionId,
   ) async {
@@ -84,7 +88,7 @@ class LocalNotifications {
     );
   }
 
-  static Future<void> _checkAppLaunch() async {
+  Future<void> _checkAppLaunch() async {
     final NotificationAppLaunchDetails? notificationAppLaunchDetails =
         !kIsWeb && Platform.isLinux
             ? null
@@ -98,7 +102,7 @@ class LocalNotifications {
     }
   }
 
-  static Future<void> _requestAndroidNotificationPermission() async {
+  Future<void> _requestAndroidNotificationPermission() async {
     if (!Platform.isAndroid) return;
 
     await flutterLocalNotificationsPlugin
@@ -107,11 +111,11 @@ class LocalNotifications {
         ?.requestPermission();
   }
 
-  static AndroidInitializationSettings _getAndroidSettings() {
+  AndroidInitializationSettings _getAndroidSettings() {
     return const AndroidInitializationSettings('app_icon');
   }
 
-  static List<DarwinNotificationCategory> _getDarwinCategories(
+  List<DarwinNotificationCategory> _getDarwinCategories(
     String navigationActionId,
   ) {
     /// Defines a iOS/MacOS notification category for text input actions.
@@ -165,7 +169,7 @@ class LocalNotifications {
     ];
   }
 
-  static DarwinInitializationSettings _getDarwinSettings(
+  DarwinInitializationSettings _getDarwinSettings(
     List<DarwinNotificationCategory> darwinNotificationCategories,
   ) {
     return DarwinInitializationSettings(
@@ -184,14 +188,14 @@ class LocalNotifications {
     );
   }
 
-  static LinuxInitializationSettings _getLinuxSettings() {
+  LinuxInitializationSettings _getLinuxSettings() {
     return LinuxInitializationSettings(
       defaultActionName: 'Open notification',
       defaultIcon: AssetsLinuxIcon('icon/app_icon.png'),
     );
   }
 
-  static AndroidNotificationDetails _getAndroidNotificationDetailsTimesUp() {
+  AndroidNotificationDetails _getAndroidNotificationDetailsTimesUp() {
     return const AndroidNotificationDetails(
       'times_up',
       'Drink Timer Completion',

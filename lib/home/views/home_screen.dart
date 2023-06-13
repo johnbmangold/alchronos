@@ -1,9 +1,11 @@
+import 'package:alchronos/main.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
+import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,7 +22,9 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         bottom: false,
         child: BlocProvider(
-          create: (context) => HomeCubit(),
+          create: (context) => HomeCubit(
+            logger: getIt.get<Logger>(),
+          ),
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               return PageTransitionSwitcher(
