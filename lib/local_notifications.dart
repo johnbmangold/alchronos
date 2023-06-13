@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:alchronos/main.dart';
 import 'package:alchronos/received_notification.dart';
@@ -45,6 +46,17 @@ class LocalNotifications {
     );
 
     await _requestAndroidNotificationPermission();
+  }
+
+  static NotificationDetails getNotificationDetailsTimesUp() {
+    return NotificationDetails(
+      android: _getAndroidNotificationDetailsTimesUp(),
+    );
+  }
+
+  static int getNotificationId() {
+    final cryptoRandom = Random.secure();
+    return cryptoRandom.nextInt(1000000);
   }
 
   static Future<void> _initializeFlutterLocalNotificationsPlugin(
@@ -176,6 +188,17 @@ class LocalNotifications {
     return LinuxInitializationSettings(
       defaultActionName: 'Open notification',
       defaultIcon: AssetsLinuxIcon('icon/app_icon.png'),
+    );
+  }
+
+  static AndroidNotificationDetails _getAndroidNotificationDetailsTimesUp() {
+    return const AndroidNotificationDetails(
+      'times_up',
+      'Drink Timer Completion',
+      channelDescription: 'Notification sent when drink timer has completed',
+      importance: Importance.max,
+      priority: Priority.max,
+      ticker: 'Drink timer has completed.',
     );
   }
 }
