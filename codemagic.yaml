@@ -6,6 +6,16 @@ workflows:
     environment:
       flutter: stable
       java: 17
+    triggering:
+      events:
+        - push
+        - pull_request
+        - tag
+      branch_patterns: 
+        - pattern: '*'
+        - pattern: develop
+          include: false
+      cancel_previous_builds: false
     scripts:
       - name: Set up local.properties
         script: |
@@ -42,6 +52,16 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
+    triggering:
+      events:
+        - push
+        - pull_request
+        - tag
+      branch_patterns: 
+        - pattern: '*'
+        - pattern: develop
+          include: false
+      cancel_previous_builds: false
     scripts:
       - name: Set up code signing settings on Xcode project
         script: |
