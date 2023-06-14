@@ -50,7 +50,7 @@ Future<void> main() async {
 
   await getIt.get<LocalNotifications>().initialize();
 
-  runApp(const MyApp());
+  runApp(MyApp(logger: getIt.get<Logger>()));
 
   FlutterNativeSplash.remove();
 }
@@ -78,7 +78,9 @@ void registerDependencies() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.logger});
+
+  final Logger logger;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +101,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(logger: logger),
     );
   }
 }

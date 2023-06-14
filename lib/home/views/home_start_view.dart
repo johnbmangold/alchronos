@@ -13,6 +13,7 @@ class HomeStartView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
+            key: Key('drinkIcon'),
             Icons.emoji_food_beverage,
             size: 60,
           ),
@@ -20,6 +21,7 @@ class HomeStartView extends StatelessWidget {
             height: 16,
           ),
           ElevatedButton(
+            key: const Key('drinkButton'),
             onPressed: () async => await cubit.start(),
             child: const Text(
               'Drink!',

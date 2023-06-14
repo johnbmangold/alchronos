@@ -1,4 +1,3 @@
-import 'package:alchronos/main.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,9 @@ import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.logger});
+
+  final Logger logger;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class HomeScreen extends StatelessWidget {
         bottom: false,
         child: BlocProvider(
           create: (context) => HomeCubit(
-            logger: getIt.get<Logger>(),
+            logger: logger,
           ),
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
