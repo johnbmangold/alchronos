@@ -44,53 +44,53 @@ workflows:
         notify:
           success: true
           failure: true
-  ios-workflow:
-    name: iOS Workflow
-    instance_type: mac_mini_m1
-    max_build_duration: 120
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-    triggering:
-      events:
-        - push
-        - pull_request
-        - tag
-      branch_patterns: 
-        - pattern: '*'
-        - pattern: develop
-          include: false
-      cancel_previous_builds: false
-    scripts:
-      - name: Set up code signing settings on Xcode project
-        script: |
-          xcode-project use-profiles
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      - name: Install pods
-        script: |
-          find . -name "Podfile" -execdir pod install \;
-      - name: Flutter analyze
-        script: |
-          flutter analyze
-      - name: Flutter unit tests
-        script: |
-          flutter test
-        ignore_failure: false
-      - name: Flutter build ipa and automatic versioning
-        script: |
-          flutter build ipa --debug
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
-    publishing:
-      # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      email:
-        recipients:
-          - johnbmangold@gmail.com
-        notify:
-          success: true # To receive a notification when a build succeeds
-          failure: true # To not receive a notification when a build fails
+  # ios-workflow:
+  #   name: iOS Workflow
+  #   instance_type: mac_mini_m1
+  #   max_build_duration: 120
+  #   environment:
+  #     flutter: stable
+  #     xcode: latest
+  #     cocoapods: default
+  #   triggering:
+  #     events:
+  #       - push
+  #       - pull_request
+  #       - tag
+  #     branch_patterns: 
+  #       - pattern: '*'
+  #       - pattern: develop
+  #         include: false
+  #     cancel_previous_builds: false
+  #   scripts:
+  #     - name: Set up code signing settings on Xcode project
+  #       script: |
+  #         xcode-project use-profiles
+  #     - name: Get Flutter packages
+  #       script: |
+  #         flutter packages pub get
+  #     - name: Install pods
+  #       script: |
+  #         find . -name "Podfile" -execdir pod install \;
+  #     - name: Flutter analyze
+  #       script: |
+  #         flutter analyze
+  #     - name: Flutter unit tests
+  #       script: |
+  #         flutter test
+  #       ignore_failure: false
+  #     - name: Flutter build ipa and automatic versioning
+  #       script: |
+  #         flutter build ipa --debug
+  #   artifacts:
+  #     - build/ios/ipa/*.ipa
+  #     - /tmp/xcodebuild_logs/*.log
+  #     - flutter_drive.log
+  #   publishing:
+  #     # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+  #     email:
+  #       recipients:
+  #         - johnbmangold@gmail.com
+  #       notify:
+  #         success: true # To receive a notification when a build succeeds
+  #         failure: true # To not receive a notification when a build fails
