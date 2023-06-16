@@ -66,6 +66,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
+                key: Key('runningIcon'),
                 Icons.run_circle_rounded,
                 size: 60,
               ),
@@ -74,6 +75,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
               ),
               Text(
                 _formattedDuration,
+                key: const Key('runningTimer'),
                 style: const TextStyle(fontSize: 36),
               ),
             ],

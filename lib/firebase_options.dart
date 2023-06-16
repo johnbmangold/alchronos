@@ -67,8 +67,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '19097124097',
     projectId: 'alchronos',
     storageBucket: 'alchronos.appspot.com',
-    iosClientId: '19097124097-v7t5v940ik75750vb6l32lf0h9l7dh3r.apps.googleusercontent.com',
-    iosBundleId: 'com.vault.alchronos',
+    iosClientId:
+        '19097124097-v7t5v940ik75750vb6l32lf0h9l7dh3r.apps.googleusercontent.com',
+    iosBundleId: 'com.idlewild.alchronos',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '19097124097',
     projectId: 'alchronos',
     storageBucket: 'alchronos.appspot.com',
-    iosClientId: '19097124097-5fs28977cpbc0vr7v8l12kge2fsl8m6l.apps.googleusercontent.com',
-    iosBundleId: 'com.vault.alchronos.RunnerTests',
+    iosClientId:
+        '19097124097-5fs28977cpbc0vr7v8l12kge2fsl8m6l.apps.googleusercontent.com',
+    iosBundleId: 'com.idlewild.alchronos.RunnerTests',
   );
 }
