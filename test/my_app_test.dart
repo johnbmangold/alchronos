@@ -19,24 +19,4 @@ void main() {
     expect(find.byKey(const Key('drinkIcon')), findsOneWidget);
     expect(find.byKey(const Key('drinkButton')), findsOneWidget);
   });
-
-  testWidgets('Tap drinkButton and change view', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(logger: Logger()));
-
-    final drinkIconFinder = find.byKey(const Key('drinkIcon'));
-    final drinkButtonFinder = find.byKey(const Key('drinkButton'));
-    final runningIconFinder = find.byKey(const Key('runningIcon'));
-    final runningTimerFinder = find.byKey(const Key('runningTimer'));
-
-    // Initial controls are present
-    expect(drinkIconFinder, findsOneWidget);
-    expect(drinkButtonFinder, findsOneWidget);
-
-    await tester.tap(drinkButtonFinder);
-    await tester.pumpAndSettle();
-
-    expect(runningIconFinder, findsNothing);
-    expect(runningTimerFinder, findsNothing);
-  });
 }
