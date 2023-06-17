@@ -52,7 +52,7 @@ workflows:
         recipients:
           - johnbmangold@gmail.com
         notify:
-          success: true
+          success: false
           failure: true
       google_play:
         credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
