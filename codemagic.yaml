@@ -6,6 +6,8 @@ workflows:
     environment:
       groups:
         - google_play
+      android_signing:
+        - keystore_reference
       vars:
         PACKAGE_NAME: "com.idlewild.alchronos"
         GOOGLE_PLAY_TRACK: "internal"
@@ -52,9 +54,9 @@ workflows:
         notify:
           success: true
           failure: true
-      # google_play:
-      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #   track: $GOOGLE_PLAY_TRACK
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: $GOOGLE_PLAY_TRACK
   # ios-workflow:
   #   name: iOS Workflow
   #   instance_type: mac_mini_m1
