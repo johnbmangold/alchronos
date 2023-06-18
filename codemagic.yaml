@@ -54,9 +54,9 @@ workflows:
         notify:
           success: false
           failure: true
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: $GOOGLE_PLAY_TRACK
+      # google_play:
+      #   credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      #   track: $GOOGLE_PLAY_TRACK
   # ios-workflow:
   #   name: iOS Workflow
   #   instance_type: mac_mini_m1
