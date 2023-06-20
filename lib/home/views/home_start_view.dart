@@ -16,6 +16,7 @@ class HomeStartView extends StatelessWidget {
             key: Key('drinkIcon'),
             Icons.emoji_food_beverage,
             size: 60,
+            semanticLabel: 'A drink icon',
           ),
           const SizedBox(
             height: 16,
@@ -26,6 +27,7 @@ class HomeStartView extends StatelessWidget {
             child: const Text(
               'Drink!',
               style: TextStyle(fontSize: 36),
+              semanticsLabel: 'Text on a button that reads Drink',
             ),
           ),
         ],

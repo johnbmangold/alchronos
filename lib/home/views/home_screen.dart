@@ -15,16 +15,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(color: Color(0xfff8bbd0)),
-              child: Text('Alchronos'),
+              child: Text(
+                'Alchronos',
+                semanticsLabel: 'The app name Alchronos',
+              ),
             ),
             ListTile(
-              title: const Text('About'),
+              title: const Text(
+                'About',
+                semanticsLabel: 'Text that reads About',
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(

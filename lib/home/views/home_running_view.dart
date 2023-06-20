@@ -69,6 +69,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
                 key: Key('runningIcon'),
                 Icons.run_circle_rounded,
                 size: 60,
+                semanticLabel: 'Icon of a running person',
               ),
               const SizedBox(
                 height: 16,
@@ -77,6 +78,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
                 _formattedDuration,
                 key: const Key('runningTimer'),
                 style: const TextStyle(fontSize: 36),
+                semanticsLabel: 'A timer that counts from 59:59 to zero',
               ),
             ],
           ),
