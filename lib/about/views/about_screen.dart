@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -12,7 +13,7 @@ class AboutScreen extends StatelessWidget {
         leading: InkWell(
           child: const Icon(Icons.arrow_back),
           onTap: () {
-            Navigator.pop(context);
+            context.goNamed('home');
           },
         ),
       ),

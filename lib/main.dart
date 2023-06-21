@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alchronos/about/views/about_screen.dart';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
@@ -12,6 +13,7 @@ import 'package:alchronos/home/views/home_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 
 const taskIdentifier = 'drinkTimerIdentifier';
@@ -77,6 +79,21 @@ void registerDependencies() {
   );
 }
 
+final GoRouter _router = GoRouter(
+  routes: <RouteBase>[
+    GoRoute(
+      name: 'home',
+      path: '/',
+      builder: (context, state) => HomeScreen(logger: getIt.get<Logger>()),
+    ),
+    GoRoute(
+      name: 'about',
+      path: '/about',
+      builder: (context, state) => const AboutScreen(),
+    ),
+  ],
+);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.logger});
 
@@ -84,7 +101,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: _router,
       title: 'Alchronos',
       themeMode: ThemeMode.system,
       theme: ThemeData(
@@ -101,7 +119,6 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: HomeScreen(logger: logger),
     );
   }
 }
