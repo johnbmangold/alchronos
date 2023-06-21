@@ -1,0 +1,6 @@
+{
+    "appName": "Alchronos",
+    "@appName": {
+        "description": "The name of the application: Alchronos"
+    }
+}
