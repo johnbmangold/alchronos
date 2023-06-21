@@ -51,8 +51,14 @@ Future<void> main() async {
   registerDependencies();
 
   await getIt.get<LocalNotifications>().initialize();
+  final logger = getIt.get<Logger>();
 
-  runApp(MyApp(logger: getIt.get<Logger>()));
+  runApp(
+    MyApp(
+      logger: logger,
+      router: getRouter(logger),
+    ),
+  );
 
   FlutterNativeSplash.remove();
 }
@@ -79,30 +85,16 @@ void registerDependencies() {
   );
 }
 
-final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-      name: 'home',
-      path: '/',
-      builder: (context, state) => HomeScreen(logger: getIt.get<Logger>()),
-    ),
-    GoRoute(
-      name: 'about',
-      path: '/about',
-      builder: (context, state) => const AboutScreen(),
-    ),
-  ],
-);
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.logger});
+  const MyApp({super.key, required this.logger, required this.router});
 
   final Logger logger;
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: router,
       title: 'Alchronos',
       themeMode: ThemeMode.system,
       theme: ThemeData(
@@ -122,6 +114,21 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+GoRouter getRouter(Logger logger) => GoRouter(
+      routes: <RouteBase>[
+        GoRoute(
+          name: 'home',
+          path: '/',
+          builder: (context, state) => HomeScreen(logger: logger),
+        ),
+        GoRoute(
+          name: 'about',
+          path: '/about',
+          builder: (context, state) => const AboutScreen(),
+        ),
+      ],
+    );
 
 Future<void> showNotification() async {
   await getIt.get<FlutterLocalNotificationsPlugin>().show(
