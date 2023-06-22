@@ -6,6 +6,7 @@ import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key, required this.logger});
@@ -14,23 +15,24 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xfff8bbd0)),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color(0xfff8bbd0)),
               child: Text(
-                'Alchronos',
-                semanticsLabel: 'The app name Alchronos',
+                l10n.appName,
+                semanticsLabel: l10n.drawerTitleSemanticsLabel,
               ),
             ),
             ListTile(
-              title: const Text(
-                'About',
-                semanticsLabel: 'Text that reads About',
+              title: Text(
+                l10n.drawerAbout,
+                semanticsLabel: l10n.drawerAboutSemanticsLabel,
               ),
               onTap: () {
                 Navigator.pop(context);

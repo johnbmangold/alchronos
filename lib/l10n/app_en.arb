@@ -22,5 +22,25 @@
     "drinkButtonText": "Drink!",
     "@drinkButtonText": {
         "description": "Text on the button to start timer: Drink!"
+    },
+    "runningIconSemanticsLabel": "Icon of a running person",
+    "@runningIconSemanticsLabel": {
+        "description": "A description of the running icon for screen readers"
+    },
+    "runningTimerSemanticsLabel": "A timer that counts from 59:59 to zero",
+    "@runningTimerSemanticsLabel": {
+        "description": "A description of the running timer for screen readers"
+    },
+    "drawerTitleSemanticsLabel": "Alchronos",
+    "@drawerTitleSemanticsLabel": {
+        "description": "A description of the drawer title for screen readers"
+    },
+    "drawerAboutSemanticsLabel": "Text that reads About",
+    "@drawerAboutSemanticsLabel": {
+        "description": "A description of the drawer item about for screen readers"
+    },
+    "drawerAbout": "About",
+    "@drawerAbout": {
+        "description": "Drawer option that reads About"
     }
 }

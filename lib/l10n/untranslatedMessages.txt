@@ -1,0 +1,14 @@
+{
+  "es": [
+    "drinkTimerComplete",
+    "notificationMessage",
+    "drinkIconSemanticsLabel",
+    "drinkButtonSemanticsLabel",
+    "drinkButtonText",
+    "runningIconSemanticsLabel",
+    "runningTimerSemanticsLabel",
+    "drawerTitleSemanticsLabel",
+    "drawerAboutSemanticsLabel",
+    "drawerAbout"
+  ]
+}

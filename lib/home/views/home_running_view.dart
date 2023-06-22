@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({super.key});
@@ -35,6 +36,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Stack(
         alignment: Alignment.center,
@@ -65,11 +67,11 @@ class _HomeRunningViewState extends State<HomeRunningView> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                key: Key('runningIcon'),
+              Icon(
+                key: const Key('runningIcon'),
                 Icons.run_circle_rounded,
                 size: 60,
-                semanticLabel: 'Icon of a running person',
+                semanticLabel: l10n.runningIconSemanticsLabel,
               ),
               const SizedBox(
                 height: 16,
@@ -78,7 +80,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
                 _formattedDuration,
                 key: const Key('runningTimer'),
                 style: const TextStyle(fontSize: 36),
-                semanticsLabel: 'A timer that counts from 59:59 to zero',
+                semanticsLabel: l10n.runningTimerSemanticsLabel,
               ),
             ],
           ),
