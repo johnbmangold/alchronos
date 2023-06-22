@@ -2,5 +2,25 @@
     "appName": "Alchronos",
     "@appName": {
         "description": "The name of the application: Alchronos"
+    },
+    "drinkTimerComplete": "Drink Timer Complete",
+    "@drinkTimerComplete": {
+        "description": "Title of the timer complete notification"
+    },
+    "notificationMessage": "You can order another drink when you're feeling up to it.",
+    "@notificationMessage": {
+        "description": "Message of the timer complete notification"
+    },
+    "drinkIconSemanticsLabel": "A drink icon",
+    "@drinkIconSemanticsLabel": {
+        "description": "A description of the drink icon for screen readers"
+    },
+    "drinkButtonSemanticsLabel": "Text on a button that reads Drink",
+    "@drinkButtonSemanticsLabel": {
+        "description": "A description of the drink button for screen readers"
+    },
+    "drinkButtonText": "Drink!",
+    "@drinkButtonText": {
+        "description": "Text on the button to start timer: Drink!"
     }
 }

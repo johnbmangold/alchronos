@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeStartView extends StatelessWidget {
   const HomeStartView({super.key});
@@ -8,15 +9,16 @@ class HomeStartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<HomeCubit>(context);
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            key: Key('drinkIcon'),
+          Icon(
+            key: const Key('drinkIcon'),
             Icons.emoji_food_beverage,
             size: 60,
-            semanticLabel: 'A drink icon',
+            semanticLabel: l10n.drinkIconSemanticsLabel,
           ),
           const SizedBox(
             height: 16,
@@ -24,10 +26,10 @@ class HomeStartView extends StatelessWidget {
           ElevatedButton(
             key: const Key('drinkButton'),
             onPressed: () async => await cubit.start(),
-            child: const Text(
-              'Drink!',
-              style: TextStyle(fontSize: 36),
-              semanticsLabel: 'Text on a button that reads Drink',
+            child: Text(
+              l10n.drinkButtonText,
+              style: const TextStyle(fontSize: 36),
+              semanticsLabel: l10n.drinkButtonSemanticsLabel,
             ),
           ),
         ],
