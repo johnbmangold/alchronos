@@ -1,3 +1,54 @@
 {
-    "appName": "Alchronos"
+    "appName": "Alcronos",
+    "@nombre de la aplicación": {
+        "description": "El nombre de la aplicación: Alchronos"
+    },
+    "drinkTimerComplete": "Temporizador de bebidas completado",
+    "@drinkTimerComplete": {
+        "description": "Título de la notificación de finalización del temporizador"
+    },
+    "notificationMessage": "Puedes pedir otra bebida cuando te apetezca.",
+    "@mensaje de notificación": {
+        "description": "Mensaje de notificación de temporizador completo"
+    },
+    "drinkIconSemanticsLabel": "Un icono de bebida",
+    "@drinkIconSemanticsLabel": {
+        "description": "Una descripción del ícono de bebida para lectores de pantalla"
+    },
+    "drinkButtonSemanticsLabel": "Texto en un botón que dice Beber",
+    "@drinkButtonSemanticsLabel": {
+        "description": "Una descripción del botón de bebida para lectores de pantalla"
+    },
+    "drinkButtonText": "¡Bebe!",
+    "@drinkButtonText": {
+        "description": "Texto en el botón para iniciar el temporizador: ¡Bebe!"
+    },
+    "runningIconSemanticsLabel": "Icono de una persona corriendo",
+    "@runningIconSemanticsLabel": {
+        "description": "Una descripción del icono de ejecución para lectores de pantalla"
+    },
+    "runningTimerSemanticsLabel": "Un temporizador que cuenta desde 59:59 hasta cero",
+    "@runningTimerSemanticsLabel": {
+        "description": "Una descripción del temporizador de ejecución para lectores de pantalla"
+    },
+    "drawerTitleSemanticsLabel": "Alcronos",
+    "@drawerTitleSemanticsLabel": {
+        "description": "Una descripción del título del cajón para lectores de pantalla"
+    },
+    "drawerAboutSemanticsLabel": "Texto que dice Acerca de",
+    "@drawerAboutSemanticsLabel": {
+        "description": "Una descripción del elemento del cajón para lectores de pantalla"
+    },
+    "drawerAbout": "Acerca de",
+    "@drawerAbout": {
+        "description": "Opción de cajón que dice Acerca de"
+    },
+    "aboutAlchronos": "El consumo de alcohol nunca es completamente seguro y nunca es saludable. Como con la mayoría de las cosas en la vida, la moderación es la mejor práctica cuando se consume alcohol. Alchronos tiene como objetivo hacer que el consumo de alcohol sea más seguro y ayudar a mitigar los peligros. Con ese objetivo en mente, Alchronos ayuda a reducir el consumo de una bebida alcohólica por hora para que su cuerpo pueda procesar el alcohol sin abrumarse. Por favor, beba siempre con responsabilidad y nunca en exceso. Si siente que tiene un problema con la bebida, busque tratamiento. .",
+    "@sobreAlcronos": {
+        "description": "La larga historia de Alchronos y sus objetivos generales"
+    },
+    "aboutAlchronosTitle": "Acerca de Alchronos",
+    "@aboutAlchronosTitle": {
+        "description": "Título de la página Acerca de"
+    }
 }

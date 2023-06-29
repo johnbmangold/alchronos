@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Alchronos'),
+        title: Text(l10n.aboutAlchronosTitle),
         centerTitle: true,
         leading: InkWell(
           child: const Icon(Icons.arrow_back),
@@ -20,11 +22,10 @@ class AboutScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Text('Buy Me a Coffee'),
             TextButton(
               onPressed: () {},
-              child: const Text(
-                'A long description of Alchronos that will be implemented with l10n',
+              child: Text(
+                l10n.aboutAlchronos,
               ),
             ),
           ],

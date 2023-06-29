@@ -42,5 +42,13 @@
     "drawerAbout": "About",
     "@drawerAbout": {
         "description": "Drawer option that reads About"
+    },
+    "aboutAlchronos": "The consumption of alcohol is never entirely safe and is never healthy. As with most things in life moderation is the best practice when consuming alcohol. Alchronos is aimed and making the consumption of alcohol safer and helping to mitigate the dangers. With that goal in mind, Alchronos helps to pace drinking to one alcoholic beverage per hour so your body can process the alcohol without getting overwhelmed. Please, always drink responsbily and never in excess. If you feel you have a drinking problem, please seek treatment.",
+    "@aboutAlchronos": {
+        "description": "The long about of Alchronos and it's overall goals"
+    },
+    "aboutAlchronosTitle": "About Alchronos",
+    "@aboutAlchronosTitle": {
+        "description": "Title of the About page"
     }
 }
