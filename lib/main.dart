@@ -36,6 +36,18 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  await initFirebase();
+
+  registerDependencies();
+
+  await getIt.get<LocalNotifications>().initialize();
+
+  runApp(const AlchronosApp());
+
+  FlutterNativeSplash.remove();
+}
+
+Future<void> initFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -48,20 +60,6 @@ Future<void> main() async {
     FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
-
-  registerDependencies();
-
-  await getIt.get<LocalNotifications>().initialize();
-  final logger = getIt.get<Logger>();
-
-  runApp(
-    MyApp(
-      logger: logger,
-      router: getRouter(logger),
-    ),
-  );
-
-  FlutterNativeSplash.remove();
 }
 
 void registerDependencies() {
@@ -84,18 +82,33 @@ void registerDependencies() {
           getIt.get<FlutterLocalNotificationsPlugin>(),
     ),
   );
+
+  // GoRouter
+  getIt.registerLazySingleton(
+    () => GoRouter(
+      routes: <RouteBase>[
+        GoRoute(
+          name: 'home',
+          path: '/',
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          name: 'about',
+          path: '/about',
+          builder: (context, state) => const AboutScreen(),
+        ),
+      ],
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.logger, required this.router});
-
-  final Logger logger;
-  final GoRouter router;
+class AlchronosApp extends StatelessWidget {
+  const AlchronosApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: router,
+      routerConfig: getIt.get<GoRouter>(),
       title: 'Alchronos',
       themeMode: ThemeMode.system,
       theme: ThemeData(
@@ -117,21 +130,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-GoRouter getRouter(Logger logger) => GoRouter(
-      routes: <RouteBase>[
-        GoRoute(
-          name: 'home',
-          path: '/',
-          builder: (context, state) => HomeScreen(logger: logger),
-        ),
-        GoRoute(
-          name: 'about',
-          path: '/about',
-          builder: (context, state) => const AboutScreen(),
-        ),
-      ],
-    );
 
 Future<void> showNotification() async {
   await getIt.get<FlutterLocalNotificationsPlugin>().show(

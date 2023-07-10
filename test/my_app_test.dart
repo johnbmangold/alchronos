@@ -8,18 +8,13 @@
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:logger/logger.dart';
 
 void main() {
+  registerDependencies();
+
   testWidgets('Finds icon and button', (WidgetTester tester) async {
-    final logger = Logger();
     // Build our app and trigger a frame.
-    await tester.pumpWidget(
-      MyApp(
-        logger: logger,
-        router: getRouter(logger),
-      ),
-    );
+    await tester.pumpWidget(const AlchronosApp());
 
     // Initial controls are present
     expect(find.byKey(const Key('drinkIcon')), findsOneWidget);
@@ -28,13 +23,7 @@ void main() {
 
   testWidgets('Test app accessibility', (tester) async {
     final SemanticsHandle handle = tester.ensureSemantics();
-    final logger = Logger();
-    await tester.pumpWidget(
-      MyApp(
-        logger: logger,
-        router: getRouter(logger),
-      ),
-    );
+    await tester.pumpWidget(const AlchronosApp());
 
     // Checks that tappable nodes have a minimum size of 48 by 48 pixels
     // for Android.
