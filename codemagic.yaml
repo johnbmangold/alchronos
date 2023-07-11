@@ -37,6 +37,17 @@ workflows:
         script: |
           flutter test
         ignore_failure: false
+      - name: Launch emulator
+        script: |
+          set -e # exit on first failed command
+
+          cd $ANDROID_HOME/tools
+          emulator -avd emulator &
+          adb wait-for-device
+      - name: Flutter integration tests
+        script: |
+          flutter test integration_test
+        ignore_failure: false
       - name: Build AAB with Flutter
         script: |
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
