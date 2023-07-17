@@ -42,12 +42,12 @@ workflows:
           flutter test --machine > test-results/flutter_unit.json
         test_report: test-results/flutter_unit.json
         ignore_failure: false
-      - name: Build Android debug APK
+      - name: Create debug and test APK
         script: |
-          ./gradlew assembleDebug
-      - name: Build Android test APK
-        script: |
+          set -ex
+          cd android
           ./gradlew assembleAndroidTest
+          ./gradlew assembleDebug
       - name: Run tests with emulator.wtf
         script: |
           ew-cli --app $EW_APK_PATH --test $EW_TEST_APK_PATK
