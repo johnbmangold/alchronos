@@ -6,11 +6,14 @@ workflows:
     environment:
       groups:
         - google_play
+        - emulatorwtf
       android_signing:
         - AlchronosRelease
       vars:
         PACKAGE_NAME: "com.idlewild.alchronos"
         GOOGLE_PLAY_TRACK: "internal"
+        EW_APK_PATH: "$CM_BUILD_DIR/app/build/outputs/apk/debug/app-debug.apk"
+        EW_TEST_APK_PATH: "$CM_BUILD_DIR/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
       flutter: stable
       java: 17
     triggering:
@@ -39,15 +42,16 @@ workflows:
           flutter test --machine > test-results/flutter_unit.json
         test_report: test-results/flutter_unit.json
         ignore_failure: false
-      - name: Integration tests
-        script: | 
-          mkdir -p test-results
-          flutter emulators --launch emulator-5554 &
-          # adb wait-for-device is used to wait for the emulator to finish loading:
-          adb wait-for-device
-          flutter -d emulator-5554 test --machine > test-results/flutter_integration.json integration_test 
-        test_report: test-results/flutter_integration.json
-        ignore_failure: false
+      - name: Build Android debug APK
+        script: |
+          ./gradlew assembleDebug
+      - name: Build Android test APK
+        script: |
+          ./gradlew assembleAndroidTest
+      - name: Run tests with emulator.wtf
+        script: |
+          ew-cli --app $EW_APK_PATH --test $EW_TEST_APK_PATK
+        test_report: results/**/*.xml
       - name: Build AAB with Flutter
         script: |
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
