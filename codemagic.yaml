@@ -51,10 +51,7 @@ workflows:
           ./gradlew assembleDebug
       - name: Run tests with emulator.wtf
         script: |
-          ew-cli \
-            --app $EW_APK_PATH
-            --test $EW_TEST_APK_PATK
-            --outputs-dir results
+          ew-cli --app $EW_APK_PATH --test $EW_TEST_APK_PATK --outputs-dir results
         test_report: results/**/*.xml
       - name: Build AAB with Flutter
         script: |
