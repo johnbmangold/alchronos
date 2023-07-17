@@ -41,7 +41,10 @@ workflows:
         ignore_failure: false
       - name: Integration tests
         script: | 
-          mkdir -p test-results 
+          mkdir -p test-results
+          flutter emulators --launch emulator &
+          # adb wait-for-device is used to wait for the emulator to finish loading:
+          adb wait-for-device
           flutter -d emulator-5554 test --machine > test-results/flutter_integration.json integration_test 
           # for iOS use: -d iPhone
         test_report: test-results/flutter_integration.json
