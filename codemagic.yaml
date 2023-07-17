@@ -12,8 +12,8 @@ workflows:
       vars:
         PACKAGE_NAME: "com.idlewild.alchronos"
         GOOGLE_PLAY_TRACK: "internal"
-        EW_APK_PATH: "$CM_BUILD_DIR/app/build/outputs/apk/debug/app-debug.apk"
-        EW_TEST_APK_PATH: "$CM_BUILD_DIR/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+        EW_APK_PATH: "build/app/outputs/apk/debug/app-debug.apk"
+        EW_TEST_APK_PATH: "build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
       flutter: stable
       java: 17
     triggering:
@@ -51,7 +51,10 @@ workflows:
           ./gradlew assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/e2e_test.dart"
       - name: Run tests with emulator.wtf
         script: |
-          ew-cli --app $EW_APK_PATH --test $EW_TEST_APK_PATH --outputs-dir results
+          ew-cli \
+            --app $EW_APK_PATH \
+            --test $EW_TEST_APK_PATH \
+            --outputs-dir results
         test_report: results/**/*.xml
       - name: Build AAB with Flutter
         script: |
