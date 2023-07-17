@@ -46,6 +46,7 @@ workflows:
         script: |
           set -ex
           cd android
+          gradle wrapper
           ./gradlew assembleAndroidTest
           ./gradlew assembleDebug
       - name: Run tests with emulator.wtf
