@@ -48,7 +48,7 @@ workflows:
           cd android
           gradle wrapper
           ./gradlew assembleAndroidTest
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/e2e_test.dart"
       - name: Run tests with emulator.wtf
         script: |
           ew-cli --app $EW_APK_PATH --test $EW_TEST_APK_PATH --outputs-dir results
