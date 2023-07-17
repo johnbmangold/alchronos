@@ -33,20 +33,18 @@ workflows:
       - name: Flutter analyze
         script: |
           flutter analyze
-      - name: Flutter unit tests
-        script: |
-          flutter test
+      - name: Flutter Unit tests
+        script: | 
+          mkdir -p test-results
+          flutter test --machine > test-results/flutter_unit.json
+        test_report: test-results/flutter_unit.json
         ignore_failure: false
-      - name: Launch emulator
-        script: |
-          set -e # exit on first failed command
-
-          cd $ANDROID_HOME/tools
-          emulator -avd emulator &
-          adb wait-for-device
-      - name: Flutter integration tests
-        script: |
-          flutter test integration_test
+      - name: Integration tests
+        script: | 
+          mkdir -p test-results 
+          flutter -d emulator-5554 test --machine > test-results/flutter_integration.json integration_test 
+          # for iOS use: -d iPhone
+        test_report: test-results/flutter_integration.json
         ignore_failure: false
       - name: Build AAB with Flutter
         script: |
