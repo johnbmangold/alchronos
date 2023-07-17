@@ -42,9 +42,8 @@ workflows:
       - name: Integration tests
         script: | 
           mkdir -p test-results
-          flutter emulators --launch apple_ios_simulator
+          open -a simulator
           flutter -d iPhone test --machine > test-results/flutter_integration.json integration_test 
-          # for iOS use: -d iPhone
         test_report: test-results/flutter_integration.json
         ignore_failure: false
       - name: Build AAB with Flutter
