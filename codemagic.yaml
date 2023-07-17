@@ -56,7 +56,7 @@ workflows:
             --app $EW_APK_PATH \
             --test $EW_TEST_APK_PATH \
             --outputs-dir results \
-            --device [model=Pixel7, version=33]
+            --device [model=Pixel7,version=33]
         test_report: results/**/*.xml
       - name: Build AAB with Flutter
         script: |
