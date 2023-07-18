@@ -6,7 +6,7 @@ workflows:
     environment:
       groups:
         - google_play
-        - emulatorwtf
+        - firebase_test_lab
       android_signing:
         - AlchronosRelease
       vars:
@@ -14,6 +14,7 @@ workflows:
         GOOGLE_PLAY_TRACK: "internal"
         EW_APK_PATH: "build/app/outputs/apk/debug/app-debug.apk"
         EW_TEST_APK_PATH: "build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+        FIREBASE_PROJECT: "alchronos"
       flutter: stable
       java: 17
     triggering:
@@ -46,18 +47,23 @@ workflows:
         script: |
           set -ex
           cd android
-          gradle wrapper
-          ./gradlew assembleAndroidTest
-          ./gradlew assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/e2e_test.dart"
-      - name: Run tests with emulator.wtf
+          ./gradlew app:assembleAndroidTest
+          ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
+      - name: Run Firebase Test Lab tests
         script: |
-          ew-cli \
-            --token $ew_api_token \
-            --app $EW_APK_PATH \
-            --test $EW_TEST_APK_PATH \
-            --outputs-dir results \
-            --device model=Pixel7,version=33
-        test_report: results/**/*.xml
+          set -ex
+
+          echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode > ./firebase_key_file.json
+
+          gcloud auth activate-service-account --key-file=firebase_key_file.json
+
+          gcloud --quiet config set project $FIREBASE_PROJECT
+
+          gcloud firebase test android run \
+            --type instrumentation \
+            --app build/app/outputs/apk/debug/app-debug.apk \
+            --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            --timeout 3m
       - name: Build AAB with Flutter
         script: |
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
