@@ -52,12 +52,12 @@ workflows:
           ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
       - name: Echo firebase credentials
         script: |
-          echo $FIREBASE_TEST_LAB_CREDENTIALS
+          echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode
       - name: Run Firebase Test Lab tests
         script: |
           set -ex
 
-          echo $FIREBASE_TEST_LAB_CREDENTIALS > ./firebase_key_file.json
+          echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode > ./firebase_key_file.json
 
           gcloud auth activate-service-account --key-file=firebase_key_file.json
 
