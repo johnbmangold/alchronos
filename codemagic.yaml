@@ -57,7 +57,7 @@ workflows:
         script: |
           set -ex
 
-          echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode > ./firebase_key_file.json
+          echo $FIREBASE_TEST_LAB_CREDENTIALS > ./firebase_key_file.json
 
           gcloud auth activate-service-account --key-file=firebase_key_file.json
 
