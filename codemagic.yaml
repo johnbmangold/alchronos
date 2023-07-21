@@ -48,6 +48,8 @@ workflows:
           set -ex
           cd android
           gradle wrapper
+          # flutter build generates files in android/ for building the app
+          flutter build apk
           ./gradlew app:assembleAndroidTest
           ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
       - name: Echo firebase credentials
