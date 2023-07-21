@@ -50,6 +50,9 @@ workflows:
           gradle wrapper
           ./gradlew app:assembleAndroidTest
           ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
+      - name: Echo firebase credentials
+        script: |
+          echo $FIREBASE_TEST_LAB_CREDENTIALS
       - name: Run Firebase Test Lab tests
         script: |
           set -ex
