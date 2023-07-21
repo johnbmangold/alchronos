@@ -43,27 +43,28 @@ workflows:
           flutter test --machine > test-results/flutter_unit.json
         test_report: test-results/flutter_unit.json
         ignore_failure: false
-      # - name: Create debug and test APK
-      #   script: |
-      #     set -ex
-      #     cd android
-      #     ./gradlew app:assembleAndroidTest
-      #     ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
-      # - name: Run Firebase Test Lab tests
-      #   script: |
-      #     set -ex
+      - name: Create debug and test APK
+        script: |
+          set -ex
+          cd android
+          gradle wrapper
+          ./gradlew app:assembleAndroidTest
+          ./gradlew app:assembleDebug -Ptarget="$CM_BUILD_DIR/integration_test/app_test.dart"
+      - name: Run Firebase Test Lab tests
+        script: |
+          set -ex
 
-      #     echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode > ./firebase_key_file.json
+          echo $FIREBASE_TEST_LAB_CREDENTIALS | base64 --decode > ./firebase_key_file.json
 
-      #     gcloud auth activate-service-account --key-file=firebase_key_file.json
+          gcloud auth activate-service-account --key-file=firebase_key_file.json
 
-      #     gcloud --quiet config set project $FIREBASE_PROJECT
+          gcloud --quiet config set project $FIREBASE_PROJECT
 
-      #     gcloud firebase test android run \
-      #       --type instrumentation \
-      #       --app build/app/outputs/apk/debug/app-debug.apk \
-      #       --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
-      #       --timeout 3m
+          gcloud firebase test android run \
+            --type instrumentation \
+            --app build/app/outputs/apk/debug/app-debug.apk \
+            --test build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+            --timeout 3m
       - name: Build AAB with Flutter
         script: |
           BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))      
