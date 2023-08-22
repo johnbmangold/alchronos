@@ -165,7 +165,7 @@ class LocalNotifications {
         options: <DarwinNotificationCategoryOption>{
           DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
         },
-      )
+      ),
     ];
   }
 

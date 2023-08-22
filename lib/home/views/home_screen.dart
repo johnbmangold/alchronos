@@ -26,6 +26,7 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 l10n.appName,
                 semanticsLabel: l10n.drawerTitleSemanticsLabel,
+                style: const TextStyle(color: Colors.black),
               ),
             ),
             ListTile(
