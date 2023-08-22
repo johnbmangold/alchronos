@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pop(context);
                 context.goNamed('about');
               },
-            )
+            ),
           ],
         ),
       ),
