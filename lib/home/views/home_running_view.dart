@@ -100,9 +100,9 @@ class _HomeRunningViewState extends State<HomeRunningView> {
       _oneSecond,
       (timer) {
         if (_timeInSeconds == 0) {
-          setState(() {
+          setState(() async {
             _timer.cancel();
-            BlocProvider.of<HomeCubit>(context).stop();
+            await BlocProvider.of<HomeCubit>(context).stop();
           });
         } else {
           setState(() {

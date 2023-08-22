@@ -75,13 +75,11 @@ class LocalNotifications {
           case NotificationResponseType.selectedNotification:
             // user selected a notification
             selectNotificationStream.add(notificationResponse.payload);
-            break;
           case NotificationResponseType.selectedNotificationAction:
             // user selected notification action i.e. 'Mark as Read'
             if (notificationResponse.actionId == navigationActionId) {
               selectNotificationStream.add(notificationResponse.payload);
             }
-            break;
         }
       },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,

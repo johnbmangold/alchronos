@@ -22,11 +22,44 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    #Error Rules
     prefer_single_quotes: true
     require_trailing_commas: true
-    await_only_futures: true
+    always_use_package_imports: true
+    avoid_dynamic_calls: true
+    avoid_slow_async_io: true
+    avoid_type_to_string: true
+    cancel_subscriptions: true
+    close_sinks: true
+    discarded_futures: true
+    unnecessary_statements: true
+    #Style Rules
+    always_declare_return_types: true
+    avoid_annotating_with_dynamic: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    flutter_style_todos: true
+    join_return_with_assignment: true
+    prefer_null_aware_method_calls: true
+    sort_constructors_first: true
+    sort_unnamed_constructors_first: true
     unawaited_futures: true
+    unnecessary_breaks: true
+    unnecessary_lambdas: true
+    unnecessary_parenthesis: true
+    unnecessary_raw_strings: true
+    unnecessary_to_list_in_spreads: true
+    use_colored_box: true
+    use_decorated_box: true
+    use_enums: true
+    use_is_even_rather_than_modulo: true
+    use_named_constants: true
+    use_raw_strings: true
+    use_string_buffers: true
+    use_to_and_as_if_applicable: true
+    #Pub Rules
+    secure_pubspec_urls: true
+    sort_pub_dependencies: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
