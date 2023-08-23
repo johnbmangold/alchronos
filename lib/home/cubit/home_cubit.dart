@@ -15,7 +15,7 @@ class HomeCubit extends Cubit<HomeState> {
     await _initPlatformState();
     await BackgroundFetch.start().then((int status) {
       logger.i('[BackgroundFetch] start success: $status');
-    }).catchError((e) {
+    }).catchError((Object e) {
       logger.e('[BackgroundFetch] start FAILURE: $e');
     });
     emit(HomeRunning());
