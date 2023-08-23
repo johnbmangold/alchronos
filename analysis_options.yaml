@@ -46,6 +46,7 @@ linter:
     avoid_void_async: true
     flutter_style_todos: true
     join_return_with_assignment: true
+    prefer_final_in_for_each: true
     prefer_null_aware_method_calls: true
     sort_constructors_first: true
     sort_unnamed_constructors_first: true
