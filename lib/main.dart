@@ -109,6 +109,8 @@ class AlchronosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final alchronosPink = Colors.pink.shade100;
+    CustomColors lightCustomColors = CustomColors(brand: alchronosPink);
+    CustomColors darkCustomColors = CustomColors(brand: alchronosPink);
 
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
@@ -117,7 +119,9 @@ class AlchronosApp extends StatelessWidget {
 
         if (lightDynamic != null && darkDynamic != null) {
           lightColorScheme = lightDynamic.harmonized();
+          lightCustomColors = lightCustomColors.harmonized(lightColorScheme);
           darkColorScheme = darkDynamic.harmonized();
+          darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
         } else {
           lightColorScheme = ColorScheme.fromSeed(
             seedColor: alchronosPink,
@@ -135,10 +139,12 @@ class AlchronosApp extends StatelessWidget {
           themeMode: ThemeMode.system,
           theme: ThemeData(
             colorScheme: lightColorScheme,
+            extensions: [lightCustomColors],
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
             colorScheme: darkColorScheme,
+            extensions: [darkCustomColors],
             useMaterial3: true,
           ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -191,5 +197,35 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
     getIt.get<Logger>().i(
           'notification action tapped with input: ${notificationResponse.input}',
         );
+  }
+}
+
+@immutable
+class CustomColors extends ThemeExtension<CustomColors> {
+  const CustomColors({
+    required this.brand,
+  });
+
+  final Color? brand;
+
+  @override
+  CustomColors copyWith({Color? brand}) {
+    return CustomColors(
+      brand: brand ?? this.brand,
+    );
+  }
+
+  @override
+  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
+    if (other is! CustomColors) {
+      return this;
+    }
+    return CustomColors(
+      brand: Color.lerp(brand, other.brand, t),
+    );
+  }
+
+  CustomColors harmonized(ColorScheme dynamic) {
+    return copyWith(brand: brand!.harmonizeWith(dynamic.primary));
   }
 }

@@ -22,7 +22,9 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(color: Color(0xfff8bbd0)),
+              decoration: BoxDecoration(
+                color: Theme.of(context).extension<CustomColors>()!.brand,
+              ),
               child: Text(
                 l10n.appName,
                 semanticsLabel: l10n.drawerTitleSemanticsLabel,
