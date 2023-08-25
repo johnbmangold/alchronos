@@ -111,8 +111,16 @@ class AlchronosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final alchronosPink = Colors.pink.shade100;
-    CustomColors lightCustomColors = CustomColors(brand: alchronosPink);
-    CustomColors darkCustomColors = CustomColors(brand: alchronosPink);
+    CustomColors lightCustomColors = CustomColors(
+      brand: alchronosPink,
+      drinkStartColor: Colors.amber.shade300,
+      drinkEndColor: Colors.amberAccent.shade700,
+    );
+    CustomColors darkCustomColors = CustomColors(
+      brand: alchronosPink,
+      drinkStartColor: Colors.amber.shade300,
+      drinkEndColor: Colors.amberAccent.shade700,
+    );
 
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
@@ -157,14 +165,18 @@ class AlchronosApp extends StatelessWidget {
   }
 }
 
-Future<void> showNotification() async {
-  await getIt.get<FlutterLocalNotificationsPlugin>().show(
-        getIt.get<LocalNotifications>().getNotificationId(),
-        'Drink Timer Complete',
-        'You can order another drink when you\'re feeling up to it.',
-        getIt.get<LocalNotifications>().getNotificationDetailsTimesUp(),
-        payload: 1.toString(),
-      );
+Future<void> showNotificationInBackground() async {
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final localNotifications = LocalNotifications(
+    flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+  );
+  await flutterLocalNotificationsPlugin.show(
+    localNotifications.getNotificationId(),
+    'Drink Timer Complete',
+    'You can order another drink when you\'re feeling up to it.',
+    localNotifications.getNotificationDetailsTimesUp(),
+    payload: 1.toString(),
+  );
 }
 
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
@@ -183,7 +195,7 @@ Future<void> backgroundFetchHeadlessTask(HeadlessTask task) async {
   }
 
   getIt.get<Logger>().i('[BackgroundFetch] Headless event received: $taskId');
-  await showNotification();
+  await showNotificationInBackground();
   await BackgroundFetch.stop(taskId);
   BackgroundFetch.finish(taskId);
 }
@@ -206,14 +218,24 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 class CustomColors extends ThemeExtension<CustomColors> {
   const CustomColors({
     required this.brand,
+    required this.drinkStartColor,
+    required this.drinkEndColor,
   });
 
   final Color? brand;
+  final Color? drinkStartColor;
+  final Color? drinkEndColor;
 
   @override
-  CustomColors copyWith({Color? brand}) {
+  CustomColors copyWith({
+    Color? brand,
+    Color? drinkStartColor,
+    Color? drinkEndColor,
+  }) {
     return CustomColors(
       brand: brand ?? this.brand,
+      drinkStartColor: drinkStartColor ?? this.drinkStartColor,
+      drinkEndColor: drinkEndColor ?? this.drinkEndColor,
     );
   }
 
@@ -224,10 +246,16 @@ class CustomColors extends ThemeExtension<CustomColors> {
     }
     return CustomColors(
       brand: Color.lerp(brand, other.brand, t),
+      drinkStartColor: Color.lerp(drinkStartColor, other.drinkStartColor, t),
+      drinkEndColor: Color.lerp(drinkEndColor, other.drinkEndColor, t),
     );
   }
 
   CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith(brand: brand!.harmonizeWith(dynamic.primary));
+    return copyWith(
+      brand: brand!.harmonizeWith(dynamic.primary),
+      drinkStartColor: drinkStartColor!.harmonizeWith(dynamic.primary),
+      drinkEndColor: drinkEndColor!.harmonizeWith(dynamic.primary),
+    );
   }
 }

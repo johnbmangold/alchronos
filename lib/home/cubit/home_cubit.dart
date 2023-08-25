@@ -1,6 +1,8 @@
+import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/main.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
 
@@ -21,8 +23,20 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeRunning());
   }
 
-  Future<void> stop() async {
+  Future<void> showNotificationAndStop() async {
+    await BackgroundFetch.stop();
+    await showNotification();
     emit(HomeInitial());
+  }
+
+  Future<void> showNotification() async {
+    await getIt.get<FlutterLocalNotificationsPlugin>().show(
+          getIt.get<LocalNotifications>().getNotificationId(),
+          'Drink Timer Complete',
+          'You can order another drink when you\'re feeling up to it.',
+          getIt.get<LocalNotifications>().getNotificationDetailsTimesUp(),
+          payload: 1.toString(),
+        );
   }
 
   Future<void> _initPlatformState() async {

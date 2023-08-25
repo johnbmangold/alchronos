@@ -19,17 +19,13 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   late Timer _timer;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
-  late DateTime _endingTime;
   double _opacity = 0.0;
-  final _drinkColorStart = Colors.amber.shade300;
-  final _drinkColorEnd = Colors.amberAccent.shade700;
   late int _timeInSeconds;
 
   @override
   void initState() {
     super.initState();
     _timeInSeconds = oneHourInSeconds;
-    _endingTime = DateTime.now().add(const Duration(seconds: oneHourInSeconds));
     _calculateTimeDisplay();
     _startTimer();
   }
@@ -37,6 +33,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final customColors = Theme.of(context).extension<CustomColors>()!;
     return Center(
       child: Stack(
         alignment: Alignment.center,
@@ -45,15 +42,19 @@ class _HomeRunningViewState extends State<HomeRunningView> {
             opacity: _opacity,
             child: Column(
               children: [
-                _buildWaveWidget(double.infinity, 50),
+                _buildWaveWidget(
+                  double.infinity,
+                  50,
+                  customColors.drinkStartColor!,
+                ),
                 Flexible(
                   flex: 100,
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          _drinkColorStart,
-                          _drinkColorEnd,
+                          customColors.drinkStartColor!,
+                          customColors.drinkEndColor!,
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -99,9 +100,9 @@ class _HomeRunningViewState extends State<HomeRunningView> {
     _timer = Timer.periodic(
       _oneSecond,
       (timer) async {
-        if (_timeInSeconds <= 0) {
+        if (_timeInSeconds == 0) {
           _timer.cancel();
-          await BlocProvider.of<HomeCubit>(context).stop();
+          await BlocProvider.of<HomeCubit>(context).showNotificationAndStop();
         } else {
           setState(() {
             _timeInSeconds--;
@@ -113,7 +114,7 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   }
 
   void _calculateTimeDisplay() {
-    final timeDifference = _endingTime.difference(DateTime.now());
+    final timeDifference = Duration(seconds: _timeInSeconds);
     final calculatedOpacity =
         (oneHourInSeconds - timeDifference.inSeconds) / oneHourInSeconds;
     _opacity = switch (calculatedOpacity) {
@@ -129,9 +130,13 @@ class _HomeRunningViewState extends State<HomeRunningView> {
     return initialFormat.substring(initialFormat.indexOf(':') + 1);
   }
 
-  WaveWidget _buildWaveWidget(double width, double height) {
+  WaveWidget _buildWaveWidget(
+    double width,
+    double height,
+    Color drinkColorStart,
+  ) {
     final colors = [
-      _drinkColorStart,
+      drinkColorStart,
     ];
 
     const durations = [
