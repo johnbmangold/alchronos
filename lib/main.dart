@@ -45,6 +45,8 @@ Future<void> main() async {
 
   runApp(const AlchronosApp());
 
+  await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+
   FlutterNativeSplash.remove();
 }
 
