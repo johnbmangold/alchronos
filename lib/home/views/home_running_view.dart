@@ -98,12 +98,10 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   void _startTimer() {
     _timer = Timer.periodic(
       _oneSecond,
-      (timer) {
-        if (_timeInSeconds == 0) {
-          setState(() async {
-            _timer.cancel();
-            await BlocProvider.of<HomeCubit>(context).stop();
-          });
+      (timer) async {
+        if (_timeInSeconds <= 0) {
+          _timer.cancel();
+          await BlocProvider.of<HomeCubit>(context).stop();
         } else {
           setState(() {
             _timeInSeconds--;
@@ -116,7 +114,13 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   void _calculateTimeDisplay() {
     final timeDifference = _endingTime.difference(DateTime.now());
-    _opacity = (oneHourInSeconds - timeDifference.inSeconds) / oneHourInSeconds;
+    final calculatedOpacity =
+        (oneHourInSeconds - timeDifference.inSeconds) / oneHourInSeconds;
+    _opacity = switch (calculatedOpacity) {
+      < 0.0 => 0.0,
+      > 1.0 => 1.0,
+      _ => calculatedOpacity
+    };
     _formattedDuration = _format(timeDifference);
   }
 
