@@ -51,6 +51,7 @@ linter:
     sort_constructors_first: true
     sort_unnamed_constructors_first: true
     unawaited_futures: true
+    unnecessary_await_in_return: true
     unnecessary_breaks: true
     unnecessary_lambdas: true
     unnecessary_parenthesis: true

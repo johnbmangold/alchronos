@@ -25,7 +25,7 @@ class HomeStartView extends StatelessWidget {
           ),
           ElevatedButton(
             key: const Key('drinkButton'),
-            onPressed: () async => await cubit.start(),
+            onPressed: cubit.start,
             child: Text(
               l10n.drinkButtonText,
               style: const TextStyle(fontSize: 36),
