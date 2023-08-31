@@ -50,4 +50,9 @@ class PartialRunService {
     final isar = await db;
     return isar.writeTxn(() => isar.partialRuns.clear());
   }
+
+  Future<int> count() async {
+    final isar = await db;
+    return isar.partialRuns.count();
+  }
 }
