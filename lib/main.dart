@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:alchronos/about/views/about_screen.dart';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
@@ -14,7 +13,6 @@ import 'package:alchronos/home/views/home_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -85,24 +83,6 @@ void registerDependencies() {
           getIt.get<FlutterLocalNotificationsPlugin>(),
     ),
   );
-
-  // GoRouter
-  getIt.registerLazySingleton(
-    () => GoRouter(
-      routes: <RouteBase>[
-        GoRoute(
-          name: 'home',
-          path: '/',
-          builder: (context, state) => const HomeScreen(),
-        ),
-        GoRoute(
-          name: 'about',
-          path: '/about',
-          builder: (context, state) => const AboutScreen(),
-        ),
-      ],
-    ),
-  );
 }
 
 class AlchronosApp extends StatelessWidget {
@@ -143,8 +123,7 @@ class AlchronosApp extends StatelessWidget {
           );
         }
 
-        return MaterialApp.router(
-          routerConfig: getIt.get<GoRouter>(),
+        return MaterialApp(
           title: 'Alchronos',
           themeMode: ThemeMode.system,
           theme: ThemeData(
@@ -159,6 +138,7 @@ class AlchronosApp extends StatelessWidget {
           ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
+          home: const HomeScreen(),
         );
       },
     );

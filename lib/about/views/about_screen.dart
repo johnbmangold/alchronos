@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
+
+  static MaterialPageRoute<AboutScreen> get route =>
+      MaterialPageRoute(builder: (context) => const AboutScreen());
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class AboutScreen extends StatelessWidget {
         leading: InkWell(
           child: const Icon(Icons.arrow_back),
           onTap: () {
-            context.goNamed('home');
+            Navigator.of(context).pop();
           },
         ),
       ),

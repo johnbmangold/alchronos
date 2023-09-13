@@ -1,3 +1,4 @@
+import 'package:alchronos/about/about.dart';
 import 'package:alchronos/main.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
-import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  static MaterialPageRoute<HomeScreen> get route =>
+      MaterialPageRoute(builder: (context) => const HomeScreen());
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +39,9 @@ class HomeScreen extends StatelessWidget {
                 l10n.drawerAbout,
                 semanticsLabel: l10n.drawerAboutSemanticsLabel,
               ),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(context);
-                context.goNamed('about');
+                await Navigator.of(context).push(AboutScreen.route);
               },
             ),
           ],
