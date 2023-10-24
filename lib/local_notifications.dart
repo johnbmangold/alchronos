@@ -106,7 +106,7 @@ class LocalNotifications {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+        ?.requestNotificationsPermission();
   }
 
   AndroidInitializationSettings _getAndroidSettings() {
