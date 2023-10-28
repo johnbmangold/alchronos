@@ -1,5 +1,7 @@
+import 'package:alchronos/home/models/models.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/main.dart';
+import 'package:alchronos/repositories/repositories.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -9,18 +11,35 @@ import 'package:meta/meta.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit({required this.logger}) : super(HomeInitial());
+  HomeCubit({
+    required this.logger,
+    required this.partialRunRepository,
+  }) : super(HomeInitial());
 
   final Logger logger;
+  final PartialRunRepository partialRunRepository;
 
   Future<void> start() async {
+    // set up background fetch
     await _initPlatformState();
+
+    // start background fetch
     await BackgroundFetch.start().then((int status) {
       logger.i('[BackgroundFetch] start success: $status');
     }).catchError((Object e) {
       logger.e('[BackgroundFetch] start FAILURE: $e');
     });
+
+    // emit running state
     emit(HomeRunning());
+  }
+
+  Future<PartialRun?> getPartialRun(DateTime currentTime) async {
+    return partialRunRepository.getPartialRunAfterTime(currentTime);
+  }
+
+  Future<int> setPartialRun(PartialRun partialRun) async {
+    return partialRunRepository.clearRunsAndPutPartialRun(partialRun);
   }
 
   Future<void> showNotificationAndStop() async {

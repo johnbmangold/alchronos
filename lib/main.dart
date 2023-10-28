@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
+import 'package:alchronos/repositories/repositories.dart';
+import 'package:alchronos/services/partial_run_service.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -82,6 +84,15 @@ void registerDependencies() {
       flutterLocalNotificationsPlugin:
           getIt.get<FlutterLocalNotificationsPlugin>(),
     ),
+  );
+
+  // PartialRunService
+  getIt.registerLazySingleton(PartialRunService.new);
+
+  // PartialRunRepository
+  getIt.registerLazySingleton(
+    () =>
+        PartialRunRepository(partialRunService: getIt.get<PartialRunService>()),
   );
 }
 

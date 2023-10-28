@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alchronos/home/home.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,9 +26,8 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   @override
   void initState() {
     super.initState();
-    _timeInSeconds = oneHourInSeconds;
-    _calculateTimeDisplay();
-    _startTimer();
+
+    _getDurationSeconds();
   }
 
   @override
@@ -157,5 +157,31 @@ class _HomeRunningViewState extends State<HomeRunningView> {
       size: Size(width, height),
       waveAmplitude: 0.0,
     );
+  }
+
+  // ignore: avoid_void_async
+  void _getDurationSeconds() async {
+    // get partial run
+    final now = DateTime.now();
+    final cubit = BlocProvider.of<HomeCubit>(context);
+    final partialRun = await cubit.getPartialRun(now);
+
+    // calculate time
+    int seconds = oneHourInSeconds;
+    if (partialRun == null || partialRun.endTime == null) {
+      // create partialRun and store
+      final newPartialRun = PartialRun();
+      newPartialRun.secondsRemaining = seconds;
+      newPartialRun.endTime = now.add(Duration(seconds: seconds));
+      await cubit.setPartialRun(newPartialRun);
+    } else {
+      // get remaining seconds
+      seconds = partialRun.endTime!.difference(now).inSeconds;
+    }
+
+    // use partial run to calculate _timeInSeconds
+    _timeInSeconds = seconds;
+    _calculateTimeDisplay();
+    _startTimer();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:alchronos/about/about.dart';
 import 'package:alchronos/main.dart';
+import 'package:alchronos/repositories/repositories.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,7 @@ class HomeScreen extends StatelessWidget {
         child: BlocProvider(
           create: (context) => HomeCubit(
             logger: getIt.get<Logger>(),
+            partialRunRepository: getIt.get<PartialRunRepository>(),
           ),
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
