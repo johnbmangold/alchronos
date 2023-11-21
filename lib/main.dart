@@ -21,9 +21,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 const taskIdentifier = 'drinkTimerIdentifier';
 const taskName = 'drinkTimerName';
 const oneHourInMinutes = 60;
-const oneHourInSeconds = 3600;
 
 final getIt = GetIt.instance;
+const oneHourInSeconds = 3600;
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function

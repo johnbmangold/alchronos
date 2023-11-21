@@ -40,15 +40,17 @@ class HomeCubit extends Cubit<HomeState> {
       logger.e('[BackgroundFetch] start FAILURE: $e');
     });
 
+    final partialRun = await _createOneHourPartialRun(DateTime.now());
+
     // emit running state
-    emit(HomeRunning(partialRun: null));
+    emit(HomeRunning(partialRun: partialRun));
   }
 
   Future<PartialRun?> getPartialRun(DateTime currentTime) async {
     return partialRunRepository.getPartialRunAfterTime(currentTime);
   }
 
-  Future<int> setPartialRun(PartialRun partialRun) async {
+  Future<int> _setPartialRun(PartialRun partialRun) async {
     return partialRunRepository.clearRunsAndPutPartialRun(partialRun);
   }
 
@@ -105,5 +107,13 @@ class HomeCubit extends Cubit<HomeState> {
     );
 
     logger.i('[BackgroundFetch] configure success: $status');
+  }
+
+  Future<PartialRun> _createOneHourPartialRun(DateTime now) async {
+    final newPartialRun = PartialRun();
+    newPartialRun.secondsRemaining = oneHourInSeconds;
+    newPartialRun.endTime = now.add(const Duration(seconds: oneHourInSeconds));
+    await _setPartialRun(newPartialRun);
+    return newPartialRun;
   }
 }

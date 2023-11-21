@@ -10,5 +10,5 @@ class HomeStart extends HomeState {}
 class HomeRunning extends HomeState {
   HomeRunning({required this.partialRun});
 
-  final PartialRun? partialRun;
+  final PartialRun partialRun;
 }

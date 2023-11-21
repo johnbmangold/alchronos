@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({super.key, required this.partialRun});
 
-  final PartialRun? partialRun;
+  final PartialRun partialRun;
 
   @override
   State<StatefulWidget> createState() => _HomeRunningViewState();
@@ -163,21 +163,9 @@ class _HomeRunningViewState extends State<HomeRunningView> {
 
   // ignore: avoid_void_async
   void _getDurationSeconds() async {
-    // get partial run
-    final now = DateTime.now();
-
-    // calculate time
-    int seconds = oneHourInSeconds;
-    if (widget.partialRun?.endTime == null) {
-      // create partialRun and store
-      final newPartialRun = PartialRun();
-      newPartialRun.secondsRemaining = seconds;
-      newPartialRun.endTime = now.add(Duration(seconds: seconds));
-      await BlocProvider.of<HomeCubit>(context).setPartialRun(newPartialRun);
-    } else {
-      // get remaining seconds
-      seconds = widget.partialRun!.endTime!.difference(now).inSeconds;
-    }
+    // get remaining seconds
+    final seconds =
+        widget.partialRun.endTime!.difference(DateTime.now()).inSeconds;
 
     // use partial run to calculate _timeInSeconds
     _timeInSeconds = seconds;
