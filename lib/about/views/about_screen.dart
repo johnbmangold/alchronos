@@ -15,7 +15,10 @@ class AboutScreen extends StatelessWidget {
         title: Text(l10n.aboutAlchronosTitle),
         centerTitle: true,
         leading: InkWell(
-          child: const Icon(Icons.arrow_back),
+          child: Icon(
+            Icons.arrow_back,
+            semanticLabel: l10n.backIconSemanticsLabel,
+          ),
           onTap: () {
             Navigator.of(context).pop();
           },

@@ -15,7 +15,7 @@
     "@drinkIconSemanticsLabel": {
         "description": "A description of the drink icon for screen readers"
     },
-    "drinkButtonSemanticsLabel": "Text on a button that reads Drink",
+    "drinkButtonSemanticsLabel": "Drink",
     "@drinkButtonSemanticsLabel": {
         "description": "A description of the drink button for screen readers"
     },
@@ -50,5 +50,29 @@
     "aboutAlchronosTitle": "About Alchronos",
     "@aboutAlchronosTitle": {
         "description": "Title of the About page"
+    },
+    "backIconSemanticsLabel": "Back",
+    "@backIconSemanticsLabel": {
+        "description": "TalkBack label for back arrow"
+    },
+    "aboutScreenSemanticsLabel": "About page",
+    "@aboutScreenSemanticsLabel": {
+        "description": "Semantics label for about page"
+    },
+    "startScreenSemanticsLabel": "Start Timer page",
+    "@startScreenSemanticsLabel": {
+        "description": "Semantics label for start timer page"
+    },
+    "runningScreenSemanticsLabel": "Timer Running page",
+    "@runningScreenSemanticsLabel": {
+        "description": "Semantics label for timer running page"
+    },
+    "loadingScreenSemanticsLabel": "Loading page",
+    "@loadingScreenSemanticsLabel": {
+        "description": "Semantics label for loading page"
+    },
+    "homeScreenSemanticsLabel": "Home page",
+    "@homeScreenSemanticsLabel": {
+        "description": "Semantics label for home page"
     }
 }

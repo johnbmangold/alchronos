@@ -20,64 +20,67 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).extension<CustomColors>()!.brand,
+    return Semantics(
+      label: l10n.homeScreenSemanticsLabel,
+      child: Scaffold(
+        appBar: AppBar(),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).extension<CustomColors>()!.brand,
+                ),
+                child: Text(
+                  l10n.appName,
+                  semanticsLabel: l10n.drawerTitleSemanticsLabel,
+                  style: const TextStyle(color: Colors.black),
+                ),
               ),
-              child: Text(
-                l10n.appName,
-                semanticsLabel: l10n.drawerTitleSemanticsLabel,
-                style: const TextStyle(color: Colors.black),
+              ListTile(
+                title: Text(
+                  l10n.drawerAbout,
+                  semanticsLabel: l10n.drawerAboutSemanticsLabel,
+                ),
+                onTap: () async {
+                  Navigator.pop(context);
+                  await Navigator.of(context).push(AboutScreen.route);
+                },
               ),
-            ),
-            ListTile(
-              title: Text(
-                l10n.drawerAbout,
-                semanticsLabel: l10n.drawerAboutSemanticsLabel,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                await Navigator.of(context).push(AboutScreen.route);
+            ],
+          ),
+        ),
+        body: SafeArea(
+          bottom: false,
+          child: BlocProvider(
+            create: (context) => HomeCubit(
+              logger: getIt.get<Logger>(),
+              partialRunRepository: getIt.get<PartialRunRepository>(),
+              // ignore: discarded_futures
+            )..init(),
+            child: BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                return PageTransitionSwitcher(
+                  duration: const Duration(milliseconds: 1000),
+                  transitionBuilder:
+                      (child, primaryAnimation, secondaryAnimation) {
+                    return FadeThroughTransition(
+                      animation: primaryAnimation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: child,
+                    );
+                  },
+                  child: switch (state) {
+                    (HomeStart _) => const HomeStartView(),
+                    (HomeRunning runningState) => HomeRunningView(
+                        partialRun: runningState.partialRun,
+                      ),
+                    (_) => const LoadingView(),
+                  },
+                );
               },
             ),
-          ],
-        ),
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: BlocProvider(
-          create: (context) => HomeCubit(
-            logger: getIt.get<Logger>(),
-            partialRunRepository: getIt.get<PartialRunRepository>(),
-            // ignore: discarded_futures
-          )..init(),
-          child: BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              return PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                  );
-                },
-                child: switch (state) {
-                  (HomeStart _) => const HomeStartView(),
-                  (HomeRunning runningState) => HomeRunningView(
-                      partialRun: runningState.partialRun,
-                    ),
-                  (_) => const LoadingView(),
-                },
-              );
-            },
           ),
         ),
       ),

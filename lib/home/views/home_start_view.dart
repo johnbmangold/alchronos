@@ -10,29 +10,32 @@ class HomeStartView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<HomeCubit>(context);
     final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            key: const Key('drinkIcon'),
-            Icons.emoji_food_beverage,
-            size: 60,
-            semanticLabel: l10n.drinkIconSemanticsLabel,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          ElevatedButton(
-            key: const Key('drinkButton'),
-            onPressed: cubit.start,
-            child: Text(
-              l10n.drinkButtonText,
-              style: const TextStyle(fontSize: 36),
-              semanticsLabel: l10n.drinkButtonSemanticsLabel,
+    return Semantics(
+      label: l10n.startScreenSemanticsLabel,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              key: const Key('drinkIcon'),
+              Icons.emoji_food_beverage,
+              size: 60,
+              semanticLabel: l10n.drinkIconSemanticsLabel,
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              key: const Key('drinkButton'),
+              onPressed: cubit.start,
+              child: Text(
+                l10n.drinkButtonText,
+                style: const TextStyle(fontSize: 36),
+                semanticsLabel: l10n.drinkButtonSemanticsLabel,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
