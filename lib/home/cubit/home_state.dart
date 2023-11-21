@@ -5,4 +5,10 @@ abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
 
-class HomeRunning extends HomeState {}
+class HomeStart extends HomeState {}
+
+class HomeRunning extends HomeState {
+  HomeRunning({required this.partialRun});
+
+  final PartialRun? partialRun;
+}

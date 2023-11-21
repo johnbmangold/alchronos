@@ -19,6 +19,16 @@ class HomeCubit extends Cubit<HomeState> {
   final Logger logger;
   final PartialRunRepository partialRunRepository;
 
+  Future<void> init() async {
+    final partialRun = await getPartialRun(DateTime.now());
+    if (partialRun == null) {
+      emit(HomeStart());
+      return;
+    }
+
+    emit(HomeRunning(partialRun: partialRun));
+  }
+
   Future<void> start() async {
     // set up background fetch
     await _initPlatformState();
@@ -31,7 +41,7 @@ class HomeCubit extends Cubit<HomeState> {
     });
 
     // emit running state
-    emit(HomeRunning());
+    emit(HomeRunning(partialRun: null));
   }
 
   Future<PartialRun?> getPartialRun(DateTime currentTime) async {
@@ -45,7 +55,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> showNotificationAndStop() async {
     await BackgroundFetch.stop();
     await showNotification();
-    emit(HomeInitial());
+    emit(HomeStart());
   }
 
   Future<void> showNotification() async {

@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   animations: ^2.0.7
+  avatar_glow: ^2.0.2
   background_fetch: ^1.1.6
   dynamic_color: ^1.6.6
   firebase_core: ^2.13.1

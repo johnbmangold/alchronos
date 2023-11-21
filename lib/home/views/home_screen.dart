@@ -1,4 +1,5 @@
 import 'package:alchronos/about/about.dart';
+import 'package:alchronos/home/views/loading_view.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:animations/animations.dart';
@@ -54,7 +55,8 @@ class HomeScreen extends StatelessWidget {
           create: (context) => HomeCubit(
             logger: getIt.get<Logger>(),
             partialRunRepository: getIt.get<PartialRunRepository>(),
-          ),
+            // ignore: discarded_futures
+          )..init(),
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               return PageTransitionSwitcher(
@@ -68,9 +70,11 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
                 child: switch (state) {
-                  (HomeInitial _) => const HomeStartView(),
-                  (HomeRunning _) => const HomeRunningView(),
-                  (_) => const Center(child: CircularProgressIndicator()),
+                  (HomeStart _) => const HomeStartView(),
+                  (HomeRunning runningState) => HomeRunningView(
+                      partialRun: runningState.partialRun,
+                    ),
+                  (_) => const LoadingView(),
                 },
               );
             },
