@@ -10,30 +10,24 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.aboutAlchronosTitle),
-        centerTitle: true,
-        leading: InkWell(
-          child: Icon(
-            Icons.arrow_back,
-            semanticLabel: l10n.backIconSemanticsLabel,
-          ),
-          onTap: () {
-            Navigator.of(context).pop();
-          },
+    return Semantics(
+      label: l10n.aboutScreenSemanticsLabel,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.aboutAlchronosTitle),
+          centerTitle: true,
         ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                l10n.aboutAlchronos,
+        body: SafeArea(
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  l10n.aboutAlchronos,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
