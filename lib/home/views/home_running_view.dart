@@ -36,61 +36,58 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final customColors = Theme.of(context).extension<CustomColors>()!;
-    return Semantics(
-      label: l10n.runningScreenSemanticsLabel,
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Opacity(
-              opacity: _opacity,
-              child: Column(
-                children: [
-                  _buildWaveWidget(
-                    double.infinity,
-                    50,
-                    customColors.drinkStartColor!,
-                  ),
-                  Flexible(
-                    flex: 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            customColors.drinkStartColor!,
-                            customColors.drinkEndColor!,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Opacity(
+            opacity: _opacity,
+            child: Column(
+              children: [
+                _buildWaveWidget(
+                  double.infinity,
+                  50,
+                  customColors.drinkStartColor!,
+                ),
+                Flexible(
+                  flex: 100,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          customColors.drinkStartColor!,
+                          customColors.drinkEndColor!,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  key: const Key('runningIcon'),
-                  Icons.run_circle_rounded,
-                  size: 60,
-                  semanticLabel: l10n.runningIconSemanticsLabel,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  _formattedDuration,
-                  key: const Key('runningTimer'),
-                  style: const TextStyle(fontSize: 36),
-                  semanticsLabel: l10n.runningTimerSemanticsLabel,
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                key: const Key('runningIcon'),
+                Icons.run_circle_rounded,
+                size: 60,
+                semanticLabel: l10n.runningIconSemanticsLabel,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                _formattedDuration,
+                key: const Key('runningTimer'),
+                style: const TextStyle(fontSize: 36),
+                semanticsLabel: l10n.runningTimerSemanticsLabel,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

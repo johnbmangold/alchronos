@@ -54,25 +54,5 @@
     "backIconSemanticsLabel": "Volver",
     "@backIconSemanticsLabel": {
         "description": "Etiqueta TalkBack para la flecha hacia atrás"
-    },
-    "aboutScreenSemanticsLabel": "Acerca de la página",
-    "@aboutScreenSemanticsLabel": {
-        "description": "Etiqueta semántica para la página Acerca de"
-    },
-    "startScreenSemanticsLabel": "Página de inicio del temporizador",
-    "@startScreenSemanticsLabel": {
-        "description": "Etiqueta semántica para la página del temporizador de inicio"
-    },
-    "runningScreenSemanticsLabel": "Página de ejecución del temporizador",
-    "@runningScreenSemanticsLabel": {
-        "description": "Etiqueta semántica para la página de ejecución del temporizador"
-    },
-    "loadingScreenSemanticsLabel": "Cargando página",
-    "@loadingScreenSemanticsLabel": {
-        "description": "Etiqueta semántica para cargar la página"
-    },
-    "homeScreenSemanticsLabel": "Página de inicio",
-     "@homeScreenSemanticsLabel": {
-         "description": "Etiqueta semántica para la página de inicio"
-     }
+    }
 }
