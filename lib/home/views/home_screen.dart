@@ -19,36 +19,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).extension<CustomColors>()!.brand,
-              ),
-              child: Text(
-                l10n.appName,
-                semanticsLabel: l10n.drawerTitleSemanticsLabel,
-                style: const TextStyle(color: Colors.black),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                l10n.drawerAbout,
-                semanticsLabel: l10n.drawerAboutSemanticsLabel,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-                await Navigator.of(context).push(AboutScreen.route);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: const HomeDrawer(),
       body: SafeArea(
         bottom: false,
         child: BlocProvider(
@@ -57,30 +30,100 @@ class HomeScreen extends StatelessWidget {
             partialRunRepository: getIt.get<PartialRunRepository>(),
             // ignore: discarded_futures
           )..init(),
-          child: BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              return PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                transitionBuilder:
-                    (child, primaryAnimation, secondaryAnimation) {
-                  return FadeThroughTransition(
-                    animation: primaryAnimation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                  );
-                },
-                child: switch (state) {
-                  (HomeStart _) => const HomeStartView(),
-                  (HomeRunning runningState) => HomeRunningView(
-                      partialRun: runningState.partialRun,
-                    ),
-                  (_) => const LoadingView(),
-                },
-              );
-            },
-          ),
+          child: const HomeBody(),
         ),
       ),
+    );
+  }
+}
+
+class HomeDrawer extends StatelessWidget {
+  const HomeDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).extension<CustomColors>()!.brand,
+            ),
+            child: Text(
+              l10n.appName,
+              semanticsLabel: l10n.drawerTitleSemanticsLabel,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              l10n.drawerAbout,
+              semanticsLabel: l10n.drawerAboutSemanticsLabel,
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              await Navigator.of(context).push(AboutScreen.route);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeBody extends StatefulWidget {
+  const HomeBody({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      await BlocProvider.of<HomeCubit>(context).reinit();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return PageTransitionSwitcher(
+          duration: const Duration(milliseconds: 1000),
+          transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+            return FadeThroughTransition(
+              animation: primaryAnimation,
+              secondaryAnimation: secondaryAnimation,
+              child: child,
+            );
+          },
+          child: switch (state) {
+            (HomeStart _) => const HomeStartView(),
+            (HomeRunning runningState) => HomeRunningView(
+                partialRun: runningState.partialRun,
+              ),
+            (_) => const LoadingView(),
+          },
+        );
+      },
     );
   }
 }

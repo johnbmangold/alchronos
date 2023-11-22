@@ -29,6 +29,11 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeRunning(partialRun: partialRun));
   }
 
+  Future<void> reinit() async {
+    emit(HomeInitial());
+    await init();
+  }
+
   Future<void> start() async {
     // set up background fetch
     await _initPlatformState();
