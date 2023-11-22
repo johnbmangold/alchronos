@@ -17,6 +17,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 const taskIdentifier = 'drinkTimerIdentifier';
 const taskName = 'drinkTimerName';
@@ -36,6 +37,8 @@ final StreamController<String?> selectNotificationStream =
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  tz.initializeTimeZones();
 
   await initFirebase();
 

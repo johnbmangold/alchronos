@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -25,9 +26,12 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         bottom: false,
         child: BlocProvider(
-          create: (context) => HomeCubit(
+          create: (_) => HomeCubit(
             logger: getIt.get<Logger>(),
             partialRunRepository: getIt.get<PartialRunRepository>(),
+            flutterLocalNotificationsPlugin:
+                getIt.get<FlutterLocalNotificationsPlugin>(),
+            l10n: AppLocalizations.of(context)!,
             // ignore: discarded_futures
           )..init(),
           child: const HomeBody(),
@@ -73,34 +77,8 @@ class HomeDrawer extends StatelessWidget {
   }
 }
 
-class HomeBody extends StatefulWidget {
+class HomeBody extends StatelessWidget {
   const HomeBody({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _HomeBodyState();
-}
-
-class _HomeBodyState extends State<HomeBody> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      await BlocProvider.of<HomeCubit>(context).reinit();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

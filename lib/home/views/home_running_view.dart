@@ -18,7 +18,8 @@ class HomeRunningView extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeRunningViewState();
 }
 
-class _HomeRunningViewState extends State<HomeRunningView> {
+class _HomeRunningViewState extends State<HomeRunningView>
+    with WidgetsBindingObserver {
   late Timer _timer;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
@@ -29,7 +30,24 @@ class _HomeRunningViewState extends State<HomeRunningView> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addObserver(this);
     _getDurationSeconds();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      _getDurationSeconds();
+    }
   }
 
   @override
@@ -90,12 +108,6 @@ class _HomeRunningViewState extends State<HomeRunningView> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
   }
 
   void _startTimer() {

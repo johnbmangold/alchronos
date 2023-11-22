@@ -7,6 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'home_state.dart';
 
@@ -14,10 +17,14 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit({
     required this.logger,
     required this.partialRunRepository,
+    required this.flutterLocalNotificationsPlugin,
+    required this.l10n,
   }) : super(HomeInitial());
 
   final Logger logger;
   final PartialRunRepository partialRunRepository;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  final AppLocalizations l10n;
 
   Future<void> init() async {
     final partialRun = await getPartialRun(DateTime.now());
@@ -29,21 +36,28 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeRunning(partialRun: partialRun));
   }
 
-  Future<void> reinit() async {
-    emit(HomeInitial());
-    await init();
-  }
-
   Future<void> start() async {
+    final location = tz.getLocation(await FlutterTimezone.getLocalTimezone());
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      getIt.get<LocalNotifications>().getNotificationId(),
+      l10n.drinkTimerComplete,
+      l10n.notificationMessage,
+      tz.TZDateTime.now(location)
+          .add(const Duration(seconds: oneHourInSeconds)),
+      getIt.get<LocalNotifications>().getNotificationDetailsTimesUp(),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
     // set up background fetch
-    await _initPlatformState();
+    // await _initPlatformState();
 
-    // start background fetch
-    await BackgroundFetch.start().then((int status) {
-      logger.i('[BackgroundFetch] start success: $status');
-    }).catchError((Object e) {
-      logger.e('[BackgroundFetch] start FAILURE: $e');
-    });
+    // // start background fetch
+    // await BackgroundFetch.start().then((int status) {
+    //   logger.i('[BackgroundFetch] start success: $status');
+    // }).catchError((Object e) {
+    //   logger.e('[BackgroundFetch] start FAILURE: $e');
+    // });
 
     final partialRun = await _createOneHourPartialRun(DateTime.now());
 
