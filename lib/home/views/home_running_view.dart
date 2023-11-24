@@ -113,10 +113,10 @@ class _HomeRunningViewState extends State<HomeRunningView>
   void _startTimer() {
     _timer = Timer.periodic(
       _oneSecond,
-      (timer) async {
-        if (_timeInSeconds == 0) {
+      (timer) {
+        if (_timeInSeconds <= 0) {
           _timer.cancel();
-          await BlocProvider.of<HomeCubit>(context).showNotificationAndStop();
+          BlocProvider.of<HomeCubit>(context).reset();
         } else {
           setState(() {
             _timeInSeconds--;
@@ -173,8 +173,11 @@ class _HomeRunningViewState extends State<HomeRunningView>
     );
   }
 
-  // ignore: avoid_void_async
-  void _getDurationSeconds() async {
+  void _getDurationSeconds() {
+    if (widget.partialRun.endTime == null ||
+        widget.partialRun.endTime!.isBefore(DateTime.now())) {
+      BlocProvider.of<HomeCubit>(context).reset();
+    }
     // get remaining seconds
     final seconds =
         widget.partialRun.endTime!.difference(DateTime.now()).inSeconds;

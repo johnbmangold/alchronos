@@ -5,7 +5,6 @@ import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:alchronos/services/partial_run_service.dart';
-import 'package:background_fetch/background_fetch.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -17,14 +16,13 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
-const taskIdentifier = 'drinkTimerIdentifier';
-const taskName = 'drinkTimerName';
 const oneHourInMinutes = 60;
+const oneMinuteInSeconds = 60;
+int get oneHourInSeconds => oneHourInMinutes * oneMinuteInSeconds;
 
 final getIt = GetIt.instance;
-const oneHourInSeconds = 3600;
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function
@@ -38,19 +36,29 @@ Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  tz.initializeTimeZones();
-
   await initFirebase();
 
   registerDependencies();
 
-  await getIt.get<LocalNotifications>().initialize();
+  await getIt.get<LocalNotifications>().initialize(false);
+
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: kDebugMode,
+  );
 
   runApp(const AlchronosApp());
 
-  await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-
   FlutterNativeSplash.remove();
+}
+
+// Mandatory if the App is obfuscated or using Flutter 3.1+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    await showNotificationInBackground();
+    return Future.value(true);
+  });
 }
 
 Future<void> initFirebase() async {
@@ -160,10 +168,17 @@ class AlchronosApp extends StatelessWidget {
 }
 
 Future<void> showNotificationInBackground() async {
+  final logger = Logger(
+    printer: PrettyPrinter(),
+  );
+  logger.i('[BackgroundFetch] Headless event received');
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final localNotifications = LocalNotifications(
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
   );
+  logger.i('[BackgroundFetch] Initializing notifications');
+  await localNotifications.initialize(true);
+  logger.i('[BackgroundFetch] Showing notification');
   await flutterLocalNotificationsPlugin.show(
     localNotifications.getNotificationId(),
     'Drink Timer Complete',
@@ -173,38 +188,18 @@ Future<void> showNotificationInBackground() async {
   );
 }
 
-// [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
-// Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
-@pragma('vm:entry-point')
-Future<void> backgroundFetchHeadlessTask(HeadlessTask task) async {
-  String taskId = task.taskId;
-  bool isTimeout = task.timeout;
-  if (isTimeout) {
-    // This task has exceeded its allowed running-time.
-    // You must stop what you're doing and immediately .finish(taskId)
-    getIt.get<Logger>().i('[BackgroundFetch] Headless task timed-out: $taskId');
-    await BackgroundFetch.stop(taskId);
-    BackgroundFetch.finish(taskId);
-    return;
-  }
-
-  getIt.get<Logger>().i('[BackgroundFetch] Headless event received: $taskId');
-  await showNotificationInBackground();
-  await BackgroundFetch.stop(taskId);
-  BackgroundFetch.finish(taskId);
-}
-
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  getIt
-      .get<Logger>()
-      .i('notification(${notificationResponse.id}) action tapped: '
-          '${notificationResponse.actionId} with'
-          ' payload: ${notificationResponse.payload}');
+  final logger = Logger(
+    printer: PrettyPrinter(),
+  );
+  logger.i('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
-    getIt.get<Logger>().i(
-          'notification action tapped with input: ${notificationResponse.input}',
-        );
+    logger.i(
+      'notification action tapped with input: ${notificationResponse.input}',
+    );
   }
 }
 

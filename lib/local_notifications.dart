@@ -11,7 +11,7 @@ class LocalNotifications {
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  Future<void> initialize() async {
+  Future<void> initialize(bool headless) async {
     /// A notification action which triggers a App navigation event
     const String navigationActionId = 'id_3';
 
@@ -49,7 +49,7 @@ class LocalNotifications {
       navigationActionId,
     );
 
-    await _requestAndroidNotificationPermission();
+    if (!headless) await _requestAndroidNotificationPermission();
   }
 
   NotificationDetails getNotificationDetailsTimesUp() {
