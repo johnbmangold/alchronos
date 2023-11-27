@@ -22,6 +22,8 @@ class HomeCubit extends Cubit<HomeState> {
   final PartialRunRepository partialRunRepository;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final AppLocalizations l10n;
+  final workmanagerUniqueName = 'drinkTimerStart';
+  final workmanagerTaskName = 'drink_timer_start';
 
   Future<void> init() async {
     final partialRun = await getPartialRun(DateTime.now());
@@ -40,9 +42,13 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> start() async {
     // set workmanager task
     await Workmanager().registerOneOffTask(
-      'drinkTimerStart',
-      'drink_timer_start',
+      workmanagerUniqueName,
+      workmanagerTaskName,
       initialDelay: const Duration(minutes: oneHourInMinutes),
+      inputData: {
+        workmanagerTitleKey: l10n.drinkTimerComplete,
+        workmanagerMessageKey: l10n.notificationMessage,
+      },
     );
 
     final partialRun = await _createOneHourPartialRun(DateTime.now());

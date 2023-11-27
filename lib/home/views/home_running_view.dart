@@ -25,12 +25,14 @@ class _HomeRunningViewState extends State<HomeRunningView>
   String _formattedDuration = '';
   double _opacity = 0.0;
   late int _timeInSeconds;
+  late final HomeCubit cubit;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addObserver(this);
+    cubit = BlocProvider.of<HomeCubit>(context);
     _getDurationSeconds();
   }
 
@@ -116,7 +118,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
       (timer) {
         if (_timeInSeconds <= 0) {
           _timer.cancel();
-          BlocProvider.of<HomeCubit>(context).reset();
+          cubit.reset();
         } else {
           setState(() {
             _timeInSeconds--;
@@ -176,7 +178,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
   void _getDurationSeconds() {
     if (widget.partialRun.endTime == null ||
         widget.partialRun.endTime!.isBefore(DateTime.now())) {
-      BlocProvider.of<HomeCubit>(context).reset();
+      cubit.reset();
     }
     // get remaining seconds
     final seconds =

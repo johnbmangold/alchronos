@@ -21,6 +21,11 @@ import 'package:workmanager/workmanager.dart';
 const oneHourInMinutes = 60;
 const oneMinuteInSeconds = 60;
 int get oneHourInSeconds => oneHourInMinutes * oneMinuteInSeconds;
+const workmanagerTitleKey = 'title';
+const workmanagerMessageKey = 'message';
+const fallbackTitle = 'Drink Timer Complete';
+const fallbackMessage =
+    'You can order another drink when you\'re feeling up to it.';
 
 final getIt = GetIt.instance;
 
@@ -56,7 +61,10 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    await showNotificationInBackground();
+    await showNotificationInBackground(
+      inputData?[workmanagerTitleKey].toString() ?? fallbackTitle,
+      inputData?[workmanagerMessageKey].toString() ?? fallbackMessage,
+    );
     return Future.value(true);
   });
 }
@@ -167,7 +175,7 @@ class AlchronosApp extends StatelessWidget {
   }
 }
 
-Future<void> showNotificationInBackground() async {
+Future<void> showNotificationInBackground(String title, String message) async {
   final logger = Logger(
     printer: PrettyPrinter(),
   );
@@ -181,8 +189,8 @@ Future<void> showNotificationInBackground() async {
   logger.i('[BackgroundFetch] Showing notification');
   await flutterLocalNotificationsPlugin.show(
     localNotifications.getNotificationId(),
-    'Drink Timer Complete',
-    'You can order another drink when you\'re feeling up to it.',
+    title,
+    message,
     localNotifications.getNotificationDetailsTimesUp(),
     payload: 1.toString(),
   );
