@@ -1,6 +1,7 @@
 import UIKit
 import flutter_local_notifications
 import Flutter
+import workmanager
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -19,6 +20,8 @@ import Flutter
     }
 
     GeneratedPluginRegistrant.register(with: self)
+      
+    WorkmanagerPlugin.registerTask(withIdentifier: "com.idlewild.alchronos.drink.timer.start")
     
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
