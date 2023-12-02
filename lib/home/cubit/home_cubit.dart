@@ -29,12 +29,12 @@ class HomeCubit extends Cubit<HomeState> {
   final StorageRepository storageRepository;
   final workmanagerUniqueName = 'com.idlewild.alchronos.drink.timer.start';
   final workmanagerTaskName = 'com.idlewild.alchronos.drink.timer.start';
-  final StreamController<double> _durationStreamController = StreamController();
-  Stream<double> get durationStream => _durationStreamController.stream;
+  final StreamController<int> _durationStreamController = StreamController();
+  Stream<int> get durationStream => _durationStreamController.stream;
 
   Future<void> init() async {
     final timerDuration = await getPreferredDuration();
-    _durationStreamController.add(timerDuration.minutesToHours);
+    _durationStreamController.add(timerDuration.minutes);
 
     final partialRun = await getPartialRun(DateTime.now());
     if (partialRun == null) {
@@ -104,6 +104,6 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> writedPreferredDuration(TimerDuration timerDuration) async {
     await storageRepository.writeTimerDurationPreference(timerDuration);
-    _durationStreamController.add(timerDuration.minutesToHours);
+    _durationStreamController.add(timerDuration.minutes);
   }
 }

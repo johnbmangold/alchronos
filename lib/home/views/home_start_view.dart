@@ -29,10 +29,10 @@ class HomeStartView extends StatelessWidget {
               stream: cubit.durationStream,
               builder: (buildContext, snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
-                  return Text(l10n.hourLabel(snapshot.data!));
+                  return Text(l10n.minutesLabel(snapshot.data!));
                 }
 
-                return Text(l10n.staticHourLabel);
+                return Text(l10n.minutesLabel(TimerDuration.standard.minutes));
               },
             ),
           ),
@@ -123,8 +123,6 @@ enum TimerDuration implements Comparable<TimerDuration> {
       );
 
   int get minutesToSeconds => minutes * 60;
-
-  double get minutesToHours => minutes / 60;
 }
 
 class HomeBottomSheet extends StatefulWidget {
@@ -153,7 +151,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       child: Column(
         children: [
           ListTile(
-            title: Text(widget.l10n.hourLabel(1)),
+            title:
+                Text(widget.l10n.minutesLabel(TimerDuration.standard.minutes)),
             leading: Radio<TimerDuration>(
               value: TimerDuration.standard,
               groupValue: _currentDuration,
@@ -164,7 +163,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             },
           ),
           ListTile(
-            title: Text(widget.l10n.hourLabel(1.5)),
+            title: Text(widget.l10n.minutesLabel(TimerDuration.longer.minutes)),
             leading: Radio<TimerDuration>(
               value: TimerDuration.longer,
               groupValue: _currentDuration,
@@ -175,7 +174,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             },
           ),
           ListTile(
-            title: Text(widget.l10n.hourLabel(2)),
+            title:
+                Text(widget.l10n.minutesLabel(TimerDuration.longest.minutes)),
             leading: Radio<TimerDuration>(
               value: TimerDuration.longest,
               groupValue: _currentDuration,

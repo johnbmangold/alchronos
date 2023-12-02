@@ -55,12 +55,13 @@
     "@backIconSemanticsLabel": {
         "description": "Etiqueta TalkBack para la flecha hacia atrás"
     },
-    "hourLabel": "{hour, plural, one{{hour} Hora} other{{hour} Horas}}",
-    "@hourLabel": {
-        "description": "Label for displaying hour values"
-    },
-    "staticHourLabel": "1 Hora",
-    "@staticHourLabel": {
-        "description": "Static text for default duration"
+    "minutesLabel": "{minutes} minutos",
+    "@minutesLabel": {
+        "description": "Label for duration length in minutes",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
     }
 }

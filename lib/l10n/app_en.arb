@@ -55,12 +55,13 @@
     "@backIconSemanticsLabel": {
         "description": "TalkBack label for back arrow"
     },
-    "hourLabel": "{hour, plural, one{{hour} Hour} other{{hour} Hours}}",
-    "@hourLabel": {
-        "description": "Label for displaying hour values"
-    },
-    "staticHourLabel": "1 Hour",
-    "@staticHourLabel": {
-        "description": "Static text for default duration"
+    "minutesLabel": "{minutes} minutes",
+    "@minutesLabel": {
+        "description": "Label for duration length in minutes",
+        "placeholders": {
+            "minutes": {
+                "type": "int"
+            }
+        }
     }
 }
