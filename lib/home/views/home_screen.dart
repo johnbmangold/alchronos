@@ -1,4 +1,3 @@
-import 'package:alchronos/about/about.dart';
 import 'package:alchronos/home/views/loading_view.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
@@ -20,12 +19,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      drawer: const HomeDrawer(),
-      body: SafeArea(
-        bottom: false,
-        child: BlocProvider(
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        body: BlocProvider(
           create: (_) => HomeCubit(
             logger: getIt.get<Logger>(),
             partialRunRepository: getIt.get<PartialRunRepository>(),
@@ -36,42 +33,6 @@ class HomeScreen extends StatelessWidget {
           )..init(),
           child: const HomeBody(),
         ),
-      ),
-    );
-  }
-}
-
-class HomeDrawer extends StatelessWidget {
-  const HomeDrawer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).extension<CustomColors>()!.brand,
-            ),
-            child: Text(
-              l10n.appName,
-              semanticsLabel: l10n.drawerTitleSemanticsLabel,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              l10n.drawerAbout,
-              semanticsLabel: l10n.drawerAboutSemanticsLabel,
-            ),
-            onTap: () async {
-              Navigator.pop(context);
-              await Navigator.of(context).push(AboutScreen.route);
-            },
-          ),
-        ],
       ),
     );
   }

@@ -54,5 +54,9 @@
     "backIconSemanticsLabel": "Back",
     "@backIconSemanticsLabel": {
         "description": "TalkBack label for back arrow"
+    },
+    "hourLabel": "{hour, plural, one{{hour} Hour} other{{hour} Hours}}",
+    "@hourLabel": {
+        "description": "Label for displaying hour values"
     }
 }

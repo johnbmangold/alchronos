@@ -54,5 +54,9 @@
     "backIconSemanticsLabel": "Volver",
     "@backIconSemanticsLabel": {
         "description": "Etiqueta TalkBack para la flecha hacia atrás"
+    },
+    "hourLabel": "{hour, plural, one{{hour} Hora} other{{hour} Horas}}",
+    "@hourLabel": {
+        "description": "Label for displaying hour values"
     }
 }
