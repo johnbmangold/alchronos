@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:alchronos/home/models/models.dart';
+import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,23 +19,35 @@ class HomeCubit extends Cubit<HomeState> {
     required this.partialRunRepository,
     required this.flutterLocalNotificationsPlugin,
     required this.l10n,
+    required this.storageRepository,
   }) : super(HomeInitial());
 
   final Logger logger;
   final PartialRunRepository partialRunRepository;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final AppLocalizations l10n;
+  final StorageRepository storageRepository;
   final workmanagerUniqueName = 'com.idlewild.alchronos.drink.timer.start';
   final workmanagerTaskName = 'com.idlewild.alchronos.drink.timer.start';
+  final StreamController<double> _durationStreamController = StreamController();
+  Stream<double> get durationStream => _durationStreamController.stream;
 
   Future<void> init() async {
+    final timerDuration = await getPreferredDuration();
+    _durationStreamController.add(timerDuration.minutesToHours);
+
     final partialRun = await getPartialRun(DateTime.now());
     if (partialRun == null) {
       emit(HomeStart());
       return;
     }
 
-    emit(HomeRunning(partialRun: partialRun));
+    emit(
+      HomeRunning(
+        partialRun: partialRun,
+        totalDurationInSeconds: timerDuration.minutesToSeconds,
+      ),
+    );
   }
 
   void reset() {
@@ -40,11 +55,14 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> start() async {
+    // get preferred duration
+    final timerDuration = await getPreferredDuration();
+
     // set workmanager task
     await Workmanager().registerOneOffTask(
       workmanagerUniqueName,
       workmanagerTaskName,
-      initialDelay: const Duration(minutes: oneHourInMinutes),
+      initialDelay: Duration(minutes: timerDuration.minutes),
       inputData: {
         workmanagerTitleKey: l10n.drinkTimerComplete,
         workmanagerMessageKey: l10n.notificationMessage,
@@ -54,7 +72,12 @@ class HomeCubit extends Cubit<HomeState> {
     final partialRun = await _createOneHourPartialRun(DateTime.now());
 
     // emit running state
-    emit(HomeRunning(partialRun: partialRun));
+    emit(
+      HomeRunning(
+        partialRun: partialRun,
+        totalDurationInSeconds: timerDuration.minutesToSeconds,
+      ),
+    );
   }
 
   Future<PartialRun?> getPartialRun(DateTime currentTime) async {
@@ -66,10 +89,21 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<PartialRun> _createOneHourPartialRun(DateTime now) async {
+    final timerDuration = await getPreferredDuration();
+    final durationInSeconds = timerDuration.minutesToSeconds;
     final newPartialRun = PartialRun();
-    newPartialRun.secondsRemaining = oneHourInSeconds;
-    newPartialRun.endTime = now.add(Duration(seconds: oneHourInSeconds));
+    newPartialRun.secondsRemaining = durationInSeconds;
+    newPartialRun.endTime = now.add(Duration(seconds: durationInSeconds));
     await _setPartialRun(newPartialRun);
     return newPartialRun;
+  }
+
+  Future<TimerDuration> getPreferredDuration() async {
+    return storageRepository.readTimerDurationPreference();
+  }
+
+  Future<void> writedPreferredDuration(TimerDuration timerDuration) async {
+    await storageRepository.writeTimerDurationPreference(timerDuration);
+    _durationStreamController.add(timerDuration.minutesToHours);
   }
 }

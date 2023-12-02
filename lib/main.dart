@@ -4,7 +4,7 @@ import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
 import 'package:alchronos/repositories/repositories.dart';
-import 'package:alchronos/services/partial_run_service.dart';
+import 'package:alchronos/services/services.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -17,10 +17,8 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const oneHourInMinutes = 60;
-const oneMinuteInSeconds = 60;
-int get oneHourInSeconds => oneHourInMinutes * oneMinuteInSeconds;
 const workmanagerTitleKey = 'title';
 const workmanagerMessageKey = 'message';
 const fallbackTitle = 'Drink Timer Complete';
@@ -112,6 +110,32 @@ void registerDependencies() {
   getIt.registerLazySingleton(
     () =>
         PartialRunRepository(partialRunService: getIt.get<PartialRunService>()),
+  );
+
+  // Flutter Secure Storage
+  const androidOptions = AndroidOptions(
+    encryptedSharedPreferences: true,
+  );
+  const iosOptions =
+      IOSOptions(accessibility: KeychainAccessibility.first_unlock);
+  getIt.registerLazySingleton(
+    () => const FlutterSecureStorage(
+      aOptions: androidOptions,
+      iOptions: iosOptions,
+    ),
+  );
+
+  // Storage Service
+  getIt.registerLazySingleton(
+    () =>
+        StorageService(flutterSecureStorage: getIt.get<FlutterSecureStorage>()),
+  );
+
+  // Storage Repository
+  getIt.registerLazySingleton(
+    () => StorageRepository(
+      storageService: getIt.get<StorageService>(),
+    ),
   );
 }
 

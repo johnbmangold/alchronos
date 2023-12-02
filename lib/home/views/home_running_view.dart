@@ -10,9 +10,14 @@ import 'package:wave/wave.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeRunningView extends StatefulWidget {
-  const HomeRunningView({super.key, required this.partialRun});
+  const HomeRunningView({
+    super.key,
+    required this.partialRun,
+    required this.totalDurationInSeconds,
+  });
 
   final PartialRun partialRun;
+  final int totalDurationInSeconds;
 
   @override
   State<StatefulWidget> createState() => _HomeRunningViewState();
@@ -132,7 +137,8 @@ class _HomeRunningViewState extends State<HomeRunningView>
   void _calculateTimeDisplay() {
     final timeDifference = Duration(seconds: _timeInSeconds);
     final calculatedOpacity =
-        (oneHourInSeconds - timeDifference.inSeconds) / oneHourInSeconds;
+        (widget.totalDurationInSeconds - timeDifference.inSeconds) /
+            widget.totalDurationInSeconds;
     _opacity = switch (calculatedOpacity) {
       < 0.0 => 0.0,
       > 1.0 => 1.0,
@@ -143,6 +149,10 @@ class _HomeRunningViewState extends State<HomeRunningView>
 
   String _format(Duration duration) {
     final initialFormat = duration.toString().split('.').first.padLeft(8, '0');
+    if (duration.inMinutes > 59) {
+      return initialFormat;
+    }
+
     return initialFormat.substring(initialFormat.indexOf(':') + 1);
   }
 

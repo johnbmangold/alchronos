@@ -40,6 +40,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.3.1
+  flutter_secure_storage: ^9.0.0
   get_it: ^7.6.0
   intl: any
   isar: ^3.1.0+1

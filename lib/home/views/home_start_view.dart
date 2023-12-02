@@ -19,11 +19,22 @@ class HomeStartView extends StatelessWidget {
             onPressed: () async {
               await showModalBottomSheet<Container>(
                 context: context,
-                builder: (localContext) =>
-                    HomeBottomSheet(l10n: AppLocalizations.of(context)!),
+                builder: (localContext) => HomeBottomSheet(
+                  l10n: AppLocalizations.of(context)!,
+                  cubit: cubit,
+                ),
               );
             },
-            child: const Text('1 hour'),
+            child: StreamBuilder(
+              stream: cubit.durationStream,
+              builder: (buildContext, snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  return Text(l10n.hourLabel(snapshot.data!));
+                }
+
+                return Text(l10n.staticHourLabel);
+              },
+            ),
           ),
         ],
       ),
@@ -94,22 +105,33 @@ class HomeDrawer extends StatelessWidget {
 }
 
 enum TimerDuration implements Comparable<TimerDuration> {
-  standard(value: 60),
-  longer(value: 90),
-  longest(value: 120);
+  standard(minutes: 60),
+  longer(minutes: 90),
+  longest(minutes: 120);
 
-  const TimerDuration({required this.value});
+  const TimerDuration({required this.minutes});
 
-  final int value;
+  final int minutes;
 
   @override
-  int compareTo(TimerDuration other) => value - other.value;
+  int compareTo(TimerDuration other) => minutes - other.minutes;
+
+  static TimerDuration fromString(String name) =>
+      TimerDuration.values.firstWhere(
+        (element) => element.name == name,
+        orElse: () => TimerDuration.standard,
+      );
+
+  int get minutesToSeconds => minutes * 60;
+
+  double get minutesToHours => minutes / 60;
 }
 
 class HomeBottomSheet extends StatefulWidget {
-  const HomeBottomSheet({super.key, required this.l10n});
+  const HomeBottomSheet({super.key, required this.l10n, required this.cubit});
 
   final AppLocalizations l10n;
+  final HomeCubit cubit;
 
   @override
   State<StatefulWidget> createState() => _HomeBottomSheetState();
@@ -135,16 +157,10 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.standard,
               groupValue: _currentDuration,
-              onChanged: (newDuration) {
-                setState(() {
-                  _currentDuration = newDuration;
-                });
-              },
+              onChanged: _setCurrentDuration,
             ),
-            onTap: () {
-              setState(() {
-                _currentDuration = TimerDuration.standard;
-              });
+            onTap: () async {
+              await _setCurrentDuration(TimerDuration.standard);
             },
           ),
           ListTile(
@@ -152,16 +168,10 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.longer,
               groupValue: _currentDuration,
-              onChanged: (newDuration) {
-                setState(() {
-                  _currentDuration = newDuration;
-                });
-              },
+              onChanged: _setCurrentDuration,
             ),
-            onTap: () {
-              setState(() {
-                _currentDuration = TimerDuration.longer;
-              });
+            onTap: () async {
+              await _setCurrentDuration(TimerDuration.longer);
             },
           ),
           ListTile(
@@ -169,20 +179,24 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.longest,
               groupValue: _currentDuration,
-              onChanged: (newDuration) {
-                setState(() {
-                  _currentDuration = newDuration;
-                });
-              },
+              onChanged: _setCurrentDuration,
             ),
-            onTap: () {
-              setState(() {
-                _currentDuration = TimerDuration.longest;
-              });
+            onTap: () async {
+              await _setCurrentDuration(TimerDuration.longest);
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _setCurrentDuration(TimerDuration? timerDuration) async {
+    setState(() {
+      _currentDuration = timerDuration;
+    });
+
+    if (_currentDuration != null) {
+      await widget.cubit.writedPreferredDuration(_currentDuration!);
+    }
   }
 }

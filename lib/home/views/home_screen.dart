@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
             flutterLocalNotificationsPlugin:
                 getIt.get<FlutterLocalNotificationsPlugin>(),
             l10n: AppLocalizations.of(context)!,
+            storageRepository: getIt.get<StorageRepository>(),
             // ignore: discarded_futures
           )..init(),
           child: const HomeBody(),
@@ -58,6 +59,7 @@ class HomeBody extends StatelessWidget {
             (HomeStart _) => const HomeStartView(),
             (HomeRunning runningState) => HomeRunningView(
                 partialRun: runningState.partialRun,
+                totalDurationInSeconds: runningState.totalDurationInSeconds,
               ),
             (_) => const LoadingView(),
           },
