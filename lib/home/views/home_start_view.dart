@@ -17,13 +17,16 @@ class HomeStartView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await showModalBottomSheet<Container>(
-                context: context,
-                builder: (localContext) => HomeBottomSheet(
-                  l10n: AppLocalizations.of(context)!,
-                  cubit: cubit,
-                ),
-              );
+              await cubit.getPreferredDuration().then((duration) async {
+                await showModalBottomSheet<Container>(
+                  context: context,
+                  builder: (localContext) => HomeBottomSheet(
+                    l10n: AppLocalizations.of(context)!,
+                    cubit: cubit,
+                    initialDuration: duration,
+                  ),
+                );
+              });
             },
             child: StreamBuilder(
               stream: cubit.durationStream,
@@ -126,10 +129,16 @@ enum TimerDuration implements Comparable<TimerDuration> {
 }
 
 class HomeBottomSheet extends StatefulWidget {
-  const HomeBottomSheet({super.key, required this.l10n, required this.cubit});
+  const HomeBottomSheet({
+    super.key,
+    required this.l10n,
+    required this.cubit,
+    required this.initialDuration,
+  });
 
   final AppLocalizations l10n;
   final HomeCubit cubit;
+  final TimerDuration initialDuration;
 
   @override
   State<StatefulWidget> createState() => _HomeBottomSheetState();
@@ -137,6 +146,12 @@ class HomeBottomSheet extends StatefulWidget {
 
 class _HomeBottomSheetState extends State<HomeBottomSheet> {
   TimerDuration? _currentDuration = TimerDuration.standard;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentDuration = widget.initialDuration;
+  }
 
   @override
   Widget build(BuildContext context) {
