@@ -171,10 +171,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.standard,
               groupValue: _currentDuration,
-              onChanged: _setCurrentDuration,
+              onChanged: (newDuration) async =>
+                  _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
-              await _setCurrentDuration(TimerDuration.standard);
+              await _setCurrentDuration(context, TimerDuration.standard);
             },
           ),
           ListTile(
@@ -182,10 +183,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.longer,
               groupValue: _currentDuration,
-              onChanged: _setCurrentDuration,
+              onChanged: (newDuration) async =>
+                  _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
-              await _setCurrentDuration(TimerDuration.longer);
+              await _setCurrentDuration(context, TimerDuration.longer);
             },
           ),
           ListTile(
@@ -194,10 +196,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.longest,
               groupValue: _currentDuration,
-              onChanged: _setCurrentDuration,
+              onChanged: (newDuration) async =>
+                  _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
-              await _setCurrentDuration(TimerDuration.longest);
+              await _setCurrentDuration(context, TimerDuration.longest);
             },
           ),
         ],
@@ -205,10 +208,15 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
     );
   }
 
-  Future<void> _setCurrentDuration(TimerDuration? timerDuration) async {
+  Future<void> _setCurrentDuration(
+    BuildContext context,
+    TimerDuration? timerDuration,
+  ) async {
     setState(() {
       _currentDuration = timerDuration;
     });
+
+    Navigator.of(context).pop();
 
     if (_currentDuration != null) {
       await widget.cubit.writedPreferredDuration(_currentDuration!);
