@@ -216,10 +216,13 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       _currentDuration = timerDuration;
     });
 
-    Navigator.of(context).pop();
-
-    if (_currentDuration != null) {
-      await widget.cubit.writedPreferredDuration(_currentDuration!);
+    if (_currentDuration == null) {
+      Navigator.of(context).pop();
+      return;
     }
+
+    await widget.cubit
+        .writedPreferredDuration(_currentDuration!)
+        .then((_) => Navigator.of(context).pop());
   }
 }
