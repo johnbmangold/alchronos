@@ -12,10 +12,8 @@ class LoadingView extends StatelessWidget {
       child: Center(
         key: const Key('loadingView'),
         child: AvatarGlow(
-          endRadius: 150,
           glowColor: color,
           duration: const Duration(milliseconds: 1000),
-          repeatPauseDuration: const Duration(milliseconds: 5),
           child: Container(
             width: 100,
             height: 100,
