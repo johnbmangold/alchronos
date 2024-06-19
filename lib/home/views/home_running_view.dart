@@ -179,7 +179,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
         durations: durations,
         heightPercentages: heightPercentages,
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       size: Size(width, height),
       waveAmplitude: 0.0,
     );
