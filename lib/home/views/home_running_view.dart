@@ -1,19 +1,17 @@
 import 'dart:async';
 
+import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/home.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({
-    super.key,
-    required this.partialRun,
-    required this.totalDurationInSeconds,
+    required this.partialRun, required this.totalDurationInSeconds, super.key,
   });
 
   final PartialRun partialRun;
@@ -28,7 +26,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
   late Timer _timer;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
-  double _opacity = 0.0;
+  double _opacity = 0;
   late int _timeInSeconds;
   late final HomeCubit cubit;
 
@@ -181,7 +179,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       size: Size(width, height),
-      waveAmplitude: 0.0,
+      waveAmplitude: 0,
     );
   }
 

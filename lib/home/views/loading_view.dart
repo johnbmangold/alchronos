@@ -1,13 +1,13 @@
 import 'package:alchronos/main.dart';
-import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/material.dart';
 
 class LoadingView extends StatelessWidget {
   const LoadingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Theme.of(context).extension<CustomColors>()!.brand!;
+    final color = Theme.of(context).extension<CustomColors>()!.brand!;
     return SafeArea(
       child: Center(
         key: const Key('loadingView'),

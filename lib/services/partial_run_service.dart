@@ -20,7 +20,6 @@ class PartialRunService {
     final dir = await getApplicationDocumentsDirectory();
     return Isar.open(
       [PartialRunSchema],
-      inspector: true,
       directory: dir.path,
       name: dbName,
     );

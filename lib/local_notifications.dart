@@ -11,32 +11,29 @@ class LocalNotifications {
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  Future<void> initialize(bool headless) async {
+  Future<void> initialize({required bool headless}) async {
     /// A notification action which triggers a App navigation event
-    const String navigationActionId = 'id_3';
+    const navigationActionId = 'id_3';
 
     // details of app launch
     await _checkAppLaunch();
 
     // Android notification settings
-    final AndroidInitializationSettings initializationSettingsAndroid =
-        _getAndroidSettings();
+    final initializationSettingsAndroid = _getAndroidSettings();
 
     // Darwin notification categories (channels)
-    final List<DarwinNotificationCategory> darwinNotificationCategories =
+    final darwinNotificationCategories =
         _getDarwinCategories(navigationActionId);
 
     // Darwin notification settings
-    final DarwinInitializationSettings initializationSettingsDarwin =
+    final initializationSettingsDarwin =
         _getDarwinSettings(darwinNotificationCategories);
 
     // Linux Notification Settings
-    final LinuxInitializationSettings initializationSettingsLinux =
-        _getLinuxSettings();
+    final initializationSettingsLinux = _getLinuxSettings();
 
     // Notification settings
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
+    final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
       macOS: initializationSettingsDarwin,
@@ -87,11 +84,10 @@ class LocalNotifications {
   }
 
   Future<void> _checkAppLaunch() async {
-    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-        !kIsWeb && Platform.isLinux
-            ? null
-            : await flutterLocalNotificationsPlugin
-                .getNotificationAppLaunchDetails();
+    final notificationAppLaunchDetails = !kIsWeb && Platform.isLinux
+        ? null
+        : await flutterLocalNotificationsPlugin
+            .getNotificationAppLaunchDetails();
 
     // determine if action is needed from selected notification
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
@@ -117,10 +113,10 @@ class LocalNotifications {
     String navigationActionId,
   ) {
     /// Defines a iOS/MacOS notification category for text input actions.
-    const String darwinNotificationCategoryText = 'textCategory';
+    const darwinNotificationCategoryText = 'textCategory';
 
     /// Defines a iOS/MacOS notification category for plain actions.
-    const String darwinNotificationCategoryPlain = 'plainCategory';
+    const darwinNotificationCategoryPlain = 'plainCategory';
 
     return <DarwinNotificationCategory>[
       DarwinNotificationCategory(

@@ -1,8 +1,8 @@
 import 'package:alchronos/about/views/about_screen.dart';
+import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeStartView extends StatelessWidget {
@@ -130,10 +130,10 @@ enum TimerDuration implements Comparable<TimerDuration> {
 
 class HomeBottomSheet extends StatefulWidget {
   const HomeBottomSheet({
-    super.key,
     required this.l10n,
     required this.cubit,
     required this.initialDuration,
+    super.key,
   });
 
   final AppLocalizations l10n;

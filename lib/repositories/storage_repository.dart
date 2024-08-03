@@ -5,7 +5,7 @@ class StorageRepository {
   const StorageRepository({required this.storageService});
 
   final StorageService storageService;
-  final String timerDurationKey = 'timer_duration_key';
+  String get timerDurationKey => 'timer_duration_key';
 
   Future<void> writeTimerDurationPreference(TimerDuration timerDuration) async {
     await storageService.writeValue(timerDurationKey, timerDuration.name);

@@ -5,10 +5,10 @@ import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:workmanager/workmanager.dart';
 
 part 'home_state.dart';
@@ -91,9 +91,9 @@ class HomeCubit extends Cubit<HomeState> {
   Future<PartialRun> _createOneHourPartialRun(DateTime now) async {
     final timerDuration = await getPreferredDuration();
     final durationInSeconds = timerDuration.minutesToSeconds;
-    final newPartialRun = PartialRun();
-    newPartialRun.secondsRemaining = durationInSeconds;
-    newPartialRun.endTime = now.add(Duration(seconds: durationInSeconds));
+    final newPartialRun = PartialRun()
+      ..secondsRemaining = durationInSeconds
+      ..endTime = now.add(Duration(seconds: durationInSeconds));
     await _setPartialRun(newPartialRun);
     return newPartialRun;
   }

@@ -11,7 +11,7 @@ import 'partial_run_repository_test.mocks.dart';
 void main() async {
   late MockPartialRunService mockPartialRunService;
   late PartialRunRepository partialRunRepository;
-  final DateTime afterDate = DateTime(2070);
+  final afterDate = DateTime(2070);
 
   setUp(() {
     mockPartialRunService = MockPartialRunService();
@@ -20,9 +20,9 @@ void main() async {
   });
 
   PartialRun getPartialRunAfter() {
-    final partialRun = PartialRun();
-    partialRun.endTime = afterDate;
-    partialRun.secondsRemaining = 22;
+    final partialRun = PartialRun()
+      ..endTime = afterDate
+      ..secondsRemaining = 22;
     return partialRun;
   }
 

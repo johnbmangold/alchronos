@@ -1,15 +1,15 @@
+import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:alchronos/home/views/home_running_view.dart';
+import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:alchronos/home/views/loading_view.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
-import 'package:alchronos/home/views/home_running_view.dart';
-import 'package:alchronos/home/views/home_start_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -57,7 +57,7 @@ class HomeBody extends StatelessWidget {
           },
           child: switch (state) {
             (HomeStart _) => const HomeStartView(),
-            (HomeRunning runningState) => HomeRunningView(
+            (final HomeRunning runningState) => HomeRunningView(
                 partialRun: runningState.partialRun,
                 totalDurationInSeconds: runningState.totalDurationInSeconds,
               ),

@@ -42,6 +42,7 @@ dependencies:
   flutter_native_splash: ^2.3.1
   flutter_secure_storage: ^9.0.0
   get_it: ^7.6.0
+  injectable: ^2.4.4
   intl: any
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
@@ -57,10 +58,12 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  injectable_generator: ^2.4.2
   integration_test:
     sdk: flutter
   isar_generator: ^3.1.0+1
   mockito: ^5.4.2
+  very_good_analysis: ^6.0.0
 
 flutter_launcher_icons:
   android: false

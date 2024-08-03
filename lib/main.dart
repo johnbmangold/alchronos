@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:alchronos/firebase_options.dart';
+import 'package:alchronos/home/views/home_screen.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
 import 'package:alchronos/repositories/repositories.dart';
@@ -10,20 +11,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:alchronos/home/views/home_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const workmanagerTitleKey = 'title';
 const workmanagerMessageKey = 'message';
 const fallbackTitle = 'Drink Timer Complete';
 const fallbackMessage =
-    'You can order another drink when you\'re feeling up to it.';
+    "You can order another drink when you're feeling up to it.";
 
 final getIt = GetIt.instance;
 
@@ -36,14 +36,14 @@ final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await initFirebase();
 
   registerDependencies();
 
-  await getIt.get<LocalNotifications>().initialize(false);
+  await getIt.get<LocalNotifications>().initialize(headless: false);
 
   await Workmanager().initialize(
     callbackDispatcher,
@@ -145,12 +145,12 @@ class AlchronosApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final alchronosPink = Colors.pink.shade100;
-    CustomColors lightCustomColors = CustomColors(
+    var lightCustomColors = CustomColors(
       brand: alchronosPink,
       drinkStartColor: Colors.amber.shade300,
       drinkEndColor: Colors.amberAccent.shade700,
     );
-    CustomColors darkCustomColors = CustomColors(
+    var darkCustomColors = CustomColors(
       brand: alchronosPink,
       drinkStartColor: Colors.amber.shade300,
       drinkEndColor: Colors.amberAccent.shade700,
@@ -169,7 +169,6 @@ class AlchronosApp extends StatelessWidget {
         } else {
           lightColorScheme = ColorScheme.fromSeed(
             seedColor: alchronosPink,
-            brightness: Brightness.light,
           );
           darkColorScheme = ColorScheme.fromSeed(
             seedColor: alchronosPink,
@@ -179,7 +178,6 @@ class AlchronosApp extends StatelessWidget {
 
         return MaterialApp(
           title: 'Alchronos',
-          themeMode: ThemeMode.system,
           theme: ThemeData(
             colorScheme: lightColorScheme,
             extensions: [lightCustomColors],
@@ -202,14 +200,13 @@ class AlchronosApp extends StatelessWidget {
 Future<void> showNotificationInBackground(String title, String message) async {
   final logger = Logger(
     printer: PrettyPrinter(),
-  );
-  logger.i('[BackgroundFetch] Headless event received');
+  )..i('[BackgroundFetch] Headless event received');
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final localNotifications = LocalNotifications(
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
   );
   logger.i('[BackgroundFetch] Initializing notifications');
-  await localNotifications.initialize(true);
+  await localNotifications.initialize(headless: true);
   logger.i('[BackgroundFetch] Showing notification');
   await flutterLocalNotificationsPlugin.show(
     localNotifications.getNotificationId(),
@@ -224,8 +221,7 @@ Future<void> showNotificationInBackground(String title, String message) async {
 void notificationTapBackground(NotificationResponse notificationResponse) {
   final logger = Logger(
     printer: PrettyPrinter(),
-  );
-  logger.i('notification(${notificationResponse.id}) action tapped: '
+  )..i('notification(${notificationResponse.id}) action tapped: '
       '${notificationResponse.actionId} with'
       ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
