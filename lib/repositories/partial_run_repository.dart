@@ -1,6 +1,8 @@
 import 'package:alchronos/home/models/partial_run.dart';
 import 'package:alchronos/services/partial_run_service.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class PartialRunRepository {
   PartialRunRepository({required PartialRunService partialRunService})
       : _partialRunService = partialRunService;

@@ -1,6 +1,8 @@
 import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/services/services.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class StorageRepository {
   const StorageRepository({required this.storageService});
 

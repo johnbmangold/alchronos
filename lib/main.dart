@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:alchronos/configurator.dart';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
-import 'package:alchronos/repositories/repositories.dart';
-import 'package:alchronos/services/services.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -13,8 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:workmanager/workmanager.dart';
@@ -36,12 +33,10 @@ final StreamController<String?> selectNotificationStream =
     StreamController<String?>.broadcast();
 
 Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
 
   await initFirebase();
-
-  registerDependencies();
+  configureDependencies();
 
   await getIt.get<LocalNotifications>().initialize(headless: false);
 
@@ -51,8 +46,6 @@ Future<void> main() async {
   );
 
   runApp(const AlchronosApp());
-
-  FlutterNativeSplash.remove();
 }
 
 // Mandatory if the App is obfuscated or using Flutter 3.1+
@@ -80,63 +73,6 @@ Future<void> initFirebase() async {
     FirebaseCrashlytics.instance.recordError(error, stack);
     return true;
   };
-}
-
-void registerDependencies() {
-  // Logger
-  getIt.registerLazySingleton<Logger>(
-    () => Logger(
-      printer: PrettyPrinter(),
-    ),
-  );
-
-  // FlutterLocalNotificationPlugin
-  getIt.registerLazySingleton<FlutterLocalNotificationsPlugin>(
-    FlutterLocalNotificationsPlugin.new,
-  );
-
-  // LocalNotifications
-  getIt.registerLazySingleton(
-    () => LocalNotifications(
-      flutterLocalNotificationsPlugin:
-          getIt.get<FlutterLocalNotificationsPlugin>(),
-    ),
-  );
-
-  // PartialRunService
-  getIt.registerLazySingleton(PartialRunService.new);
-
-  // PartialRunRepository
-  getIt.registerLazySingleton(
-    () =>
-        PartialRunRepository(partialRunService: getIt.get<PartialRunService>()),
-  );
-
-  // Flutter Secure Storage
-  const androidOptions = AndroidOptions(
-    encryptedSharedPreferences: true,
-  );
-  const iosOptions =
-      IOSOptions(accessibility: KeychainAccessibility.first_unlock);
-  getIt.registerLazySingleton(
-    () => const FlutterSecureStorage(
-      aOptions: androidOptions,
-      iOptions: iosOptions,
-    ),
-  );
-
-  // Storage Service
-  getIt.registerLazySingleton(
-    () =>
-        StorageService(flutterSecureStorage: getIt.get<FlutterSecureStorage>()),
-  );
-
-  // Storage Repository
-  getIt.registerLazySingleton(
-    () => StorageRepository(
-      storageService: getIt.get<StorageService>(),
-    ),
-  );
 }
 
 class AlchronosApp extends StatelessWidget {

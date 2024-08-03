@@ -5,7 +5,9 @@ import 'package:alchronos/main.dart';
 import 'package:alchronos/received_notification.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class LocalNotifications {
   const LocalNotifications({required this.flutterLocalNotificationsPlugin});
 

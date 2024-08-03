@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:alchronos/home/home.dart';
+import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+@injectable
 class PartialRunService {
   PartialRunService() {
     unawaited(db = _openDb());
