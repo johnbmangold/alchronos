@@ -1,8 +1,8 @@
+import 'package:alchronos/configurator.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:alchronos/home/views/loading_view.dart';
-import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';

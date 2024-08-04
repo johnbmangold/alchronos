@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -21,8 +20,6 @@ const workmanagerMessageKey = 'message';
 const fallbackTitle = 'Drink Timer Complete';
 const fallbackMessage =
     "You can order another drink when you're feeling up to it.";
-
-final getIt = GetIt.instance;
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function
