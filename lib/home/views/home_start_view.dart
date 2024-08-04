@@ -84,11 +84,12 @@ class HomeStartView extends StatelessWidget {
 }
 
 class _OverflowLottieAsset extends StatelessWidget {
-  const _OverflowLottieAsset(
-      {required this.assetName,
-      required this.overflowWidthHeight,
-      required this.widthHeight,
-      super.key});
+  const _OverflowLottieAsset({
+    required this.assetName,
+    required this.overflowWidthHeight,
+    required this.widthHeight,
+    super.key,
+  });
 
   final String assetName;
   final double widthHeight;
