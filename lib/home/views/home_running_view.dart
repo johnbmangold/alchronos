@@ -6,12 +6,15 @@ import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({
-    required this.partialRun, required this.totalDurationInSeconds, super.key,
+    required this.partialRun,
+    required this.totalDurationInSeconds,
+    super.key,
   });
 
   final PartialRun partialRun;
@@ -29,6 +32,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
   double _opacity = 0;
   late int _timeInSeconds;
   late final HomeCubit cubit;
+  final double lottieWidthHeight = 100;
 
   @override
   void initState() {
@@ -93,12 +97,20 @@ class _HomeRunningViewState extends State<HomeRunningView>
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                key: const Key('runningIcon'),
-                Icons.run_circle_rounded,
-                size: 60,
-                semanticLabel: l10n.runningIconSemanticsLabel,
-              ),
+              if (MediaQuery.of(context).platformBrightness == Brightness.light)
+                Lottie.asset(
+                  'assets/lottie/activeDrinkLight.json',
+                  key: const Key('activeDrinkLight'),
+                  width: lottieWidthHeight,
+                  height: lottieWidthHeight,
+                )
+              else
+                Lottie.asset(
+                  'assets/lottie/activeDrinkDark.json',
+                  key: const Key('activeDrinkDark'),
+                  width: lottieWidthHeight,
+                  height: lottieWidthHeight,
+                ),
               const SizedBox(
                 height: 16,
               ),

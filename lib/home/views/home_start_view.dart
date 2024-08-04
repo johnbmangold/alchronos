@@ -4,9 +4,13 @@ import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeStartView extends StatelessWidget {
   const HomeStartView({super.key});
+
+  double get lottieWidthHeight => 100;
+  double get lottieOverflowWidthHeight => 200;
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +50,20 @@ class HomeStartView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              key: const Key('drinkIcon'),
-              Icons.emoji_food_beverage,
-              size: 60,
-              semanticLabel: l10n.drinkIconSemanticsLabel,
-            ),
+            if (MediaQuery.of(context).platformBrightness == Brightness.light)
+              _OverflowLottieAsset(
+                assetName: 'assets/lottie/waitDrinkLight.json',
+                overflowWidthHeight: lottieOverflowWidthHeight,
+                widthHeight: lottieWidthHeight,
+                key: const Key('waitDrinkLight'),
+              )
+            else
+              _OverflowLottieAsset(
+                assetName: 'assets/lottie/waitDrinkDark.json',
+                overflowWidthHeight: lottieOverflowWidthHeight,
+                widthHeight: lottieWidthHeight,
+                key: const Key('waitDrinkDark'),
+              ),
             const SizedBox(
               height: 16,
             ),
@@ -65,6 +77,35 @@ class HomeStartView extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OverflowLottieAsset extends StatelessWidget {
+  const _OverflowLottieAsset(
+      {required this.assetName,
+      required this.overflowWidthHeight,
+      required this.widthHeight,
+      super.key});
+
+  final String assetName;
+  final double widthHeight;
+  final double overflowWidthHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: widthHeight,
+      width: widthHeight,
+      child: OverflowBox(
+        minHeight: overflowWidthHeight,
+        maxHeight: overflowWidthHeight,
+        minWidth: overflowWidthHeight,
+        maxWidth: overflowWidthHeight,
+        child: Lottie.asset(
+          assetName,
         ),
       ),
     );
