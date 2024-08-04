@@ -25,7 +25,7 @@ class HomeRunningView extends StatefulWidget {
 }
 
 class _HomeRunningViewState extends State<HomeRunningView>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   late Timer _timer;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
@@ -33,11 +33,13 @@ class _HomeRunningViewState extends State<HomeRunningView>
   late int _timeInSeconds;
   late final HomeCubit cubit;
   final double lottieWidthHeight = 100;
+  late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
 
+    _controller = AnimationController(vsync: this);
     WidgetsBinding.instance.addObserver(this);
     cubit = BlocProvider.of<HomeCubit>(context);
     _getDurationSeconds();
@@ -103,6 +105,14 @@ class _HomeRunningViewState extends State<HomeRunningView>
                   key: const Key('activeDrinkLight'),
                   width: lottieWidthHeight,
                   height: lottieWidthHeight,
+                  controller: _controller,
+                  onLoaded: (composition) {
+                    _controller
+                      ..duration = composition.duration
+                      ..repeat(
+                        reverse: true,
+                      );
+                  },
                 )
               else
                 Lottie.asset(
@@ -110,6 +120,14 @@ class _HomeRunningViewState extends State<HomeRunningView>
                   key: const Key('activeDrinkDark'),
                   width: lottieWidthHeight,
                   height: lottieWidthHeight,
+                  controller: _controller,
+                  onLoaded: (composition) {
+                    _controller
+                      ..duration = composition.duration
+                      ..repeat(
+                        reverse: true,
+                      );
+                  },
                 ),
               const SizedBox(
                 height: 16,
