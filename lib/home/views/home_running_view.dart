@@ -99,36 +99,19 @@ class _HomeRunningViewState extends State<HomeRunningView>
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (MediaQuery.of(context).platformBrightness == Brightness.light)
-                Lottie.asset(
-                  'assets/lottie/activeDrinkLight.json',
-                  key: const Key('activeDrinkLight'),
-                  width: lottieWidthHeight,
-                  height: lottieWidthHeight,
-                  controller: _controller,
-                  onLoaded: (composition) {
-                    _controller
-                      ..duration = composition.duration
-                      ..repeat(
-                        reverse: true,
-                      );
-                  },
-                )
-              else
-                Lottie.asset(
-                  'assets/lottie/activeDrinkDark.json',
-                  key: const Key('activeDrinkDark'),
-                  width: lottieWidthHeight,
-                  height: lottieWidthHeight,
-                  controller: _controller,
-                  onLoaded: (composition) {
-                    _controller
-                      ..duration = composition.duration
-                      ..repeat(
-                        reverse: true,
-                      );
-                  },
-                ),
+              Lottie.asset(
+                MediaQuery.of(context).platformBrightness == Brightness.light
+                    ? 'assets/lottie/activeDrinkLight.json'
+                    : 'assets/lottie/activeDrinkDark.json',
+                key: const Key('activeDrinkAnimation'),
+                width: lottieWidthHeight,
+                height: lottieWidthHeight,
+                controller: _controller,
+                onLoaded: (composition) {
+                  _controller.duration = composition.duration;
+                  _startAnimationController();
+                },
+              ),
               const SizedBox(
                 height: 16,
               ),
@@ -142,6 +125,17 @@ class _HomeRunningViewState extends State<HomeRunningView>
           ),
         ],
       ),
+    );
+  }
+
+  void _startAnimationController() {
+    const start = 0.0;
+    const stop = .78;
+    _controller.repeat(
+      reverse: true,
+      min: start,
+      max: stop,
+      period: _controller.duration! * (stop - start),
     );
   }
 

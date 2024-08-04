@@ -50,20 +50,15 @@ class HomeStartView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (MediaQuery.of(context).platformBrightness == Brightness.light)
-              _OverflowLottieAsset(
-                assetName: 'assets/lottie/waitDrinkLight.json',
-                overflowWidthHeight: lottieOverflowWidthHeight,
-                widthHeight: lottieWidthHeight,
-                key: const Key('waitDrinkLight'),
-              )
-            else
-              _OverflowLottieAsset(
-                assetName: 'assets/lottie/waitDrinkDark.json',
-                overflowWidthHeight: lottieOverflowWidthHeight,
-                widthHeight: lottieWidthHeight,
-                key: const Key('waitDrinkDark'),
-              ),
+            _OverflowLottieAsset(
+              assetName:
+                  MediaQuery.of(context).platformBrightness == Brightness.light
+                      ? 'assets/lottie/waitDrinkLight.json'
+                      : 'assets/lottie/waitDrinkDark.json',
+              overflowWidthHeight: lottieOverflowWidthHeight,
+              widthHeight: lottieWidthHeight,
+              key: const Key('waitDrinkAnimation'),
+            ),
             const SizedBox(
               height: 16,
             ),
