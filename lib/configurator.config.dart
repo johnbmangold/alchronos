@@ -8,9 +8,11 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:alchronos/configurator.dart' as _i12;
+import 'package:alchronos/configurator.dart' as _i14;
+import 'package:alchronos/home/cubit/home_cubit.dart' as _i12;
 import 'package:alchronos/local_notifications.dart' as _i5;
 import 'package:alchronos/repositories/partial_run_repository.dart' as _i9;
+import 'package:alchronos/repositories/repositories.dart' as _i13;
 import 'package:alchronos/repositories/storage_repository.dart' as _i10;
 import 'package:alchronos/services/partial_run_service.dart' as _i7;
 import 'package:alchronos/services/services.dart' as _i11;
@@ -48,8 +50,15 @@ extension GetItInjectableX on _i1.GetIt {
         partialRunService: gh<_i7.PartialRunService>()));
     gh.factory<_i10.StorageRepository>(() =>
         _i10.StorageRepository(storageService: gh<_i11.StorageService>()));
+    gh.factory<_i12.HomeCubit>(() => _i12.HomeCubit(
+          logger: gh<_i6.Logger>(),
+          partialRunRepository: gh<_i13.PartialRunRepository>(),
+          flutterLocalNotificationsPlugin:
+              gh<_i3.FlutterLocalNotificationsPlugin>(),
+          storageRepository: gh<_i13.StorageRepository>(),
+        ));
     return this;
   }
 }
 
-class _$AppModule extends _i12.AppModule {}
+class _$AppModule extends _i14.AppModule {}

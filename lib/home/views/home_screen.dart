@@ -3,13 +3,9 @@ import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:alchronos/home/views/loading_view.dart';
-import 'package:alchronos/repositories/repositories.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,15 +19,7 @@ class HomeScreen extends StatelessWidget {
       bottom: false,
       child: Scaffold(
         body: BlocProvider(
-          create: (_) => HomeCubit(
-            logger: getIt.get<Logger>(),
-            partialRunRepository: getIt.get<PartialRunRepository>(),
-            flutterLocalNotificationsPlugin:
-                getIt.get<FlutterLocalNotificationsPlugin>(),
-            l10n: AppLocalizations.of(context)!,
-            storageRepository: getIt.get<StorageRepository>(),
-            // ignore: discarded_futures
-          )..init(),
+          create: (_) => getIt.get<HomeCubit>()..init(),
           child: const HomeBody(),
         ),
       ),

@@ -4,28 +4,28 @@ import 'package:alchronos/home/models/models.dart';
 import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
-import 'package:meta/meta.dart';
 import 'package:workmanager/workmanager.dart';
 
 part 'home_state.dart';
 
+@injectable
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit({
     required this.logger,
     required this.partialRunRepository,
     required this.flutterLocalNotificationsPlugin,
-    required this.l10n,
     required this.storageRepository,
   }) : super(HomeInitial());
 
   final Logger logger;
   final PartialRunRepository partialRunRepository;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  final AppLocalizations l10n;
   final StorageRepository storageRepository;
   final workmanagerUniqueName = 'com.idlewild.alchronos.drink.timer.start';
   final workmanagerTaskName = 'com.idlewild.alchronos.drink.timer.start';
@@ -54,7 +54,8 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeStart());
   }
 
-  Future<void> start() async {
+  Future<void> start(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     // get preferred duration
     final timerDuration = await getPreferredDuration();
 
