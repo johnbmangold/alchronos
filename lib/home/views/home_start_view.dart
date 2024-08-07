@@ -21,7 +21,8 @@ class HomeStartView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await cubit.getPreferredDuration().then((duration) async {
+              final duration = await cubit.getPreferredDuration();
+              if (context.mounted) {
                 await showModalBottomSheet<Container>(
                   context: context,
                   builder: (localContext) => HomeBottomSheet(
@@ -30,7 +31,7 @@ class HomeStartView extends StatelessWidget {
                     initialDuration: duration,
                   ),
                 );
-              });
+              }
             },
             child: StreamBuilder(
               stream: cubit.durationStream,
@@ -258,8 +259,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       return;
     }
 
-    await widget.cubit
-        .writedPreferredDuration(_currentDuration!)
-        .then((_) => Navigator.of(context).pop());
+    await widget.cubit.writedPreferredDuration(_currentDuration!);
+
+    if (context.mounted) Navigator.of(context).pop();
   }
 }
