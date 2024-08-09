@@ -65,7 +65,10 @@ class HomeStartView extends StatelessWidget {
             ),
             FilledButton(
               key: const Key('drinkButton'),
-              onPressed: () => cubit.start(context),
+              onPressed: () => cubit.start(
+                l10n.drinkTimerComplete,
+                l10n.notificationMessage,
+              ),
               child: Text(
                 l10n.drinkButtonText,
                 style: const TextStyle(fontSize: 36),

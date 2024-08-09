@@ -6,7 +6,6 @@ import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
@@ -54,8 +53,10 @@ class HomeCubit extends Cubit<HomeState> {
     emit(HomeStart());
   }
 
-  Future<void> start(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
+  Future<void> start(
+    String drinkTimerComplete,
+    String notificationMessage,
+  ) async {
     // get preferred duration
     final timerDuration = await getPreferredDuration();
 
@@ -65,8 +66,8 @@ class HomeCubit extends Cubit<HomeState> {
       workmanagerTaskName,
       initialDelay: Duration(minutes: timerDuration.minutes),
       inputData: {
-        workmanagerTitleKey: l10n.drinkTimerComplete,
-        workmanagerMessageKey: l10n.notificationMessage,
+        workmanagerTitleKey: drinkTimerComplete,
+        workmanagerMessageKey: notificationMessage,
       },
     );
 
