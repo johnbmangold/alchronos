@@ -14,10 +14,12 @@ void main() {
   configureDependencies();
 
   testWidgets('Finds icon and button', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const AlchronosApp());
+    await tester.runAsync(() async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(const AlchronosApp());
 
-    expect(find.byKey(const Key('loadingView')), findsOneWidget);
+      expect(find.byKey(const Key('loadingView')), findsOneWidget);
+    });
 
     // Initial controls are present
     // expect(find.byKey(const Key('drinkIcon')), findsOneWidget);
