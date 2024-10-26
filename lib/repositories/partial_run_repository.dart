@@ -1,4 +1,4 @@
-import 'package:alchronos/home/models/partial_run.dart';
+import 'package:alchronos/app_database.dart';
 import 'package:alchronos/services/partial_run_service.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,17 +9,20 @@ class PartialRunRepository {
 
   final PartialRunService _partialRunService;
 
-  Future<PartialRun?> getPartialRunAfterTime(DateTime time) {
+  Future<PartialRunData?> getPartialRunAfterTime(DateTime time) {
     return _partialRunService.getPartialRunAfterTime(time);
   }
 
-  Future<int> clearRunsAndPutPartialRun(PartialRun partialRun) async {
+  Future<int> clearRunsAndPutPartialRun(
+    DateTime endTime,
+    int secondsRemaining,
+  ) async {
     await _partialRunService.deleteAllPartialRuns();
-    return _putPartialRun(partialRun);
+    return _putPartialRun(endTime, secondsRemaining);
   }
 
-  Future<int> _putPartialRun(PartialRun partialRun) {
-    return _partialRunService.putPartialRun(partialRun);
+  Future<int> _putPartialRun(DateTime endTime, int secondsRemaining) {
+    return _partialRunService.putPartialRun(endTime, secondsRemaining);
   }
 
   Future<int> count() {

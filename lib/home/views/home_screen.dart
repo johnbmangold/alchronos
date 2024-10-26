@@ -46,7 +46,7 @@ class HomeBody extends StatelessWidget {
           child: switch (state) {
             (HomeStart _) => const HomeStartView(),
             (final HomeRunning runningState) => HomeRunningView(
-                partialRun: runningState.partialRun,
+                partialRunData: runningState.partialRunData,
                 totalDurationInSeconds: runningState.totalDurationInSeconds,
               ),
             (_) => const LoadingView(),

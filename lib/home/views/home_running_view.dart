@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:alchronos/app_database.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
-import 'package:alchronos/home/home.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,12 +12,12 @@ import 'package:wave/wave.dart';
 
 class HomeRunningView extends StatefulWidget {
   const HomeRunningView({
-    required this.partialRun,
+    required this.partialRunData,
     required this.totalDurationInSeconds,
     super.key,
   });
 
-  final PartialRun partialRun;
+  final PartialRunData partialRunData;
   final int totalDurationInSeconds;
 
   @override
@@ -208,13 +208,12 @@ class _HomeRunningViewState extends State<HomeRunningView>
   }
 
   void _getDurationSeconds() {
-    if (widget.partialRun.endTime == null ||
-        widget.partialRun.endTime!.isBefore(DateTime.now())) {
+    if (widget.partialRunData.endTime.isBefore(DateTime.now())) {
       cubit.reset();
     }
     // get remaining seconds
     final seconds =
-        widget.partialRun.endTime!.difference(DateTime.now()).inSeconds;
+        widget.partialRunData.endTime.difference(DateTime.now()).inSeconds;
 
     // use partial run to calculate _timeInSeconds
     _timeInSeconds = seconds;

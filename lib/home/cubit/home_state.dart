@@ -8,8 +8,11 @@ class HomeInitial extends HomeState {}
 class HomeStart extends HomeState {}
 
 class HomeRunning extends HomeState {
-  HomeRunning({required this.partialRun, required this.totalDurationInSeconds});
+  HomeRunning({
+    required this.partialRunData,
+    required this.totalDurationInSeconds,
+  });
 
-  final PartialRun partialRun;
+  final PartialRunData partialRunData;
   final int totalDurationInSeconds;
 }

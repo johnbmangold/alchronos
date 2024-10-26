@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alchronos/home/models/models.dart';
+import 'package:alchronos/app_database.dart';
 import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
@@ -43,7 +43,7 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(
       HomeRunning(
-        partialRun: partialRun,
+        partialRunData: partialRun,
         totalDurationInSeconds: timerDuration.minutesToSeconds,
       ),
     );
@@ -76,28 +76,36 @@ class HomeCubit extends Cubit<HomeState> {
     // emit running state
     emit(
       HomeRunning(
-        partialRun: partialRun,
+        partialRunData: partialRun,
         totalDurationInSeconds: timerDuration.minutesToSeconds,
       ),
     );
   }
 
-  Future<PartialRun?> getPartialRun(DateTime currentTime) async {
+  Future<PartialRunData?> getPartialRun(DateTime currentTime) async {
     return partialRunRepository.getPartialRunAfterTime(currentTime);
   }
 
-  Future<int> _setPartialRun(PartialRun partialRun) async {
-    return partialRunRepository.clearRunsAndPutPartialRun(partialRun);
+  Future<int> _setPartialRun(DateTime endTime, int secondsRemaining) async {
+    return partialRunRepository.clearRunsAndPutPartialRun(
+      endTime,
+      secondsRemaining,
+    );
   }
 
-  Future<PartialRun> _createOneHourPartialRun(DateTime now) async {
+  Future<PartialRunData> _createOneHourPartialRun(DateTime now) async {
     final timerDuration = await getPreferredDuration();
     final durationInSeconds = timerDuration.minutesToSeconds;
-    final newPartialRun = PartialRun()
-      ..secondsRemaining = durationInSeconds
-      ..endTime = now.add(Duration(seconds: durationInSeconds));
-    await _setPartialRun(newPartialRun);
-    return newPartialRun;
+    final partialRunData = PartialRunData(
+      id: -1,
+      secondsRemaining: durationInSeconds,
+      endTime: now.add(Duration(seconds: durationInSeconds)),
+    );
+    await _setPartialRun(
+      partialRunData.endTime,
+      partialRunData.secondsRemaining,
+    );
+    return partialRunData;
   }
 
   Future<TimerDuration> getPreferredDuration() async {

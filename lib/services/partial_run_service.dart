@@ -1,59 +1,46 @@
 import 'dart:async';
 
-import 'package:alchronos/home/home.dart';
+import 'package:alchronos/app_database.dart';
+import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 @injectable
 class PartialRunService {
-  PartialRunService() {
-    unawaited(db = _openDb());
+  PartialRunService(this._db);
+
+  final AppDatabase _db;
+
+  Future<PartialRunData?> getPartialRunAfterTime(DateTime time) async {
+    return _db.managers.partialRun
+        .filter((f) => f.endTime.isAfter(time))
+        .getSingleOrNull();
   }
 
-  late final Future<Isar> db;
-  final String dbName = 'PartialRunSchema';
+  Future<PartialRunData?> getPartialRunBeforeTime(DateTime time) async {
+    return _db.managers.partialRun
+        .filter((f) => f.endTime.isBefore(time))
+        .getSingleOrNull();
+  }
 
-  Future<Isar> _openDb() async {
-    if (Isar.instanceNames.contains(dbName)) {
-      return Future.value(Isar.getInstance(dbName));
-    }
-
-    final dir = await getApplicationDocumentsDirectory();
-    return Isar.open(
-      [PartialRunSchema],
-      directory: dir.path,
-      name: dbName,
+  Future<int> putPartialRun(DateTime endTime, int secondsRemaining) async {
+    return _db.managers.partialRun.create(
+      (f) => f(
+        endTime: endTime,
+        secondsRemaining: secondsRemaining,
+      ),
+      mode: InsertMode.insertOrReplace,
     );
   }
 
-  Future<PartialRun?> getPartialRunAfterTime(DateTime time) async {
-    final isar = await db;
-    return isar.partialRuns.filter().endTimeGreaterThan(time).findFirst();
+  Future<int> deletePartialRun(int id) async {
+    return _db.managers.partialRun.filter((f) => f.id(id)).delete();
   }
 
-  Future<PartialRun?> getPartialRunBeforeTime(DateTime time) async {
-    final isar = await db;
-    return isar.partialRuns.filter().endTimeLessThan(time).findFirst();
-  }
-
-  Future<int> putPartialRun(PartialRun partialRun) async {
-    final isar = await db;
-    return isar.writeTxn(() => isar.partialRuns.put(partialRun));
-  }
-
-  Future<bool> deletePartialRun(int id) async {
-    final isar = await db;
-    return isar.writeTxn(() => isar.partialRuns.delete(id));
-  }
-
-  Future<void> deleteAllPartialRuns() async {
-    final isar = await db;
-    return isar.writeTxn(() => isar.partialRuns.clear());
+  Future<int> deleteAllPartialRuns() async {
+    return _db.managers.partialRun.delete();
   }
 
   Future<int> count() async {
-    final isar = await db;
-    return isar.partialRuns.count();
+    return _db.managers.partialRun.count();
   }
 }

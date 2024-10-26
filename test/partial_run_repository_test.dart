@@ -1,4 +1,4 @@
-import 'package:alchronos/home/models/partial_run.dart';
+import 'package:alchronos/app_database.dart';
 import 'package:alchronos/repositories/repositories.dart';
 import 'package:alchronos/services/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,10 +19,9 @@ void main() async {
         PartialRunRepository(partialRunService: mockPartialRunService);
   });
 
-  PartialRun getPartialRunAfter() {
-    final partialRun = PartialRun()
-      ..endTime = afterDate
-      ..secondsRemaining = 22;
+  PartialRunData getPartialRunAfter() {
+    final partialRun =
+        PartialRunData(id: -1, endTime: afterDate, secondsRemaining: 22);
     return partialRun;
   }
 
@@ -52,11 +51,13 @@ void main() async {
     () async {
       when(mockPartialRunService.count())
           .thenAnswer((realInvocation) async => 123);
-      when(mockPartialRunService.putPartialRun(any))
+      when(mockPartialRunService.putPartialRun(any, any))
           .thenAnswer((realInvocation) async => 321);
       expect(await partialRunRepository.count(), 123);
-      final id =
-          await partialRunRepository.clearRunsAndPutPartialRun(PartialRun());
+      final id = await partialRunRepository.clearRunsAndPutPartialRun(
+        DateTime.now(),
+        33,
+      );
       expect(id, 321);
     },
   );
