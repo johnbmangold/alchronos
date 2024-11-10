@@ -43,6 +43,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-#Generated files
+# Generated files
 *.g.dart
 *.mocks.dart
+
+# Test Coverage
+lcov.info

@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "com.idlewild.alchronos"
     compileSdkVersion rootProject.ext.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion rootProject.ext.ndkVersion
 
     compileOptions {
         coreLibraryDesugaringEnabled true
