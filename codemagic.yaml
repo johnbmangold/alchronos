@@ -54,7 +54,8 @@ workflows:
             --build-number=$BUILD_NUMBER
       - name: Zip Android symbols
         script: |
-          zip -r build/app/outputs/bundle/release/app-symbols.zip build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib/
+          cd build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/
+          zip -r build/app/outputs/bundle/release/app-symbols.zip lib/
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/mapping.txt
