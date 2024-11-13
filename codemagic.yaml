@@ -55,11 +55,13 @@ workflows:
       - name: Zip Android symbols
         script: |
           cd build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/
-          zip -r build/app/outputs/bundle/release/app-symbols.zip lib/
+          zip -r app-symbols.zip lib/
+          zip -d app-symbols.zip "__MACOSX*"
+          zip -d app-symbols.zip "*/.DS_Store"
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/mapping.txt
-      - build/**/outputs/**/*.zip
+      - build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/*.zip
     publishing:
       email:
         recipients:
