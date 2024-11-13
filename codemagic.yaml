@@ -56,8 +56,6 @@ workflows:
         script: |
           cd build/app/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/
           zip -r app-symbols.zip lib/
-          zip -d app-symbols.zip "__MACOSX*"
-          zip -d app-symbols.zip "*/.DS_Store"
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/mapping.txt
