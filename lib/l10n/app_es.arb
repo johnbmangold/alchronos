@@ -43,9 +43,21 @@
     "@drawerAbout": {
         "description": "Opción de cajón que dice Acerca de"
     },
-    "aboutAlchronos": "El consumo de alcohol nunca es del todo seguro y nunca es saludable. Como con la mayoría de las cosas en la vida, la moderación es la mejor práctica cuando se consume alcohol. Alchronos tiene como objetivo hacer que el consumo de alcohol sea más seguro y ayudar a mitigar los peligros. Con ese objetivo en mente, Alchronos ayuda a reducir el consumo de una bebida alcohólica por hora para que su cuerpo pueda procesar el alcohol sin sentirse abrumado. Por favor, bebe siempre con responsabilidad y nunca en exceso. Si cree que tiene un problema con la bebida, busque tratamiento.",
-    "@sobreAlcronos": {
-        "description": "La larga historia de Alchronos y sus objetivos generales"
+    "aboutAlchronosPart1": "El consumo de alcohol nunca es totalmente seguro y nunca es saludable.",
+    "@aboutAlchronosPart1": {
+        "description": "La larga historia de Alchronos y sus objetivos generales parte 1"
+    },
+    "aboutAlchronosPart2": "Como ocurre con la mayoría de las cosas de la vida, la moderación es la mejor práctica a la hora de consumir alcohol. Alchronos tiene como objetivo hacer que el consumo de alcohol sea más seguro y ayudar a mitigar los peligros.",
+    "@aboutAlchronosPart2": {
+        "description": "La larga historia de Alchronos y sus objetivos generales parte 2"
+    },
+    "aboutAlchronosPart3": "Con ese objetivo en mente, Alchronos ayuda a controlar el consumo de alcohol a un máximo de una bebida alcohólica por hora para que el cuerpo pueda procesar el alcohol sin agobiarse. Por favor, siempre beba de manera responsable y nunca en exceso.",
+    "@aboutAlchronosPart3": {
+        "description": "La larga historia de Alchronos y sus objetivos generales parte 3"
+    },
+    "aboutAlchronosPart4": "Si cree que tiene un problema con la bebida, busque tratamiento.",
+    "@aboutAlchronosPart4": {
+        "description": "La larga historia de Alchronos y sus objetivos generales parte 4"
     },
     "aboutAlchronosTitle": "Acerca de Alchronos",
     "@aboutAlchronosTitle": {

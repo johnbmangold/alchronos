@@ -18,10 +18,27 @@ class AboutScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                l10n.aboutAlchronos,
+            Card.outlined(
+              margin: const EdgeInsets.all(16),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    Text(
+                      l10n.aboutAlchronosPart1,
+                    ),
+                    Text(
+                      l10n.aboutAlchronosPart2,
+                    ),
+                    Text(
+                      l10n.aboutAlchronosPart3,
+                    ),
+                    Text(
+                      l10n.aboutAlchronosPart4,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
