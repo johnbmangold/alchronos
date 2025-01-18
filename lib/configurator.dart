@@ -15,10 +15,5 @@ abstract class AppModule {
   Logger get logger => Logger(printer: PrettyPrinter());
   FlutterLocalNotificationsPlugin get flutterLocalNotificationsPlugin =>
       FlutterLocalNotificationsPlugin();
-  FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage(
-        aOptions: AndroidOptions(
-          encryptedSharedPreferences: true,
-        ),
-        iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-      );
+  FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
 }
