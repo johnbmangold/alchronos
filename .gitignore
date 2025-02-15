@@ -49,3 +49,6 @@ app.*.map.json
 
 # Test Coverage
 lcov.info
+
+# .cxx generated files
+/android/app/.cxx
