@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:alchronos/app_database.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
@@ -112,9 +112,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
                   _startAnimationController();
                 },
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               Text(
                 _formattedDuration,
                 key: const Key('runningTimer'),
@@ -140,31 +138,28 @@ class _HomeRunningViewState extends State<HomeRunningView>
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(
-      _oneSecond,
-      (timer) {
-        if (_timeInSeconds <= 0) {
-          _timer.cancel();
-          cubit.reset();
-        } else {
-          setState(() {
-            _timeInSeconds--;
-            _calculateTimeDisplay();
-          });
-        }
-      },
-    );
+    _timer = Timer.periodic(_oneSecond, (timer) {
+      if (_timeInSeconds <= 0) {
+        _timer.cancel();
+        cubit.reset();
+      } else {
+        setState(() {
+          _timeInSeconds--;
+          _calculateTimeDisplay();
+        });
+      }
+    });
   }
 
   void _calculateTimeDisplay() {
     final timeDifference = Duration(seconds: _timeInSeconds);
     final calculatedOpacity =
         (widget.totalDurationInSeconds - timeDifference.inSeconds) /
-            widget.totalDurationInSeconds;
+        widget.totalDurationInSeconds;
     _opacity = switch (calculatedOpacity) {
       < 0.0 => 0.0,
       > 1.0 => 1.0,
-      _ => calculatedOpacity
+      _ => calculatedOpacity,
     };
     _formattedDuration = _format(timeDifference);
   }
@@ -183,17 +178,11 @@ class _HomeRunningViewState extends State<HomeRunningView>
     double height,
     Color drinkColorStart,
   ) {
-    final colors = [
-      drinkColorStart,
-    ];
+    final colors = [drinkColorStart];
 
-    const durations = [
-      5000,
-    ];
+    const durations = [5000];
 
-    const heightPercentages = [
-      0.75,
-    ];
+    const heightPercentages = [0.75];
 
     return WaveWidget(
       config: CustomConfig(

@@ -1,9 +1,9 @@
 import 'package:alchronos/about/views/about_screen.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart';
 
 class HomeStartView extends StatelessWidget {
@@ -25,11 +25,12 @@ class HomeStartView extends StatelessWidget {
               if (context.mounted) {
                 await showModalBottomSheet<Container>(
                   context: context,
-                  builder: (localContext) => HomeBottomSheet(
-                    l10n: AppLocalizations.of(context)!,
-                    cubit: cubit,
-                    initialDuration: duration,
-                  ),
+                  builder:
+                      (localContext) => HomeBottomSheet(
+                        l10n: AppLocalizations.of(context)!,
+                        cubit: cubit,
+                        initialDuration: duration,
+                      ),
                 );
               }
             },
@@ -60,15 +61,14 @@ class HomeStartView extends StatelessWidget {
               widthHeight: lottieWidthHeight,
               key: const Key('waitDrinkAnimation'),
             ),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 16),
             FilledButton(
               key: const Key('drinkButton'),
-              onPressed: () => cubit.start(
-                l10n.drinkTimerComplete,
-                l10n.notificationMessage,
-              ),
+              onPressed:
+                  () => cubit.start(
+                    l10n.drinkTimerComplete,
+                    l10n.notificationMessage,
+                  ),
               child: Text(
                 l10n.drinkButtonText,
                 style: const TextStyle(fontSize: 36),
@@ -104,9 +104,7 @@ class _OverflowLottieAsset extends StatelessWidget {
         maxHeight: overflowWidthHeight,
         minWidth: overflowWidthHeight,
         maxWidth: overflowWidthHeight,
-        child: Lottie.asset(
-          assetName,
-        ),
+        child: Lottie.asset(assetName),
       ),
     );
   }
@@ -207,13 +205,15 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       child: Column(
         children: [
           ListTile(
-            title:
-                Text(widget.l10n.minutesLabel(TimerDuration.standard.minutes)),
+            title: Text(
+              widget.l10n.minutesLabel(TimerDuration.standard.minutes),
+            ),
             leading: Radio<TimerDuration>(
               value: TimerDuration.standard,
               groupValue: _currentDuration,
-              onChanged: (newDuration) async =>
-                  _setCurrentDuration(context, newDuration),
+              onChanged:
+                  (newDuration) async =>
+                      _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
               await _setCurrentDuration(context, TimerDuration.standard);
@@ -224,21 +224,24 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             leading: Radio<TimerDuration>(
               value: TimerDuration.longer,
               groupValue: _currentDuration,
-              onChanged: (newDuration) async =>
-                  _setCurrentDuration(context, newDuration),
+              onChanged:
+                  (newDuration) async =>
+                      _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
               await _setCurrentDuration(context, TimerDuration.longer);
             },
           ),
           ListTile(
-            title:
-                Text(widget.l10n.minutesLabel(TimerDuration.longest.minutes)),
+            title: Text(
+              widget.l10n.minutesLabel(TimerDuration.longest.minutes),
+            ),
             leading: Radio<TimerDuration>(
               value: TimerDuration.longest,
               groupValue: _currentDuration,
-              onChanged: (newDuration) async =>
-                  _setCurrentDuration(context, newDuration),
+              onChanged:
+                  (newDuration) async =>
+                      _setCurrentDuration(context, newDuration),
             ),
             onTap: () async {
               await _setCurrentDuration(context, TimerDuration.longest);

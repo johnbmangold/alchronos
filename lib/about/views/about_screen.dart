@@ -1,5 +1,5 @@
+import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -11,10 +11,7 @@ class AboutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.aboutAlchronosTitle),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text(l10n.aboutAlchronosTitle), centerTitle: true),
       body: SafeArea(
         child: Column(
           children: [
@@ -25,18 +22,10 @@ class AboutScreen extends StatelessWidget {
                 child: Column(
                   spacing: 16,
                   children: [
-                    Text(
-                      l10n.aboutAlchronosPart1,
-                    ),
-                    Text(
-                      l10n.aboutAlchronosPart2,
-                    ),
-                    Text(
-                      l10n.aboutAlchronosPart3,
-                    ),
-                    Text(
-                      l10n.aboutAlchronosPart4,
-                    ),
+                    Text(l10n.aboutAlchronosPart1),
+                    Text(l10n.aboutAlchronosPart2),
+                    Text(l10n.aboutAlchronosPart3),
+                    Text(l10n.aboutAlchronosPart4),
                   ],
                 ),
               ),

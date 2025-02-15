@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alchronos/configurator.dart';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/home/views/home_screen.dart';
+import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -10,7 +11,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
 import 'package:workmanager/workmanager.dart';
@@ -37,10 +37,7 @@ Future<void> main() async {
 
   await getIt.get<LocalNotifications>().initialize(headless: false);
 
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: kDebugMode,
-  );
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
 
   runApp(const AlchronosApp());
 }
@@ -58,9 +55,7 @@ void callbackDispatcher() {
 }
 
 Future<void> initFirebase() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -100,9 +95,7 @@ class AlchronosApp extends StatelessWidget {
           darkColorScheme = darkDynamic.harmonized();
           darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
         } else {
-          lightColorScheme = ColorScheme.fromSeed(
-            seedColor: alchronosPink,
-          );
+          lightColorScheme = ColorScheme.fromSeed(seedColor: alchronosPink);
           darkColorScheme = ColorScheme.fromSeed(
             seedColor: alchronosPink,
             brightness: Brightness.dark,
@@ -131,9 +124,8 @@ class AlchronosApp extends StatelessWidget {
 }
 
 Future<void> showNotificationInBackground(String title, String message) async {
-  final logger = Logger(
-    printer: PrettyPrinter(),
-  )..i('[BackgroundFetch] Headless event received');
+  final logger = Logger(printer: PrettyPrinter())
+    ..i('[BackgroundFetch] Headless event received');
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final localNotifications = LocalNotifications(
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
@@ -152,11 +144,11 @@ Future<void> showNotificationInBackground(String title, String message) async {
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  final logger = Logger(
-    printer: PrettyPrinter(),
-  )..i('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
+  final logger = Logger(printer: PrettyPrinter())..i(
+    'notification(${notificationResponse.id}) action tapped: '
+    '${notificationResponse.actionId} with'
+    ' payload: ${notificationResponse.payload}',
+  );
   if (notificationResponse.input?.isNotEmpty ?? false) {
     logger.i(
       'notification action tapped with input: ${notificationResponse.input}',
