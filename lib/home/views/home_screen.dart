@@ -15,10 +15,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Scaffold(
-        body: BlocProvider(
+    return Scaffold(
+      body: SafeArea(
+        bottom: false,
+        child: BlocProvider(
           create: (_) => getIt.get<HomeCubit>()..init(),
           child: const HomeBody(),
         ),
@@ -46,9 +46,9 @@ class HomeBody extends StatelessWidget {
           child: switch (state) {
             (HomeStart _) => const HomeStartView(),
             (final HomeRunning runningState) => HomeRunningView(
-                partialRunData: runningState.partialRunData,
-                totalDurationInSeconds: runningState.totalDurationInSeconds,
-              ),
+              partialRunData: runningState.partialRunData,
+              totalDurationInSeconds: runningState.totalDurationInSeconds,
+            ),
             (_) => const LoadingView(),
           },
         );
