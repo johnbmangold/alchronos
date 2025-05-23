@@ -6,8 +6,8 @@ allprojects {
 }
 
 ext {
-        compileSdkVersion   = 35
-        targetSdkVersion    = 35
+        compileSdkVersion   = 36
+        targetSdkVersion    = 36
         minSdkVersion       = 33
         appCompatVersion    = "1.6.1"
         ndkVersion          = "27.0.12077973"
