@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import dynamic_color
+import dynamic_system_colors
 import firebase_core
 import firebase_crashlytics
 import flutter_local_notifications

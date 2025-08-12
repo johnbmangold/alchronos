@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  dynamic_color
+  dynamic_system_colors
   firebase_core
   flutter_secure_storage_windows
   sqlite3_flutter_libs

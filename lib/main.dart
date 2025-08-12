@@ -6,7 +6,7 @@ import 'package:alchronos/home/views/home_screen.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/local_notifications.dart';
 import 'package:alchronos/received_notification.dart';
-import 'package:dynamic_color/dynamic_color.dart';
+import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -144,11 +144,12 @@ Future<void> showNotificationInBackground(String title, String message) async {
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  final logger = Logger(printer: PrettyPrinter())..i(
-    'notification(${notificationResponse.id}) action tapped: '
-    '${notificationResponse.actionId} with'
-    ' payload: ${notificationResponse.payload}',
-  );
+  final logger = Logger(printer: PrettyPrinter())
+    ..i(
+      'notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}',
+    );
   if (notificationResponse.input?.isNotEmpty ?? false) {
     logger.i(
       'notification action tapped with input: ${notificationResponse.input}',
