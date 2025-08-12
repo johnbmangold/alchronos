@@ -37,7 +37,7 @@ Future<void> main() async {
 
   await getIt.get<LocalNotifications>().initialize(headless: false);
 
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
+  await Workmanager().initialize(callbackDispatcher);
 
   runApp(const AlchronosApp());
 }
