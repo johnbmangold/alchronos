@@ -16,7 +16,7 @@ workflows:
         EW_TEST_APK_PATH: "build/app/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
         FIREBASE_PROJECT: "alchronos"
       flutter: stable
-      java: 17
+      java: 21
     triggering:
       events:
         - push
