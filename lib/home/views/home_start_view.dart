@@ -25,12 +25,11 @@ class HomeStartView extends StatelessWidget {
               if (context.mounted) {
                 await showModalBottomSheet<Container>(
                   context: context,
-                  builder:
-                      (localContext) => HomeBottomSheet(
-                        l10n: AppLocalizations.of(context)!,
-                        cubit: cubit,
-                        initialDuration: duration,
-                      ),
+                  builder: (localContext) => HomeBottomSheet(
+                    l10n: AppLocalizations.of(context)!,
+                    cubit: cubit,
+                    initialDuration: duration,
+                  ),
                 );
               }
             },
@@ -64,11 +63,10 @@ class HomeStartView extends StatelessWidget {
             const SizedBox(height: 16),
             FilledButton(
               key: const Key('drinkButton'),
-              onPressed:
-                  () => cubit.start(
-                    l10n.drinkTimerComplete,
-                    l10n.notificationMessage,
-                  ),
+              onPressed: () => cubit.start(
+                l10n.drinkTimerComplete,
+                l10n.notificationMessage,
+              ),
               child: Text(
                 l10n.drinkButtonText,
                 style: const TextStyle(fontSize: 36),
@@ -202,53 +200,46 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
           topRight: Radius.circular(28),
         ),
       ),
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(
-              widget.l10n.minutesLabel(TimerDuration.standard.minutes),
-            ),
-            leading: Radio<TimerDuration>(
-              value: TimerDuration.standard,
-              groupValue: _currentDuration,
-              onChanged:
-                  (newDuration) async =>
-                      _setCurrentDuration(context, newDuration),
-            ),
-            onTap: () async {
-              await _setCurrentDuration(context, TimerDuration.standard);
-            },
-          ),
-          ListTile(
-            title: Text(widget.l10n.minutesLabel(TimerDuration.longer.minutes)),
-            leading: Radio<TimerDuration>(
-              value: TimerDuration.longer,
-              groupValue: _currentDuration,
-              onChanged:
-                  (newDuration) async =>
-                      _setCurrentDuration(context, newDuration),
-            ),
-            onTap: () async {
-              await _setCurrentDuration(context, TimerDuration.longer);
-            },
-          ),
-          ListTile(
-            title: Text(
-              widget.l10n.minutesLabel(TimerDuration.longest.minutes),
-            ),
-            leading: Radio<TimerDuration>(
-              value: TimerDuration.longest,
-              groupValue: _currentDuration,
-              onChanged:
-                  (newDuration) async =>
-                      _setCurrentDuration(context, newDuration),
-            ),
-            onTap: () async {
-              await _setCurrentDuration(context, TimerDuration.longest);
-            },
-          ),
-        ],
-      ),
+      child: RadioGroup<TimerDuration>(
+          groupValue: _currentDuration,
+          onChanged: (newDuration) async =>
+              _setCurrentDuration(context, newDuration),
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(
+                  widget.l10n.minutesLabel(TimerDuration.standard.minutes),
+                ),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.standard,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.standard);
+                },
+              ),
+              ListTile(
+                title: Text(
+                    widget.l10n.minutesLabel(TimerDuration.longer.minutes)),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.longer,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.longer);
+                },
+              ),
+              ListTile(
+                title: Text(
+                  widget.l10n.minutesLabel(TimerDuration.longest.minutes),
+                ),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.longest,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.longest);
+                },
+              ),
+            ],
+          )),
     );
   }
 
