@@ -90,4 +90,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get done => 'Done';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get quickPresets => 'Quick Presets';
 }

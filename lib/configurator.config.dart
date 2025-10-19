@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // InjectableConfigGenerator
@@ -16,8 +16,13 @@ import 'package:alchronos/local_notifications.dart' as _i871;
 import 'package:alchronos/repositories/partial_run_repository.dart' as _i524;
 import 'package:alchronos/repositories/repositories.dart' as _i312;
 import 'package:alchronos/repositories/storage_repository.dart' as _i111;
+import 'package:alchronos/services/audio_service.dart' as _i472;
+import 'package:alchronos/services/haptic_service.dart' as _i533;
+import 'package:alchronos/services/history_service.dart' as _i365;
 import 'package:alchronos/services/partial_run_service.dart' as _i590;
+import 'package:alchronos/services/performance_service.dart' as _i1052;
 import 'package:alchronos/services/services.dart' as _i638;
+import 'package:alchronos/services/settings_service.dart' as _i402;
 import 'package:alchronos/services/storage_service.dart' as _i79;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as _i163;
@@ -44,8 +49,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i558.FlutterSecureStorage>(
         () => appModule.flutterSecureStorage);
     gh.lazySingleton<_i388.AppDatabase>(() => _i388.AppDatabase());
+    gh.lazySingleton<_i533.HapticService>(() => _i533.HapticService());
+    gh.lazySingleton<_i472.AudioService>(() => _i472.AudioService());
     gh.factory<_i79.StorageService>(() => _i79.StorageService(
         flutterSecureStorage: gh<_i558.FlutterSecureStorage>()));
+    gh.lazySingleton<_i365.HistoryService>(() => _i365.HistoryService(
+          gh<_i388.AppDatabase>(),
+          gh<_i974.Logger>(),
+        ));
+    gh.lazySingleton<_i1052.PerformanceService>(
+        () => _i1052.PerformanceService(gh<_i974.Logger>()));
     gh.lazySingleton<_i871.LocalNotifications>(() => _i871.LocalNotifications(
         flutterLocalNotificationsPlugin:
             gh<_i163.FlutterLocalNotificationsPlugin>()));
@@ -55,12 +68,19 @@ extension GetItInjectableX on _i174.GetIt {
         _i111.StorageRepository(storageService: gh<_i638.StorageService>()));
     gh.factory<_i524.PartialRunRepository>(() => _i524.PartialRunRepository(
         partialRunService: gh<_i590.PartialRunService>()));
+    gh.lazySingleton<_i402.SettingsService>(
+        () => _i402.SettingsService(gh<_i111.StorageRepository>()));
     gh.factory<_i925.HomeCubit>(() => _i925.HomeCubit(
           logger: gh<_i974.Logger>(),
           partialRunRepository: gh<_i312.PartialRunRepository>(),
           flutterLocalNotificationsPlugin:
               gh<_i163.FlutterLocalNotificationsPlugin>(),
           storageRepository: gh<_i312.StorageRepository>(),
+          hapticService: gh<_i533.HapticService>(),
+          audioService: gh<_i472.AudioService>(),
+          settingsService: gh<_i402.SettingsService>(),
+          performanceService: gh<_i1052.PerformanceService>(),
+          historyService: gh<_i365.HistoryService>(),
         ));
     return this;
   }

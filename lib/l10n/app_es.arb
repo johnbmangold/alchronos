@@ -104,5 +104,13 @@
     "done": "Hecho",
     "@done": {
         "description": "Texto del botón para confirmar la selección"
+    },
+    "paused": "Pausado",
+    "@paused": {
+        "description": "Texto mostrado cuando el temporizador está pausado"
+    },
+    "quickPresets": "Configuraciones Rápidas",
+    "@quickPresets": {
+        "description": "Título para los botones de configuración rápida del temporizador"
     }
 }

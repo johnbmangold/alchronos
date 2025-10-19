@@ -35,4 +35,22 @@ class StorageRepository {
     final value = await storageService.readValue(customDurationKey);
     return int.tryParse(value ?? '60') ?? 60;
   }
+
+  Future<bool?> readBool(String key) async {
+    final value = await storageService.readValue(key);
+    return value == 'true';
+  }
+
+  Future<void> writeBool(String key, {required bool value}) async {
+    await storageService.writeValue(key, value.toString());
+  }
+
+  Future<int?> readInt(String key) async {
+    final value = await storageService.readValue(key);
+    return int.tryParse(value ?? '');
+  }
+
+  Future<void> writeInt(String key, {required int value}) async {
+    await storageService.writeValue(key, value.toString());
+  }
 }

@@ -471,6 +471,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  haptic_feedback:
+    dependency: "direct main"
+    description:
+      name: haptic_feedback
+      sha256: d3b5ad41858d18a35d317636c9cdc1cb8aef23c7b861ca5896273acc68e1a98a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1+1"
   http:
     dependency: transitive
     description:
@@ -898,7 +906,7 @@ packages:
     source: hosted
     version: "0.7.6"
   timezone:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: timezone
       sha256: dd14a3b83cfd7cb19e7888f1cbc20f258b8d71b54c06f79ac585f14093a287d1

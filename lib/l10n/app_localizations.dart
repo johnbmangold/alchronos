@@ -247,6 +247,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Done'**
   String get done;
+
+  /// Text shown when timer is paused
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// Title for quick timer preset buttons
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Presets'**
+  String get quickPresets;
 }
 
 class _AppLocalizationsDelegate

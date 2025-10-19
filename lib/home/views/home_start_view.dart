@@ -1,7 +1,11 @@
 import 'package:alchronos/about/views/about_screen.dart';
+import 'package:alchronos/configurator.dart';
 import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/main.dart';
+import 'package:alchronos/services/audio_service.dart';
+import 'package:alchronos/services/haptic_service.dart';
+import 'package:alchronos/services/performance_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -10,6 +14,28 @@ class HomeStartView extends StatelessWidget {
   const HomeStartView({super.key});
 
   double get lottieWidthHeight => 100;
+
+  Future<void> _startQuickTimer(
+    BuildContext context,
+    HomeCubit cubit,
+    AppLocalizations l10n,
+    int minutes,
+  ) async {
+    // Add haptic and audio feedback
+    final hapticService = getIt.get<HapticService>();
+    final audioService = getIt.get<AudioService>();
+    getIt.get<PerformanceService>().trackUserInteraction(
+          'quick_preset_${minutes}min',
+          screen: 'home_start',
+        );
+    await hapticService.lightImpact();
+    await audioService.playButtonClickSound();
+
+    // Set custom duration and start timer
+    await cubit.writeCustomDuration(minutes);
+    await cubit.start(l10n.drinkTimerComplete, l10n.notificationMessage);
+  }
+
   double get lottieOverflowWidthHeight => 200;
 
   @override
@@ -60,12 +86,53 @@ class HomeStartView extends StatelessWidget {
               widthHeight: lottieWidthHeight,
               key: const Key('waitDrinkAnimation'),
             ),
+            const SizedBox(height: 24),
+            // Quick Timer Presets
+            Text(
+              l10n.quickPresets,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _QuickPresetButton(
+                  minutes: 15,
+                  onPressed: () => _startQuickTimer(context, cubit, l10n, 15),
+                ),
+                _QuickPresetButton(
+                  minutes: 30,
+                  onPressed: () => _startQuickTimer(context, cubit, l10n, 30),
+                ),
+                _QuickPresetButton(
+                  minutes: 45,
+                  onPressed: () => _startQuickTimer(context, cubit, l10n, 45),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            // Main Drink Button
             FilledButton(
               key: const Key('drinkButton'),
-              onPressed: () => cubit.start(
-                l10n.drinkTimerComplete,
-                l10n.notificationMessage,
+              onPressed: () async {
+                // Add haptic and audio feedback
+                final hapticService = getIt.get<HapticService>();
+                final audioService = getIt.get<AudioService>();
+                getIt.get<PerformanceService>().trackUserInteraction(
+                      'start_timer',
+                      screen: 'home_start',
+                    );
+                await hapticService.mediumImpact();
+                await audioService.playButtonClickSound();
+
+                await cubit.start(
+                  l10n.drinkTimerComplete,
+                  l10n.notificationMessage,
+                );
+              },
+              style: FilledButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
               child: Text(
                 l10n.drinkButtonText,
@@ -354,5 +421,49 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
     await widget.cubit.writedPreferredDuration(durationToSave);
 
     if (context.mounted) Navigator.of(context).pop();
+  }
+}
+
+class _QuickPresetButton extends StatelessWidget {
+  const _QuickPresetButton({
+    required this.minutes,
+    required this.onPressed,
+  });
+
+  final int minutes;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Start $minutes minute timer',
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          shape: const CircleBorder(),
+          padding: const EdgeInsets.all(16),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '$minutes m',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              '$minutes min',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
