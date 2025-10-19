@@ -69,4 +69,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String minutesLabel(int minutes) {
     return '$minutes minutes';
   }
+
+  @override
+  String get pauseTimer => 'Pause';
+
+  @override
+  String get resumeTimer => 'Resume';
+
+  @override
+  String get stopTimer => 'Stop';
+
+  @override
+  String get customDuration => 'Custom';
+
+  @override
+  String get customMinutesLabel => 'Minutes';
+
+  @override
+  String get minutes => 'min';
+
+  @override
+  String get done => 'Done';
 }

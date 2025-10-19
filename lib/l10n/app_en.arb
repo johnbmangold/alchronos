@@ -75,5 +75,33 @@
                 "type": "int"
             }
         }
+    },
+    "pauseTimer": "Pause",
+    "@pauseTimer": {
+        "description": "Button text to pause the timer"
+    },
+    "resumeTimer": "Resume",
+    "@resumeTimer": {
+        "description": "Button text to resume the timer"
+    },
+    "stopTimer": "Stop",
+    "@stopTimer": {
+        "description": "Button text to stop the timer"
+    },
+    "customDuration": "Custom",
+    "@customDuration": {
+        "description": "Label for custom timer duration option"
+    },
+    "customMinutesLabel": "Minutes",
+    "@customMinutesLabel": {
+        "description": "Label for custom minutes input field"
+    },
+    "minutes": "min",
+    "@minutes": {
+        "description": "Abbreviation for minutes"
+    },
+    "done": "Done",
+    "@done": {
+        "description": "Button text to confirm selection"
     }
 }

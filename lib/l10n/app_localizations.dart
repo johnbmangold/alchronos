@@ -205,6 +205,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} minutes'**
   String minutesLabel(int minutes);
+
+  /// Button text to pause the timer
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pauseTimer;
+
+  /// Button text to resume the timer
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resumeTimer;
+
+  /// Button text to stop the timer
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stopTimer;
+
+  /// Label for custom timer duration option
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get customDuration;
+
+  /// Label for custom minutes input field
+  ///
+  /// In en, this message translates to:
+  /// **'Minutes'**
+  String get customMinutesLabel;
+
+  /// Abbreviation for minutes
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minutes;
+
+  /// Button text to confirm selection
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
 }
 
 class _AppLocalizationsDelegate
