@@ -64,8 +64,19 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  void reset() {
-    emit(HomeStart());
+  Future<void> reset() async {
+    try {
+      // Clear any existing partial runs from the database
+      await partialRunRepository.clearAllPartialRuns();
+      emit(HomeStart());
+    } on Exception catch (error) {
+      await ErrorHandler.handleError(
+        error,
+        StackTrace.current,
+        context: 'HomeCubit.reset',
+      );
+      emit(HomeError(ErrorHandler.getUserFriendlyMessage(error)));
+    }
   }
 
   void pauseTimer() {

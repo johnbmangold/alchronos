@@ -174,7 +174,9 @@ class _HomeRunningViewState extends State<HomeRunningView>
     _timer = Timer.periodic(_oneSecond, (timer) {
       if (_timeInSeconds <= 0) {
         _timer.cancel();
-        cubit.reset();
+        // This is intentionally not awaited as we don't need
+        // to wait for the reset to complete
+        unawaited(cubit.reset());
       } else if (!_isPaused) {
         _timeInSeconds--;
         _calculateTimeDisplay();
@@ -247,7 +249,9 @@ class _HomeRunningViewState extends State<HomeRunningView>
 
   void _getDurationSeconds() {
     if (widget.partialRunData.endTime.isBefore(DateTime.now())) {
-      cubit.reset();
+      // This is intentionally not awaited
+      // as we don't need to wait for the reset to complete
+      unawaited(cubit.reset());
     }
     // get remaining seconds
     final seconds =

@@ -28,4 +28,8 @@ class PartialRunRepository {
   Future<int> count() {
     return _partialRunService.count();
   }
+
+  Future<int> clearAllPartialRuns() {
+    return _partialRunService.deleteAllPartialRuns();
+  }
 }
