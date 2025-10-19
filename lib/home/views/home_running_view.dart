@@ -115,39 +115,114 @@ class _HomeRunningViewState extends State<HomeRunningView>
                 },
               ),
               const SizedBox(height: 16),
-              Text(
-                _formattedDuration,
-                key: const Key('runningTimer'),
-                style: const TextStyle(fontSize: 36),
-                semanticsLabel: l10n.runningTimerSemanticsLabel,
+              // Circular Progress Indicator
+              Semantics(
+                label: 'Timer progress: ${(_opacity * 100).round()}% complete',
+                value: _formattedDuration,
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Background circle
+                      Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest
+                              .withValues(
+                                alpha: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? 0.5
+                                    : 0.3,
+                              ),
+                        ),
+                      ),
+                      // Progress circle
+                      SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: CircularProgressIndicator(
+                          value: _opacity,
+                          strokeWidth: 8,
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      // Timer text in center
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _formattedDuration,
+                            key: const Key('runningTimer'),
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            semanticsLabel: l10n.runningTimerSemanticsLabel,
+                          ),
+                          if (_isPaused)
+                            Text(
+                              l10n.paused,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (_isPaused)
-                    ElevatedButton.icon(
-                      onPressed: _resumeTimer,
-                      icon: const Icon(Icons.play_arrow),
-                      label: Text(l10n.resumeTimer),
-                      key: const Key('resumeButton'),
+                    Semantics(
+                      button: true,
+                      label: 'Resume timer',
+                      child: ElevatedButton.icon(
+                        onPressed: _resumeTimer,
+                        icon: const Icon(Icons.play_arrow),
+                        label: Text(l10n.resumeTimer),
+                        key: const Key('resumeButton'),
+                      ),
                     )
                   else
-                    ElevatedButton.icon(
-                      onPressed: _pauseTimer,
-                      icon: const Icon(Icons.pause),
-                      label: Text(l10n.pauseTimer),
-                      key: const Key('pauseButton'),
+                    Semantics(
+                      button: true,
+                      label: 'Pause timer',
+                      child: ElevatedButton.icon(
+                        onPressed: _pauseTimer,
+                        icon: const Icon(Icons.pause),
+                        label: Text(l10n.pauseTimer),
+                        key: const Key('pauseButton'),
+                      ),
                     ),
                   const SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed: () => cubit.reset(),
-                    icon: const Icon(Icons.stop),
-                    label: Text(l10n.stopTimer),
-                    key: const Key('stopButton'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
+                  Semantics(
+                    button: true,
+                    label: 'Stop timer',
+                    child: ElevatedButton.icon(
+                      onPressed: () => cubit.reset(),
+                      icon: const Icon(Icons.stop),
+                      label: Text(l10n.stopTimer),
+                      key: const Key('stopButton'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -188,18 +263,18 @@ class _HomeRunningViewState extends State<HomeRunningView>
     });
   }
 
-  void _pauseTimer() {
+  Future<void> _pauseTimer() async {
     setState(() {
       _isPaused = true;
     });
-    cubit.pauseTimer();
+    await cubit.pauseTimer();
   }
 
-  void _resumeTimer() {
+  Future<void> _resumeTimer() async {
     setState(() {
       _isPaused = false;
     });
-    cubit.resumeTimer();
+    await cubit.resumeTimer();
   }
 
   void _calculateTimeDisplay() {

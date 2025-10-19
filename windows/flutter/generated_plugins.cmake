@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   dynamic_system_colors
   firebase_core
   flutter_secure_storage_windows

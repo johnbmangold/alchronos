@@ -90,4 +90,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get done => 'Hecho';
+
+  @override
+  String get paused => 'Pausado';
+
+  @override
+  String get quickPresets => 'Configuraciones Rápidas';
 }

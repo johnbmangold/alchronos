@@ -79,8 +79,9 @@ class AlchronosApp extends StatelessWidget {
     );
     var darkCustomColors = CustomColors(
       brand: alchronosPink,
-      drinkStartColor: Colors.amber.shade300,
-      drinkEndColor: Colors.amberAccent.shade700,
+      drinkStartColor:
+          Colors.amber.shade400, // Brighter for better contrast in dark mode
+      drinkEndColor: Colors.amberAccent.shade400, // Adjusted for dark mode
     );
 
     return DynamicColorBuilder(
@@ -112,6 +113,40 @@ class AlchronosApp extends StatelessWidget {
             colorScheme: darkColorScheme,
             extensions: [darkCustomColors],
             useMaterial3: true,
+            // Enhanced dark mode contrast
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: darkColorScheme.surface,
+            cardColor: darkColorScheme.surfaceContainerHighest,
+            // Better text contrast
+            textTheme: TextTheme(
+              bodyLarge: TextStyle(color: darkColorScheme.onSurface),
+              bodyMedium: TextStyle(color: darkColorScheme.onSurface),
+              bodySmall: TextStyle(color: darkColorScheme.onSurfaceVariant),
+              titleLarge: TextStyle(color: darkColorScheme.onSurface),
+              titleMedium: TextStyle(color: darkColorScheme.onSurface),
+              titleSmall: TextStyle(color: darkColorScheme.onSurface),
+            ),
+            // Enhanced button styles for dark mode
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: darkColorScheme.primary,
+                foregroundColor: darkColorScheme.onPrimary,
+                elevation: 2,
+              ),
+            ),
+            filledButtonTheme: FilledButtonThemeData(
+              style: FilledButton.styleFrom(
+                backgroundColor: darkColorScheme.primary,
+                foregroundColor: darkColorScheme.onPrimary,
+                elevation: 2,
+              ),
+            ),
+            outlinedButtonTheme: OutlinedButtonThemeData(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: darkColorScheme.primary,
+                side: BorderSide(color: darkColorScheme.primary),
+              ),
+            ),
           ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
