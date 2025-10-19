@@ -17,6 +17,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
+        /// ignoring discarded futures because the cubit is
+        ///  initialised in the main function
+        // ignore: discarded_futures
         create: (_) => getIt.get<HomeCubit>()..init(),
         child: const HomeBody(),
       ),
@@ -43,9 +46,9 @@ class HomeBody extends StatelessWidget {
           child: switch (state) {
             (HomeStart _) => const HomeStartView(),
             (final HomeRunning runningState) => HomeRunningView(
-              partialRunData: runningState.partialRunData,
-              totalDurationInSeconds: runningState.totalDurationInSeconds,
-            ),
+                partialRunData: runningState.partialRunData,
+                totalDurationInSeconds: runningState.totalDurationInSeconds,
+              ),
             (_) => const LoadingView(),
           },
         );

@@ -201,45 +201,47 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         ),
       ),
       child: RadioGroup<TimerDuration>(
-          groupValue: _currentDuration,
-          onChanged: (newDuration) async =>
-              _setCurrentDuration(context, newDuration),
-          child: Column(
-            children: [
-              ListTile(
-                title: Text(
-                  widget.l10n.minutesLabel(TimerDuration.standard.minutes),
-                ),
-                leading: const Radio<TimerDuration>(
-                  value: TimerDuration.standard,
-                ),
-                onTap: () async {
-                  await _setCurrentDuration(context, TimerDuration.standard);
-                },
+        groupValue: _currentDuration,
+        onChanged: (newDuration) async =>
+            _setCurrentDuration(context, newDuration),
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(
+                widget.l10n.minutesLabel(TimerDuration.standard.minutes),
               ),
-              ListTile(
-                title: Text(
-                    widget.l10n.minutesLabel(TimerDuration.longer.minutes)),
-                leading: const Radio<TimerDuration>(
-                  value: TimerDuration.longer,
-                ),
-                onTap: () async {
-                  await _setCurrentDuration(context, TimerDuration.longer);
-                },
+              leading: const Radio<TimerDuration>(
+                value: TimerDuration.standard,
               ),
-              ListTile(
-                title: Text(
-                  widget.l10n.minutesLabel(TimerDuration.longest.minutes),
-                ),
-                leading: const Radio<TimerDuration>(
-                  value: TimerDuration.longest,
-                ),
-                onTap: () async {
-                  await _setCurrentDuration(context, TimerDuration.longest);
-                },
+              onTap: () async {
+                await _setCurrentDuration(context, TimerDuration.standard);
+              },
+            ),
+            ListTile(
+              title: Text(
+                widget.l10n.minutesLabel(TimerDuration.longer.minutes),
               ),
-            ],
-          )),
+              leading: const Radio<TimerDuration>(
+                value: TimerDuration.longer,
+              ),
+              onTap: () async {
+                await _setCurrentDuration(context, TimerDuration.longer);
+              },
+            ),
+            ListTile(
+              title: Text(
+                widget.l10n.minutesLabel(TimerDuration.longest.minutes),
+              ),
+              leading: const Radio<TimerDuration>(
+                value: TimerDuration.longest,
+              ),
+              onTap: () async {
+                await _setCurrentDuration(context, TimerDuration.longest);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

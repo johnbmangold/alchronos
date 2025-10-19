@@ -71,12 +71,12 @@ class LocalNotifications {
           (NotificationResponse notificationResponse) {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
-            // user selected a notification
-            selectNotificationStream.add(notificationResponse.payload);
+          // user selected a notification
+          // Handle notification selection
           case NotificationResponseType.selectedNotificationAction:
             // user selected notification action i.e. 'Mark as Read'
             if (notificationResponse.actionId == navigationActionId) {
-              selectNotificationStream.add(notificationResponse.payload);
+              // Handle notification action
             }
         }
       },

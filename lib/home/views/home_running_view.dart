@@ -107,9 +107,9 @@ class _HomeRunningViewState extends State<HomeRunningView>
                 width: lottieWidthHeight,
                 height: lottieWidthHeight,
                 controller: _controller,
-                onLoaded: (composition) {
+                onLoaded: (composition) async {
                   _controller.duration = composition.duration;
-                  _startAnimationController();
+                  await _startAnimationController();
                 },
               ),
               const SizedBox(height: 16),
@@ -126,10 +126,10 @@ class _HomeRunningViewState extends State<HomeRunningView>
     );
   }
 
-  void _startAnimationController() {
+  Future<void> _startAnimationController() async {
     const start = 0.0;
     const stop = .78;
-    _controller.repeat(
+    await _controller.repeat(
       reverse: true,
       min: start,
       max: stop,
@@ -155,7 +155,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
     final timeDifference = Duration(seconds: _timeInSeconds);
     final calculatedOpacity =
         (widget.totalDurationInSeconds - timeDifference.inSeconds) /
-        widget.totalDurationInSeconds;
+            widget.totalDurationInSeconds;
     _opacity = switch (calculatedOpacity) {
       < 0.0 => 0.0,
       > 1.0 => 1.0,

@@ -5,7 +5,6 @@ import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/local_notifications.dart';
-import 'package:alchronos/received_notification.dart';
 import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -23,11 +22,6 @@ const fallbackMessage =
 
 /// Streams are created so that app can respond to notification-related events
 /// since the plugin is initialised in the `main` function
-final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
-    StreamController<ReceivedNotification>.broadcast();
-
-final StreamController<String?> selectNotificationStream =
-    StreamController<String?>.broadcast();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,12 +51,12 @@ void callbackDispatcher() {
 Future<void> initFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  FlutterError.onError = (errorDetails) async {
+    await FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack);
+    unawaited(FirebaseCrashlytics.instance.recordError(error, stack));
     return true;
   };
 }
