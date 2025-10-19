@@ -87,4 +87,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get minutes => 'min';
+
+  @override
+  String get done => 'Hecho';
 }

@@ -1,6 +1,7 @@
 {
+    "@@locale": "es",
     "appName": "Alcronos",
-    "@nombre de la aplicación": {
+    "@appName": {
         "description": "El nombre de la aplicación: Alchronos"
     },
     "drinkTimerComplete": "Temporizador de bebidas completado",
@@ -8,7 +9,7 @@
         "description": "Título de la notificación de finalización del temporizador"
     },
     "notificationMessage": "Puedes pedir otra bebida cuando te apetezca.",
-    "@mensaje de notificación": {
+    "@notificationMessage": {
         "description": "Mensaje de notificación de temporizador completo"
     },
     "drinkIconSemanticsLabel": "Un icono de bebida",
@@ -99,5 +100,9 @@
     "minutes": "min",
     "@minutes": {
         "description": "Abreviatura de minutos"
+    },
+    "done": "Hecho",
+    "@done": {
+        "description": "Texto del botón para confirmar la selección"
     }
 }

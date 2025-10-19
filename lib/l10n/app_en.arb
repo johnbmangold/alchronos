@@ -99,5 +99,9 @@
     "minutes": "min",
     "@minutes": {
         "description": "Abbreviation for minutes"
+    },
+    "done": "Done",
+    "@done": {
+        "description": "Button text to confirm selection"
     }
 }

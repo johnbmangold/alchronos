@@ -209,7 +209,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: _currentDuration == TimerDuration.custom ? 400 : 300,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(28),
@@ -218,8 +218,16 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       ),
       child: RadioGroup<TimerDuration>(
         groupValue: _currentDuration,
-        onChanged: (newDuration) async =>
-            _setCurrentDuration(context, newDuration),
+        onChanged: (newDuration) async {
+          if (newDuration == TimerDuration.custom) {
+            // Don't close the bottom sheet for custom duration
+            setState(() {
+              _currentDuration = newDuration;
+            });
+          } else {
+            await _setCurrentDuration(context, newDuration);
+          }
+        },
         child: Column(
           children: [
             ListTile(
@@ -260,11 +268,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
               leading: const Radio<TimerDuration>(
                 value: TimerDuration.custom,
               ),
-              onTap: () async {
-                await _setCurrentDuration(context, TimerDuration.custom);
-              },
             ),
-            if (_currentDuration == TimerDuration.custom)
+            if (_currentDuration == TimerDuration.custom) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
@@ -285,6 +290,20 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                   },
                 ),
               ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await _setCurrentDuration(context, TimerDuration.custom);
+                    },
+                    child: Text(widget.l10n.done),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
