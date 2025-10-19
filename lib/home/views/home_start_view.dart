@@ -195,8 +195,27 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
     super.initState();
     _currentDuration = widget.initialDuration;
     if (_currentDuration?.isCustom ?? false) {
-      _customMinutes = _currentDuration!.minutes;
-      _customMinutesController.text = _customMinutes.toString();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await _loadCustomDuration();
+      });
+    }
+  }
+
+  Future<void> _loadCustomDuration() async {
+    try {
+      // Access storage repository through the cubit
+      final storageRepo = widget.cubit.storageRepository;
+      final customMinutes = await storageRepo.readCustomDuration();
+      setState(() {
+        _customMinutes = customMinutes;
+        _customMinutesController.text = customMinutes.toString();
+      });
+    } on Exception {
+      // Fallback to default value if loading fails
+      setState(() {
+        _customMinutes = 60;
+        _customMinutesController.text = '60';
+      });
     }
   }
 
