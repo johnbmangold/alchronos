@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:alchronos/app_database.dart';
+import 'package:alchronos/core/errors/app_exceptions.dart';
+import 'package:alchronos/core/errors/error_handler.dart';
 import 'package:alchronos/home/views/views.dart';
 import 'package:alchronos/main.dart';
 import 'package:alchronos/repositories/repositories.dart';
@@ -28,58 +30,112 @@ class HomeCubit extends Cubit<HomeState> {
   final StorageRepository storageRepository;
   final workmanagerUniqueName = 'com.idlewild.alchronos.drink.timer.start';
   final workmanagerTaskName = 'com.idlewild.alchronos.drink.timer.start';
-  final StreamController<int> _durationStreamController = StreamController();
+  final StreamController<int> _durationStreamController =
+      StreamController<int>.broadcast();
   Stream<int> get durationStream => _durationStreamController.stream;
 
   Future<void> init() async {
-    final timerDuration = await getPreferredDuration();
-    _durationStreamController.add(timerDuration.minutes);
+    try {
+      final timerDuration = await getPreferredDuration();
+      final minutes = timerDuration.isCustom
+          ? await storageRepository.readCustomDuration()
+          : timerDuration.minutes;
+      _durationStreamController.add(minutes);
 
-    final partialRun = await getPartialRun(DateTime.now());
-    if (partialRun == null) {
-      emit(HomeStart());
-      return;
+      final partialRun = await getPartialRun(DateTime.now());
+      if (partialRun == null) {
+        emit(HomeStart());
+        return;
+      }
+
+      emit(
+        HomeRunning(
+          partialRunData: partialRun,
+          totalDurationInSeconds: minutes * 60,
+        ),
+      );
+    } on Exception catch (error) {
+      await ErrorHandler.handleError(
+        error,
+        StackTrace.current,
+        context: 'HomeCubit.init',
+      );
+      emit(HomeError(ErrorHandler.getUserFriendlyMessage(error)));
     }
-
-    emit(
-      HomeRunning(
-        partialRunData: partialRun,
-        totalDurationInSeconds: timerDuration.minutesToSeconds,
-      ),
-    );
   }
 
   void reset() {
     emit(HomeStart());
   }
 
+  void pauseTimer() {
+    final currentState = state;
+    if (currentState is HomeRunning && !currentState.isPaused) {
+      emit(
+        currentState.copyWith(
+          isPaused: true,
+          pausedAt: DateTime.now(),
+        ),
+      );
+    }
+  }
+
+  void resumeTimer() {
+    final currentState = state;
+    if (currentState is HomeRunning && currentState.isPaused) {
+      emit(
+        currentState.copyWith(
+          isPaused: false,
+        ),
+      );
+    }
+  }
+
   Future<void> start(
     String drinkTimerComplete,
     String notificationMessage,
   ) async {
-    // get preferred duration
-    final timerDuration = await getPreferredDuration();
+    try {
+      // get preferred duration
+      final timerDuration = await getPreferredDuration();
+      final minutes = timerDuration.isCustom
+          ? await storageRepository.readCustomDuration()
+          : timerDuration.minutes;
 
-    // set workmanager task
-    await Workmanager().registerOneOffTask(
-      workmanagerUniqueName,
-      workmanagerTaskName,
-      initialDelay: Duration(minutes: timerDuration.minutes),
-      inputData: {
-        workmanagerTitleKey: drinkTimerComplete,
-        workmanagerMessageKey: notificationMessage,
-      },
-    );
+      // Validate duration
+      if (minutes <= 0 || minutes > 1440) {
+        // Max 24 hours
+        throw const ValidationException('Invalid timer duration');
+      }
 
-    final partialRun = await _createOneHourPartialRun(DateTime.now());
+      // set workmanager task
+      await Workmanager().registerOneOffTask(
+        workmanagerUniqueName,
+        workmanagerTaskName,
+        initialDelay: Duration(minutes: minutes),
+        inputData: {
+          workmanagerTitleKey: drinkTimerComplete,
+          workmanagerMessageKey: notificationMessage,
+        },
+      );
 
-    // emit running state
-    emit(
-      HomeRunning(
-        partialRunData: partialRun,
-        totalDurationInSeconds: timerDuration.minutesToSeconds,
-      ),
-    );
+      final partialRun = await _createPartialRun(DateTime.now(), minutes);
+
+      // emit running state
+      emit(
+        HomeRunning(
+          partialRunData: partialRun,
+          totalDurationInSeconds: minutes * 60,
+        ),
+      );
+    } on Exception catch (error) {
+      await ErrorHandler.handleError(
+        error,
+        StackTrace.current,
+        context: 'HomeCubit.start',
+      );
+      emit(HomeError(ErrorHandler.getUserFriendlyMessage(error)));
+    }
   }
 
   Future<PartialRunData?> getPartialRun(DateTime currentTime) async {
@@ -93,9 +149,8 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  Future<PartialRunData> _createOneHourPartialRun(DateTime now) async {
-    final timerDuration = await getPreferredDuration();
-    final durationInSeconds = timerDuration.minutesToSeconds;
+  Future<PartialRunData> _createPartialRun(DateTime now, int minutes) async {
+    final durationInSeconds = minutes * 60;
     final partialRunData = PartialRunData(
       id: -1,
       secondsRemaining: durationInSeconds,
@@ -113,7 +168,41 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> writedPreferredDuration(TimerDuration timerDuration) async {
-    await storageRepository.writeTimerDurationPreference(timerDuration);
-    _durationStreamController.add(timerDuration.minutes);
+    try {
+      await storageRepository.writeTimerDurationPreference(timerDuration);
+      final minutes = timerDuration.isCustom
+          ? await storageRepository.readCustomDuration()
+          : timerDuration.minutes;
+      _durationStreamController.add(minutes);
+    } on Exception catch (error) {
+      await ErrorHandler.handleError(
+        error,
+        StackTrace.current,
+        context: 'HomeCubit.writedPreferredDuration',
+      );
+      emit(HomeError(ErrorHandler.getUserFriendlyMessage(error)));
+    }
+  }
+
+  Future<void> writeCustomDuration(int minutes) async {
+    try {
+      if (minutes <= 0 || minutes > 1440) {
+        throw const ValidationException('Invalid custom duration');
+      }
+      await storageRepository.writeCustomDuration(minutes);
+    } on Exception catch (error) {
+      await ErrorHandler.handleError(
+        error,
+        StackTrace.current,
+        context: 'HomeCubit.writeCustomDuration',
+      );
+      emit(HomeError(ErrorHandler.getUserFriendlyMessage(error)));
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    await _durationStreamController.close();
+    return super.close();
   }
 }

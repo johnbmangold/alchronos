@@ -147,7 +147,8 @@ class HomeDrawer extends StatelessWidget {
 enum TimerDuration implements Comparable<TimerDuration> {
   standard(minutes: 60),
   longer(minutes: 90),
-  longest(minutes: 120);
+  longest(minutes: 120),
+  custom(minutes: 0);
 
   const TimerDuration({required this.minutes});
 
@@ -163,6 +164,8 @@ enum TimerDuration implements Comparable<TimerDuration> {
       );
 
   int get minutesToSeconds => minutes * 60;
+
+  bool get isCustom => this == TimerDuration.custom;
 }
 
 class HomeBottomSheet extends StatefulWidget {
@@ -183,17 +186,30 @@ class HomeBottomSheet extends StatefulWidget {
 
 class _HomeBottomSheetState extends State<HomeBottomSheet> {
   TimerDuration? _currentDuration = TimerDuration.standard;
+  final TextEditingController _customMinutesController =
+      TextEditingController();
+  int _customMinutes = 60;
 
   @override
   void initState() {
     super.initState();
     _currentDuration = widget.initialDuration;
+    if (_currentDuration?.isCustom ?? false) {
+      _customMinutes = _currentDuration!.minutes;
+      _customMinutesController.text = _customMinutes.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _customMinutesController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 300,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(28),
@@ -239,6 +255,36 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                 await _setCurrentDuration(context, TimerDuration.longest);
               },
             ),
+            ListTile(
+              title: Text(widget.l10n.customDuration),
+              leading: const Radio<TimerDuration>(
+                value: TimerDuration.custom,
+              ),
+              onTap: () async {
+                await _setCurrentDuration(context, TimerDuration.custom);
+              },
+            ),
+            if (_currentDuration == TimerDuration.custom)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _customMinutesController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: widget.l10n.customMinutesLabel,
+                    hintText: '60',
+                    suffixText: widget.l10n.minutes,
+                  ),
+                  onChanged: (value) {
+                    final minutes = int.tryParse(value);
+                    if (minutes != null && minutes > 0) {
+                      setState(() {
+                        _customMinutes = minutes;
+                      });
+                    }
+                  },
+                ),
+              ),
           ],
         ),
       ),
@@ -258,7 +304,16 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       return;
     }
 
-    await widget.cubit.writedPreferredDuration(_currentDuration!);
+    // For custom duration, we need to create a custom
+    // TimerDuration with the specified minutes
+    var durationToSave = _currentDuration!;
+    if (_currentDuration == TimerDuration.custom) {
+      durationToSave = TimerDuration.custom;
+      // We'll store the custom minutes separately
+      await widget.cubit.writeCustomDuration(_customMinutes);
+    }
+
+    await widget.cubit.writedPreferredDuration(durationToSave);
 
     if (context.mounted) Navigator.of(context).pop();
   }

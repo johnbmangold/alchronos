@@ -34,6 +34,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
   late final HomeCubit cubit;
   final double lottieWidthHeight = 100;
   late final AnimationController _controller;
+  bool _isPaused = false;
 
   @override
   void initState() {
@@ -49,6 +50,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _timer.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -119,6 +121,37 @@ class _HomeRunningViewState extends State<HomeRunningView>
                 style: const TextStyle(fontSize: 36),
                 semanticsLabel: l10n.runningTimerSemanticsLabel,
               ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (_isPaused)
+                    ElevatedButton.icon(
+                      onPressed: _resumeTimer,
+                      icon: const Icon(Icons.play_arrow),
+                      label: Text(l10n.resumeTimer),
+                      key: const Key('resumeButton'),
+                    )
+                  else
+                    ElevatedButton.icon(
+                      onPressed: _pauseTimer,
+                      icon: const Icon(Icons.pause),
+                      label: Text(l10n.pauseTimer),
+                      key: const Key('pauseButton'),
+                    ),
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => cubit.reset(),
+                    icon: const Icon(Icons.stop),
+                    label: Text(l10n.stopTimer),
+                    key: const Key('stopButton'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
@@ -142,13 +175,29 @@ class _HomeRunningViewState extends State<HomeRunningView>
       if (_timeInSeconds <= 0) {
         _timer.cancel();
         cubit.reset();
-      } else {
-        setState(() {
-          _timeInSeconds--;
-          _calculateTimeDisplay();
-        });
+      } else if (!_isPaused) {
+        _timeInSeconds--;
+        _calculateTimeDisplay();
+        // Only call setState if the display actually changed
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
+  }
+
+  void _pauseTimer() {
+    setState(() {
+      _isPaused = true;
+    });
+    cubit.pauseTimer();
+  }
+
+  void _resumeTimer() {
+    setState(() {
+      _isPaused = false;
+    });
+    cubit.resumeTimer();
   }
 
   void _calculateTimeDisplay() {

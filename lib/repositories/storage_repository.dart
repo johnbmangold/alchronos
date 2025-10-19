@@ -8,6 +8,7 @@ class StorageRepository {
 
   final StorageService storageService;
   String get timerDurationKey => 'timer_duration_key';
+  String get customDurationKey => 'custom_duration_key';
 
   Future<void> writeTimerDurationPreference(TimerDuration timerDuration) async {
     await storageService.writeValue(timerDurationKey, timerDuration.name);
@@ -24,5 +25,14 @@ class StorageRepository {
     }
 
     return TimerDuration.fromString(name);
+  }
+
+  Future<void> writeCustomDuration(int minutes) async {
+    await storageService.writeValue(customDurationKey, minutes.toString());
+  }
+
+  Future<int> readCustomDuration() async {
+    final value = await storageService.readValue(customDurationKey);
+    return int.tryParse(value ?? '60') ?? 60;
   }
 }

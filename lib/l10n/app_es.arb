@@ -75,5 +75,29 @@
                 "type": "int"
             }
         }
+    },
+    "pauseTimer": "Pausar",
+    "@pauseTimer": {
+        "description": "Texto del botón para pausar el temporizador"
+    },
+    "resumeTimer": "Reanudar",
+    "@resumeTimer": {
+        "description": "Texto del botón para reanudar el temporizador"
+    },
+    "stopTimer": "Detener",
+    "@stopTimer": {
+        "description": "Texto del botón para detener el temporizador"
+    },
+    "customDuration": "Personalizado",
+    "@customDuration": {
+        "description": "Etiqueta para la opción de duración personalizada del temporizador"
+    },
+    "customMinutesLabel": "Minutos",
+    "@customMinutesLabel": {
+        "description": "Etiqueta para el campo de entrada de minutos personalizados"
+    },
+    "minutes": "min",
+    "@minutes": {
+        "description": "Abreviatura de minutos"
     }
 }

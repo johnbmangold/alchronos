@@ -26,12 +26,17 @@ const fallbackMessage =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initFirebase();
-  configureDependencies();
+  // Initialize Firebase and dependencies in parallel for better performance
+  await Future.wait([
+    initFirebase(),
+    Future(configureDependencies),
+  ]);
 
-  await getIt.get<LocalNotifications>().initialize(headless: false);
-
-  await Workmanager().initialize(callbackDispatcher);
+  // Initialize notifications and workmanager in parallel
+  await Future.wait([
+    getIt.get<LocalNotifications>().initialize(headless: false),
+    Workmanager().initialize(callbackDispatcher),
+  ]);
 
   runApp(const AlchronosApp());
 }
