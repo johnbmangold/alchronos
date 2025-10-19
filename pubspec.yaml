@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   animations: ^2.1.0
-  audioplayers: ^6.1.0
   avatar_glow: ^3.0.1
   cupertino_icons: ^1.0.8
   drift: ^2.29.0

@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_linux
   dynamic_system_colors
   flutter_secure_storage_linux
   sqlite3_flutter_libs
