@@ -420,7 +420,8 @@ void main() {
 
       // Wait for start view to appear
       // Wait for the drink button which is unique to HomeStartView
-      // This avoids issues with multiple HomeStartView widgets during transitions
+      // This avoids issues with multiple
+      // HomeStartView widgets during transitions
       // Wait until there's exactly one drink button (transition complete)
       final drinkButtonFinder = find.byKey(const Key('drinkButton'));
       final endTime = DateTime.now().add(const Duration(seconds: 5));
