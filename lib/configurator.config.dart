@@ -49,8 +49,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i558.FlutterSecureStorage>(
         () => appModule.flutterSecureStorage);
     gh.lazySingleton<_i388.AppDatabase>(() => _i388.AppDatabase());
-    gh.lazySingleton<_i533.HapticService>(() => _i533.HapticService());
     gh.lazySingleton<_i472.AudioService>(() => _i472.AudioService());
+    gh.lazySingleton<_i533.HapticService>(() => _i533.HapticService());
     gh.factory<_i79.StorageService>(() => _i79.StorageService(
         flutterSecureStorage: gh<_i558.FlutterSecureStorage>()));
     gh.lazySingleton<_i365.HistoryService>(() => _i365.HistoryService(
