@@ -25,16 +25,16 @@ void main() {
         expect(performanceService, isNotNull);
       });
 
-      test('endTiming logs duration when startTiming was called', () {
+      test('endTiming logs duration when startTiming was called', () async {
         performanceService.startTiming('test_operation');
 
         // Wait a bit to ensure duration > 0
-        Future<void>.delayed(const Duration(milliseconds: 10), () {
-          performanceService.endTiming('test_operation');
-        });
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        performanceService.endTiming('test_operation');
 
         // Verify logger was called
-        verify(mockLogger.i(any, error: anyNamed('error'))).called(any);
+        verify(mockLogger.i(any, error: anyNamed('error')))
+            .called(greaterThan(0));
       });
 
       test('endTiming does nothing when startTiming was not called', () {
@@ -61,8 +61,9 @@ void main() {
       });
 
       test('increments event count for same event', () {
-        performanceService.trackEvent('test_event');
-        performanceService.trackEvent('test_event');
+        performanceService
+          ..trackEvent('test_event')
+          ..trackEvent('test_event');
 
         final stats = performanceService.getEventStats();
         expect(stats['test_event'], 2);
@@ -132,9 +133,10 @@ void main() {
       });
 
       test('returns event counts for tracked events', () {
-        performanceService.trackEvent('event1');
-        performanceService.trackEvent('event1');
-        performanceService.trackEvent('event2');
+        performanceService
+          ..trackEvent('event1')
+          ..trackEvent('event1')
+          ..trackEvent('event2');
 
         final stats = performanceService.getEventStats();
 
@@ -152,4 +154,3 @@ void main() {
     });
   });
 }
-

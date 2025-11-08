@@ -2,6 +2,8 @@ import 'package:alchronos/services/haptic_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('HapticService', () {
     late HapticService hapticService;
 
@@ -50,4 +52,3 @@ void main() {
     });
   });
 }
-

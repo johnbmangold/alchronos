@@ -1,6 +1,5 @@
 import 'package:alchronos/app_database.dart';
 import 'package:alchronos/services/history_service.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
@@ -23,12 +22,11 @@ void main() {
 
     group('saveCompletedSession', () {
       test('saves session successfully', () async {
-        when(mockDatabase.insertTimerSession(any))
-            .thenAnswer((_) async => {});
+        when(mockDatabase.insertTimerSession(any)).thenAnswer((_) async => 1);
 
         await historyService.saveCompletedSession(
           durationMinutes: 60,
-          startTime: DateTime(2024, 1, 1),
+          startTime: DateTime(2024),
           endTime: DateTime(2024, 1, 1, 1),
           wasPaused: false,
         );
@@ -37,12 +35,11 @@ void main() {
       });
 
       test('saves session with pause count', () async {
-        when(mockDatabase.insertTimerSession(any))
-            .thenAnswer((_) async => {});
+        when(mockDatabase.insertTimerSession(any)).thenAnswer((_) async => 1);
 
         await historyService.saveCompletedSession(
           durationMinutes: 60,
-          startTime: DateTime(2024, 1, 1),
+          startTime: DateTime(2024),
           endTime: DateTime(2024, 1, 1, 1),
           wasPaused: true,
           pauseCount: 3,
@@ -57,7 +54,7 @@ void main() {
 
         await historyService.saveCompletedSession(
           durationMinutes: 60,
-          startTime: DateTime(2024, 1, 1),
+          startTime: DateTime(2024),
           endTime: DateTime(2024, 1, 1, 1),
           wasPaused: false,
         );
@@ -72,7 +69,7 @@ void main() {
           TimerSessionData(
             id: 1,
             durationMinutes: 60,
-            startTime: DateTime(2024, 1, 1),
+            startTime: DateTime(2024),
             endTime: DateTime(2024, 1, 1, 1),
             wasPaused: false,
             pauseCount: 0,
@@ -84,7 +81,7 @@ void main() {
           startDate: anyNamed('startDate'),
           endDate: anyNamed('endDate'),
           limit: anyNamed('limit'),
-        )).thenAnswer((_) async => expectedSessions);
+        ),).thenAnswer((_) async => expectedSessions);
 
         final result = await historyService.getHistory();
 
@@ -96,7 +93,7 @@ void main() {
           startDate: anyNamed('startDate'),
           endDate: anyNamed('endDate'),
           limit: anyNamed('limit'),
-        )).thenThrow(Exception('Database error'));
+        ),).thenThrow(Exception('Database error'));
 
         final result = await historyService.getHistory();
 
@@ -111,7 +108,7 @@ void main() {
           startDate: anyNamed('startDate'),
           endDate: anyNamed('endDate'),
           limit: anyNamed('limit'),
-        )).thenAnswer((_) async => <TimerSessionData>[]);
+        ),).thenAnswer((_) async => <TimerSessionData>[]);
 
         final result = await historyService.getStatistics();
 
@@ -125,7 +122,7 @@ void main() {
           TimerSessionData(
             id: 1,
             durationMinutes: 60,
-            startTime: DateTime(2024, 1, 1),
+            startTime: DateTime(2024),
             endTime: DateTime(2024, 1, 1, 1),
             wasPaused: false,
             pauseCount: 0,
@@ -133,12 +130,21 @@ void main() {
           ),
           TimerSessionData(
             id: 2,
-            durationMinutes: 90,
+            durationMinutes: 60,
             startTime: DateTime(2024, 1, 2),
-            endTime: DateTime(2024, 1, 2, 1, 30),
+            endTime: DateTime(2024, 1, 2, 1),
+            wasPaused: false,
+            pauseCount: 0,
+            createdAt: DateTime(2024, 1, 2, 1),
+          ),
+          TimerSessionData(
+            id: 3,
+            durationMinutes: 90,
+            startTime: DateTime(2024, 1, 3),
+            endTime: DateTime(2024, 1, 3, 1, 30),
             wasPaused: true,
             pauseCount: 2,
-            createdAt: DateTime(2024, 1, 2, 1, 30),
+            createdAt: DateTime(2024, 1, 3, 1, 30),
           ),
         ];
 
@@ -146,13 +152,13 @@ void main() {
           startDate: anyNamed('startDate'),
           endDate: anyNamed('endDate'),
           limit: anyNamed('limit'),
-        )).thenAnswer((_) async => sessions);
+        ),).thenAnswer((_) async => sessions);
 
         final result = await historyService.getStatistics();
 
-        expect(result.totalSessions, 2);
-        expect(result.totalMinutes, 150);
-        expect(result.averageMinutes, 75);
+        expect(result.totalSessions, 3);
+        expect(result.totalMinutes, 210);
+        expect(result.averageMinutes, 70);
         expect(result.totalPauses, 2);
         expect(result.sessionsWithPauses, 1);
         expect(result.mostCommonDuration, 60);
@@ -163,7 +169,7 @@ void main() {
           startDate: anyNamed('startDate'),
           endDate: anyNamed('endDate'),
           limit: anyNamed('limit'),
-        )).thenThrow(Exception('Database error'));
+        ),).thenThrow(Exception('Database error'));
 
         final result = await historyService.getStatistics();
 
@@ -175,7 +181,7 @@ void main() {
     group('clearHistory', () {
       test('clears all history', () async {
         when(mockDatabase.clearAllTimerSessions())
-            .thenAnswer((_) async => {});
+            .thenAnswer((_) async => Future<void>.value());
 
         await historyService.clearHistory();
 
@@ -212,7 +218,7 @@ void main() {
     });
 
     test('pauseRate calculates correctly', () {
-      final stats = TimerStatistics(
+      const stats = TimerStatistics(
         totalSessions: 10,
         totalMinutes: 600,
         averageMinutes: 60,
@@ -225,7 +231,7 @@ void main() {
     });
 
     test('formattedTotalTime formats hours and minutes', () {
-      final stats = TimerStatistics(
+      const stats = TimerStatistics(
         totalSessions: 1,
         totalMinutes: 125,
         averageMinutes: 125,
@@ -238,7 +244,7 @@ void main() {
     });
 
     test('formattedTotalTime formats minutes only', () {
-      final stats = TimerStatistics(
+      const stats = TimerStatistics(
         totalSessions: 1,
         totalMinutes: 45,
         averageMinutes: 45,
@@ -253,7 +259,7 @@ void main() {
 
   group('DateRange', () {
     test('creates date range with start and end', () {
-      final start = DateTime(2024, 1, 1);
+      final start = DateTime(2024);
       final end = DateTime(2024, 1, 31);
       final range = DateRange(start, end);
 
@@ -262,4 +268,3 @@ void main() {
     });
   });
 }
-

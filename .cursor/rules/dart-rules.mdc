@@ -126,6 +126,19 @@ mobile platforms.
       exception is intentionally ignored. Never use `catch (e)` without
       specifying the exception type.
 * **Arrow Functions:** Use arrow syntax for simple one-line functions.
+* **Cascade Notation:** Use cascade notation (`..`) when calling multiple
+  methods on the same object to avoid unnecessary duplication of the receiver.
+
+  ```dart
+  // Bad: Unnecessary duplication of receiver
+  performanceService.trackEvent('event1');
+  performanceService.trackEvent('event2');
+
+  // Good: Use cascade notation
+  performanceService
+    ..trackEvent('event1')
+    ..trackEvent('event2');
+  ```
 
 ## Flutter Best Practices
 * **Immutability:** Widgets (especially `StatelessWidget`) are immutable; when

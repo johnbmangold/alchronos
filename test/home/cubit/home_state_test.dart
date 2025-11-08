@@ -39,7 +39,7 @@ void main() {
       test('is instance of HomeState', () {
         final partialRunData = PartialRunData(
           id: 1,
-          endTime: DateTime(2024, 1, 1),
+          endTime: DateTime(2024),
           secondsRemaining: 60,
         );
         final state = HomeRunning(
@@ -53,7 +53,7 @@ void main() {
       test('defaults isPaused to false', () {
         final partialRunData = PartialRunData(
           id: 1,
-          endTime: DateTime(2024, 1, 1),
+          endTime: DateTime(2024),
           secondsRemaining: 60,
         );
         final state = HomeRunning(
@@ -68,7 +68,7 @@ void main() {
       test('sets isPaused and pausedAt when provided', () {
         final partialRunData = PartialRunData(
           id: 1,
-          endTime: DateTime(2024, 1, 1),
+          endTime: DateTime(2024),
           secondsRemaining: 60,
         );
         final pausedAt = DateTime(2024, 1, 1, 0, 30);
@@ -87,13 +87,12 @@ void main() {
         test('returns new instance with updated values', () {
           final originalPartialRunData = PartialRunData(
             id: 1,
-            endTime: DateTime(2024, 1, 1),
+            endTime: DateTime(2024),
             secondsRemaining: 60,
           );
           final originalState = HomeRunning(
             partialRunData: originalPartialRunData,
             totalDurationInSeconds: 60,
-            isPaused: false,
           );
 
           final newPartialRunData = PartialRunData(
@@ -117,13 +116,12 @@ void main() {
         test('preserves original values when not provided', () {
           final originalPartialRunData = PartialRunData(
             id: 1,
-            endTime: DateTime(2024, 1, 1),
+            endTime: DateTime(2024),
             secondsRemaining: 60,
           );
           final originalState = HomeRunning(
             partialRunData: originalPartialRunData,
             totalDurationInSeconds: 60,
-            isPaused: false,
           );
 
           final newState = originalState.copyWith(isPaused: true);
@@ -137,4 +135,3 @@ void main() {
     });
   });
 }
-

@@ -60,8 +60,7 @@ void main() {
         'key2': 'value2',
       };
 
-      when(mockSecureStorage.readAll())
-          .thenAnswer((_) async => expectedMap);
+      when(mockSecureStorage.readAll()).thenAnswer((_) async => expectedMap);
 
       final result = await storageService.readAll();
 
@@ -95,8 +94,7 @@ void main() {
     test('delete calls flutterSecureStorage.delete', () async {
       const key = 'test_key';
 
-      when(mockSecureStorage.delete(key: key))
-          .thenAnswer((_) async => {});
+      when(mockSecureStorage.delete(key: key)).thenAnswer((_) async => {});
 
       await storageService.delete(key);
 
@@ -112,4 +110,3 @@ void main() {
     });
   });
 }
-

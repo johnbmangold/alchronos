@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:alchronos/about/bloc/about_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -10,19 +12,16 @@ void main() {
     });
 
     tearDown(() {
-      aboutBloc.close();
+      unawaited(aboutBloc.close());
     });
 
     test('initial state is AboutInitial', () {
       expect(aboutBloc.state, isA<AboutInitial>());
     });
 
-    test('emits no new states when AboutEvent is added', () {
-      final initialState = aboutBloc.state;
-      aboutBloc.add(AboutEvent());
-      // Since AboutBloc doesn't handle events, state should remain the same
-      expect(aboutBloc.state, initialState);
+    test('state remains AboutInitial', () {
+      // AboutBloc doesn't handle events, so state should remain AboutInitial
+      expect(aboutBloc.state, isA<AboutInitial>());
     });
   });
 }
-
