@@ -636,16 +636,20 @@ void main() {
       await tester.pump();
       await waitForWidget(tester, find.byType(HomeStartView));
 
-      // Open drawer - find Scaffold within HomeScreen
-      final homeScreen = find.byType(HomeScreen);
-      expect(homeScreen, findsOneWidget);
+      // Open drawer - find Scaffold within HomeStartView
+      // (HomeStartView has its own Scaffold with the drawer)
+      final homeStartView = find.byType(HomeStartView);
+      expect(homeStartView, findsOneWidget);
       final scaffold = find.descendant(
-        of: homeScreen,
+        of: homeStartView,
         matching: find.byType(Scaffold),
       );
       expect(scaffold, findsOneWidget);
       tester.state<ScaffoldState>(scaffold).openDrawer();
       await waitForWidget(tester, find.byType(Drawer));
+      // Wait for drawer animation to complete
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
       // Find and tap About option
       final l10n = AppLocalizations.of(
@@ -654,6 +658,9 @@ void main() {
       final aboutOption = find.text(l10n.drawerAbout);
       expect(aboutOption, findsOneWidget);
       await tester.tap(aboutOption);
+      // Wait for drawer to close and navigation to complete
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
       // Wait for AboutScreen to appear
       await waitForWidget(tester, find.byType(AboutScreen));
 
