@@ -414,13 +414,26 @@ void main() {
       // Tap stop button
       await tester.tap(find.byKey(const Key('stopButton')));
       await tester.pump();
+      // Wait for transition to complete
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       // Wait for start view to appear
-      await waitForWidget(tester, find.byType(HomeStartView));
+      // Wait for the drink button which is unique to HomeStartView
+      // This avoids issues with multiple HomeStartView widgets during transitions
+      // Wait until there's exactly one drink button (transition complete)
+      final drinkButtonFinder = find.byKey(const Key('drinkButton'));
+      final endTime = DateTime.now().add(const Duration(seconds: 5));
+      while (DateTime.now().isBefore(endTime)) {
+        await tester.pump(const Duration(milliseconds: 100));
+        if (drinkButtonFinder.evaluate().length == 1) {
+          break;
+        }
+        await tester.pump(const Duration(milliseconds: 50));
+      }
 
       // Verify returned to start view
-      expect(find.byType(HomeStartView), findsOneWidget);
-      expect(find.byKey(const Key('drinkButton')), findsOneWidget);
+      expect(drinkButtonFinder, findsOneWidget);
     });
 
     testWidgets('should display paused text when timer is paused',
@@ -481,10 +494,16 @@ void main() {
       await waitForWidget(tester, find.byType(HomeBottomSheet));
 
       // Find and tap standard duration option
+      // Find the text within HomeBottomSheet to avoid the duplicate in AppBar
       final l10n = AppLocalizations.of(
         tester.element(find.byType(HomeScreen)),
       )!;
-      final standardOption = find.text(l10n.minutesLabel(60));
+      final bottomSheet = find.byType(HomeBottomSheet);
+      expect(bottomSheet, findsOneWidget);
+      final standardOption = find.descendant(
+        of: bottomSheet,
+        matching: find.text(l10n.minutesLabel(60)),
+      );
       expect(standardOption, findsOneWidget);
       await tester.tap(standardOption);
       await tester.pump();
