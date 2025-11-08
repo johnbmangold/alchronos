@@ -79,10 +79,12 @@ void main() {
         when(mockPartialRunRepository.getPartialRunAfterTime(any))
             .thenAnswer((_) async => null);
         when(mockPerformanceService.startTiming(any)).thenReturn(null);
-        when(mockPerformanceService.trackTimerEvent(
-          any,
-          duration: anyNamed('duration'),
-        ),).thenReturn(null);
+        when(
+          mockPerformanceService.trackTimerEvent(
+            any,
+            duration: anyNamed('duration'),
+          ),
+        ).thenReturn(null);
         when(mockPerformanceService.endTiming(any)).thenReturn(null);
 
         final states = <HomeState>[];
@@ -111,10 +113,12 @@ void main() {
         when(mockPartialRunRepository.getPartialRunAfterTime(any))
             .thenAnswer((_) async => partialRun);
         when(mockPerformanceService.startTiming(any)).thenReturn(null);
-        when(mockPerformanceService.trackTimerEvent(
-          any,
-          duration: anyNamed('duration'),
-        ),).thenReturn(null);
+        when(
+          mockPerformanceService.trackTimerEvent(
+            any,
+            duration: anyNamed('duration'),
+          ),
+        ).thenReturn(null);
         when(mockPerformanceService.endTiming(any)).thenReturn(null);
 
         final states = <HomeState>[];
@@ -126,10 +130,12 @@ void main() {
         expect(states, isNotEmpty);
         expect(states.last, isA<HomeRunning>());
         await subscription.cancel();
-        verify(mockPerformanceService.trackTimerEvent(
-          'resume_existing',
-          duration: 60,
-        ),).called(1);
+        verify(
+          mockPerformanceService.trackTimerEvent(
+            'resume_existing',
+            duration: 60,
+          ),
+        ).called(1);
       });
 
       test('emits HomeError when exception occurs', () async {
@@ -187,13 +193,15 @@ void main() {
         when(mockAudioService.playButtonClickSound())
             .thenAnswer((_) async => {});
         when(mockPerformanceService.trackTimerEvent(any)).thenReturn(null);
-        when(mockHistoryService.saveCompletedSession(
-          durationMinutes: anyNamed('durationMinutes'),
-          startTime: anyNamed('startTime'),
-          endTime: anyNamed('endTime'),
-          wasPaused: anyNamed('wasPaused'),
-          pauseCount: anyNamed('pauseCount'),
-        ),).thenAnswer((_) async => {});
+        when(
+          mockHistoryService.saveCompletedSession(
+            durationMinutes: anyNamed('durationMinutes'),
+            startTime: anyNamed('startTime'),
+            endTime: anyNamed('endTime'),
+            wasPaused: anyNamed('wasPaused'),
+            pauseCount: anyNamed('pauseCount'),
+          ),
+        ).thenAnswer((_) async => {});
 
         // Set initial state to HomeRunning
         homeCubit.emit(
@@ -212,13 +220,15 @@ void main() {
         expect(states, isNotEmpty);
         expect(states.last, isA<HomeStart>());
         await subscription.cancel();
-        verify(mockHistoryService.saveCompletedSession(
-          durationMinutes: anyNamed('durationMinutes'),
-          startTime: anyNamed('startTime'),
-          endTime: anyNamed('endTime'),
-          wasPaused: anyNamed('wasPaused'),
-          pauseCount: anyNamed('pauseCount'),
-        ),).called(1);
+        verify(
+          mockHistoryService.saveCompletedSession(
+            durationMinutes: anyNamed('durationMinutes'),
+            startTime: anyNamed('startTime'),
+            endTime: anyNamed('endTime'),
+            wasPaused: anyNamed('wasPaused'),
+            pauseCount: anyNamed('pauseCount'),
+          ),
+        ).called(1);
       });
     });
 
@@ -230,10 +240,12 @@ void main() {
           secondsRemaining: 3600,
         );
 
-        when(mockPerformanceService.trackTimerEvent(
-          any,
-          duration: anyNamed('duration'),
-        ),).thenReturn(null);
+        when(
+          mockPerformanceService.trackTimerEvent(
+            any,
+            duration: anyNamed('duration'),
+          ),
+        ).thenReturn(null);
         when(mockHapticService.timerToggle()).thenAnswer((_) async => {});
 
         homeCubit.emit(
@@ -254,10 +266,12 @@ void main() {
         expect((states.last as HomeRunning).isPaused, isTrue);
         await subscription.cancel();
         verify(mockHapticService.timerToggle()).called(1);
-        verify(mockPerformanceService.trackTimerEvent(
-          'pause',
-          duration: 60,
-        ),).called(1);
+        verify(
+          mockPerformanceService.trackTimerEvent(
+            'pause',
+            duration: 60,
+          ),
+        ).called(1);
       });
 
       test('does nothing when timer is already paused', () async {
@@ -290,10 +304,12 @@ void main() {
           secondsRemaining: 3600,
         );
 
-        when(mockPerformanceService.trackTimerEvent(
-          any,
-          duration: anyNamed('duration'),
-        ),).thenReturn(null);
+        when(
+          mockPerformanceService.trackTimerEvent(
+            any,
+            duration: anyNamed('duration'),
+          ),
+        ).thenReturn(null);
         when(mockHapticService.timerToggle()).thenAnswer((_) async => {});
 
         homeCubit.emit(
@@ -315,10 +331,12 @@ void main() {
         expect((states.last as HomeRunning).isPaused, isFalse);
         await subscription.cancel();
         verify(mockHapticService.timerToggle()).called(1);
-        verify(mockPerformanceService.trackTimerEvent(
-          'resume',
-          duration: 60,
-        ),).called(1);
+        verify(
+          mockPerformanceService.trackTimerEvent(
+            'resume',
+            duration: 60,
+          ),
+        ).called(1);
       });
 
       test('does nothing when timer is not paused', () async {
@@ -426,10 +444,12 @@ void main() {
         when(mockPartialRunRepository.getPartialRunAfterTime(any))
             .thenAnswer((_) async => null);
         when(mockPerformanceService.startTiming(any)).thenReturn(null);
-        when(mockPerformanceService.trackTimerEvent(
-          any,
-          duration: anyNamed('duration'),
-        ),).thenReturn(null);
+        when(
+          mockPerformanceService.trackTimerEvent(
+            any,
+            duration: anyNamed('duration'),
+          ),
+        ).thenReturn(null);
         when(mockPerformanceService.endTiming(any)).thenReturn(null);
 
         await homeCubit.init();

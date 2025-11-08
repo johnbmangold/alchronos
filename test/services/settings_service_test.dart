@@ -128,23 +128,30 @@ void main() {
       });
 
       test('does not save when minutes is 0', () async {
+        reset(mockStorageRepository);
         await settingsService.setReminderMinutes(minutes: 0);
 
-        verifyNever(mockStorageRepository.writeInt(any, value: any));
+        verifyNever(
+          mockStorageRepository.writeInt(any, value: anyNamed('value')),
+        );
       });
 
       test('does not save when minutes is negative', () async {
         reset(mockStorageRepository);
         await settingsService.setReminderMinutes(minutes: -1);
 
-        verifyNever(mockStorageRepository.writeInt(any, value: any));
+        verifyNever(
+          mockStorageRepository.writeInt(any, value: anyNamed('value')),
+        );
       });
 
       test('does not save when minutes exceeds 60', () async {
         reset(mockStorageRepository);
         await settingsService.setReminderMinutes(minutes: 61);
 
-        verifyNever(mockStorageRepository.writeInt(any, value: any));
+        verifyNever(
+          mockStorageRepository.writeInt(any, value: anyNamed('value')),
+        );
       });
 
       test('saves when minutes is exactly 60', () async {

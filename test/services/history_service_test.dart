@@ -77,11 +77,13 @@ void main() {
           ),
         ];
 
-        when(mockDatabase.getTimerSessions(
-          startDate: anyNamed('startDate'),
-          endDate: anyNamed('endDate'),
-          limit: anyNamed('limit'),
-        ),).thenAnswer((_) async => expectedSessions);
+        when(
+          mockDatabase.getTimerSessions(
+            startDate: anyNamed('startDate'),
+            endDate: anyNamed('endDate'),
+            limit: anyNamed('limit'),
+          ),
+        ).thenAnswer((_) async => expectedSessions);
 
         final result = await historyService.getHistory();
 
@@ -89,11 +91,13 @@ void main() {
       });
 
       test('returns empty list on exception', () async {
-        when(mockDatabase.getTimerSessions(
-          startDate: anyNamed('startDate'),
-          endDate: anyNamed('endDate'),
-          limit: anyNamed('limit'),
-        ),).thenThrow(Exception('Database error'));
+        when(
+          mockDatabase.getTimerSessions(
+            startDate: anyNamed('startDate'),
+            endDate: anyNamed('endDate'),
+            limit: anyNamed('limit'),
+          ),
+        ).thenThrow(Exception('Database error'));
 
         final result = await historyService.getHistory();
 
@@ -104,11 +108,13 @@ void main() {
 
     group('getStatistics', () {
       test('returns empty statistics when no sessions', () async {
-        when(mockDatabase.getTimerSessions(
-          startDate: anyNamed('startDate'),
-          endDate: anyNamed('endDate'),
-          limit: anyNamed('limit'),
-        ),).thenAnswer((_) async => <TimerSessionData>[]);
+        when(
+          mockDatabase.getTimerSessions(
+            startDate: anyNamed('startDate'),
+            endDate: anyNamed('endDate'),
+            limit: anyNamed('limit'),
+          ),
+        ).thenAnswer((_) async => <TimerSessionData>[]);
 
         final result = await historyService.getStatistics();
 
@@ -148,11 +154,13 @@ void main() {
           ),
         ];
 
-        when(mockDatabase.getTimerSessions(
-          startDate: anyNamed('startDate'),
-          endDate: anyNamed('endDate'),
-          limit: anyNamed('limit'),
-        ),).thenAnswer((_) async => sessions);
+        when(
+          mockDatabase.getTimerSessions(
+            startDate: anyNamed('startDate'),
+            endDate: anyNamed('endDate'),
+            limit: anyNamed('limit'),
+          ),
+        ).thenAnswer((_) async => sessions);
 
         final result = await historyService.getStatistics();
 
@@ -165,11 +173,13 @@ void main() {
       });
 
       test('returns empty statistics on exception', () async {
-        when(mockDatabase.getTimerSessions(
-          startDate: anyNamed('startDate'),
-          endDate: anyNamed('endDate'),
-          limit: anyNamed('limit'),
-        ),).thenThrow(Exception('Database error'));
+        when(
+          mockDatabase.getTimerSessions(
+            startDate: anyNamed('startDate'),
+            endDate: anyNamed('endDate'),
+            limit: anyNamed('limit'),
+          ),
+        ).thenThrow(Exception('Database error'));
 
         final result = await historyService.getStatistics();
 

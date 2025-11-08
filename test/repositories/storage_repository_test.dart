@@ -22,10 +22,12 @@ void main() {
 
     group('writeTimerDurationPreference', () {
       test('writes timer duration preference', () async {
-        when(mockStorageService.writeValue(
-          storageRepository.timerDurationKey,
-          TimerDuration.standard.name,
-        ),).thenAnswer((_) async => {});
+        when(
+          mockStorageService.writeValue(
+            storageRepository.timerDurationKey,
+            TimerDuration.standard.name,
+          ),
+        ).thenAnswer((_) async => {});
 
         await storageRepository.writeTimerDurationPreference(
           TimerDuration.standard,
@@ -42,9 +44,11 @@ void main() {
 
     group('readTimerDurationPreference', () {
       test('returns stored timer duration', () async {
-        when(mockStorageService.readValue(
-          storageRepository.timerDurationKey,
-        ),).thenAnswer((_) async => TimerDuration.longer.name);
+        when(
+          mockStorageService.readValue(
+            storageRepository.timerDurationKey,
+          ),
+        ).thenAnswer((_) async => TimerDuration.longer.name);
 
         final result = await storageRepository.readTimerDurationPreference();
 
@@ -52,13 +56,17 @@ void main() {
       });
 
       test('returns and saves standard when value is null', () async {
-        when(mockStorageService.readValue(
-          storageRepository.timerDurationKey,
-        ),).thenAnswer((_) async => null);
-        when(mockStorageService.writeValue(
-          storageRepository.timerDurationKey,
-          TimerDuration.standard.name,
-        ),).thenAnswer((_) async => {});
+        when(
+          mockStorageService.readValue(
+            storageRepository.timerDurationKey,
+          ),
+        ).thenAnswer((_) async => null);
+        when(
+          mockStorageService.writeValue(
+            storageRepository.timerDurationKey,
+            TimerDuration.standard.name,
+          ),
+        ).thenAnswer((_) async => {});
 
         final result = await storageRepository.readTimerDurationPreference();
 
@@ -72,13 +80,17 @@ void main() {
       });
 
       test('returns and saves standard when value is empty', () async {
-        when(mockStorageService.readValue(
-          storageRepository.timerDurationKey,
-        ),).thenAnswer((_) async => '');
-        when(mockStorageService.writeValue(
-          storageRepository.timerDurationKey,
-          TimerDuration.standard.name,
-        ),).thenAnswer((_) async => {});
+        when(
+          mockStorageService.readValue(
+            storageRepository.timerDurationKey,
+          ),
+        ).thenAnswer((_) async => '');
+        when(
+          mockStorageService.writeValue(
+            storageRepository.timerDurationKey,
+            TimerDuration.standard.name,
+          ),
+        ).thenAnswer((_) async => {});
 
         final result = await storageRepository.readTimerDurationPreference();
 
@@ -90,10 +102,12 @@ void main() {
       test('writes custom duration', () async {
         const minutes = 90;
 
-        when(mockStorageService.writeValue(
-          storageRepository.customDurationKey,
-          minutes.toString(),
-        ),).thenAnswer((_) async => {});
+        when(
+          mockStorageService.writeValue(
+            storageRepository.customDurationKey,
+            minutes.toString(),
+          ),
+        ).thenAnswer((_) async => {});
 
         await storageRepository.writeCustomDuration(minutes);
 
@@ -110,9 +124,11 @@ void main() {
       test('returns stored custom duration', () async {
         const expectedMinutes = 90;
 
-        when(mockStorageService.readValue(
-          storageRepository.customDurationKey,
-        ),).thenAnswer((_) async => expectedMinutes.toString());
+        when(
+          mockStorageService.readValue(
+            storageRepository.customDurationKey,
+          ),
+        ).thenAnswer((_) async => expectedMinutes.toString());
 
         final result = await storageRepository.readCustomDuration();
 
@@ -120,9 +136,11 @@ void main() {
       });
 
       test('returns default 60 when value is null', () async {
-        when(mockStorageService.readValue(
-          storageRepository.customDurationKey,
-        ),).thenAnswer((_) async => null);
+        when(
+          mockStorageService.readValue(
+            storageRepository.customDurationKey,
+          ),
+        ).thenAnswer((_) async => null);
 
         final result = await storageRepository.readCustomDuration();
 
@@ -130,9 +148,11 @@ void main() {
       });
 
       test('returns default 60 when value is invalid', () async {
-        when(mockStorageService.readValue(
-          storageRepository.customDurationKey,
-        ),).thenAnswer((_) async => 'invalid');
+        when(
+          mockStorageService.readValue(
+            storageRepository.customDurationKey,
+          ),
+        ).thenAnswer((_) async => 'invalid');
 
         final result = await storageRepository.readCustomDuration();
 
