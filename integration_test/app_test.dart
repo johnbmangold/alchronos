@@ -547,28 +547,44 @@ void main() {
 
       // Open bottom sheet
       await tester.tap(find.byType(TextButton).first);
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
+      // Wait for bottom sheet to appear
+      await waitForWidget(tester, find.byType(HomeBottomSheet));
 
       // Find and tap custom option
       final l10n = AppLocalizations.of(
         tester.element(find.byType(HomeScreen)),
       )!;
-      final customOption = find.text(l10n.customDuration);
-      expect(customOption, findsOneWidget);
-      await tester.tap(customOption);
-      await tester.pump(const Duration(milliseconds: 500));
-
-      // Verify custom input field is displayed
-      expect(find.byType(TextField), findsOneWidget);
+      // Find the Radio widget with value TimerDuration.custom
+      // We need to tap the Radio directly to trigger RadioGroup's onChanged
+      final customOptionText = find.text(l10n.customDuration);
+      expect(customOptionText, findsOneWidget);
+      // Find the Radio widget within the same ListTile
+      final customRadio = find.descendant(
+        of: find.ancestor(
+          of: customOptionText,
+          matching: find.byType(ListTile),
+        ),
+        matching: find.byType(Radio<TimerDuration>),
+      );
+      expect(customRadio, findsOneWidget);
+      await tester.tap(customRadio);
+      // Wait for state update and TextField to appear
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await waitForWidget(tester, find.byType(TextField));
 
       // Enter custom duration
       await tester.enterText(find.byType(TextField), '75');
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
       // Tap done button
       final doneButton = find.text(l10n.done);
-      expect(doneButton, findsOneWidget);
+      await waitForWidget(tester, doneButton);
       await tester.tap(doneButton);
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 
       // Bottom sheet should close
