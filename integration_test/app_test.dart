@@ -365,7 +365,8 @@ void main() {
 
       // Start timer
       await tester.tap(find.byKey(const Key('drinkButton')));
-      await tester.pump(const Duration(milliseconds: 500));
+      // Wait for HomeRunningView to appear
+      await waitForWidget(tester, find.byType(HomeRunningView));
 
       // Pause timer
       await tester.tap(find.byKey(const Key('pauseButton')));
@@ -430,7 +431,8 @@ void main() {
 
       // Start timer
       await tester.tap(find.byKey(const Key('drinkButton')));
-      await tester.pump(const Duration(milliseconds: 500));
+      // Wait for HomeRunningView to appear
+      await waitForWidget(tester, find.byType(HomeRunningView));
 
       // Pause timer
       await tester.tap(find.byKey(const Key('pauseButton')));
