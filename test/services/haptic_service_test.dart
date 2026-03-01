@@ -1,4 +1,5 @@
 import 'package:alchronos/services/haptic_service.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -8,12 +9,15 @@ void main() {
     late HapticService hapticService;
 
     setUp(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('haptic_feedback'),
+        (MethodCall methodCall) async {
+          return null; // returning null represents success
+        },
+      );
       hapticService = HapticService();
     });
-
-    // Note: HapticService tests are skipped because they require platform
-    // channels (haptic_feedback) that are not available in unit tests.
-    // These tests should be run as integration tests on a real device/emulator.
 
     test(
       'lightImpact completes without error',
@@ -21,7 +25,6 @@ void main() {
         await hapticService.lightImpact();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -30,7 +33,6 @@ void main() {
         await hapticService.mediumImpact();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -39,7 +41,6 @@ void main() {
         await hapticService.heavyImpact();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -48,7 +49,6 @@ void main() {
         await hapticService.selectionClick();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -57,7 +57,6 @@ void main() {
         await hapticService.timerComplete();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -66,7 +65,6 @@ void main() {
         await hapticService.timerToggle();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -75,7 +73,6 @@ void main() {
         await hapticService.timerStart();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
 
     test(
@@ -84,7 +81,6 @@ void main() {
         await hapticService.timerStop();
         // Should complete without error
       },
-      skip: 'Requires platform channels not available in unit tests',
     );
   });
 }
