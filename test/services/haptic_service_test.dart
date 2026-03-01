@@ -12,7 +12,7 @@ void main() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
         const MethodChannel('haptic_feedback'),
-        (MethodCall methodCall) async {
+        (methodCall) async {
           return null; // returning null represents success
         },
       );
