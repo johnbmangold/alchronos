@@ -66,9 +66,8 @@ class LocalNotifications {
     String navigationActionId,
   ) async {
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
+      settings: initializationSettings,
+      onDidReceiveNotificationResponse: (notificationResponse) {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
           // user selected a notification

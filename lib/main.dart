@@ -5,7 +5,7 @@ import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/home/views/home_screen.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/local_notifications.dart';
-import 'package:dynamic_system_colors/dynamic_system_colors.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -168,10 +168,10 @@ Future<void> showNotificationInBackground(String title, String message) async {
   await localNotifications.initialize(headless: true);
   logger.i('[BackgroundFetch] Showing notification');
   await flutterLocalNotificationsPlugin.show(
-    localNotifications.getNotificationId(),
-    title,
-    message,
-    localNotifications.getNotificationDetailsTimesUp(),
+    id: localNotifications.getNotificationId(),
+    title: title,
+    body: message,
+    notificationDetails: localNotifications.getNotificationDetailsTimesUp(),
     payload: 1.toString(),
   );
 }

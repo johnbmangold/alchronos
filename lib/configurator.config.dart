@@ -51,17 +51,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i388.AppDatabase>(() => _i388.AppDatabase());
     gh.lazySingleton<_i472.AudioService>(() => _i472.AudioService());
     gh.lazySingleton<_i533.HapticService>(() => _i533.HapticService());
+    gh.lazySingleton<_i871.LocalNotifications>(() => _i871.LocalNotifications(
+        flutterLocalNotificationsPlugin:
+            gh<_i163.FlutterLocalNotificationsPlugin>()));
     gh.factory<_i79.StorageService>(() => _i79.StorageService(
         flutterSecureStorage: gh<_i558.FlutterSecureStorage>()));
+    gh.lazySingleton<_i1052.PerformanceService>(
+        () => _i1052.PerformanceService(gh<_i974.Logger>()));
     gh.lazySingleton<_i365.HistoryService>(() => _i365.HistoryService(
           gh<_i388.AppDatabase>(),
           gh<_i974.Logger>(),
         ));
-    gh.lazySingleton<_i1052.PerformanceService>(
-        () => _i1052.PerformanceService(gh<_i974.Logger>()));
-    gh.lazySingleton<_i871.LocalNotifications>(() => _i871.LocalNotifications(
-        flutterLocalNotificationsPlugin:
-            gh<_i163.FlutterLocalNotificationsPlugin>()));
     gh.factory<_i590.PartialRunService>(
         () => _i590.PartialRunService(gh<_i388.AppDatabase>()));
     gh.factory<_i111.StorageRepository>(() =>

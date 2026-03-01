@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   configureDependencies();
 
-  testWidgets('Finds icon and button', (WidgetTester tester) async {
+  testWidgets('Finds icon and button', (tester) async {
     await tester.runAsync(() async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(const AlchronosApp());

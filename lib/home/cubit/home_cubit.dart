@@ -311,11 +311,11 @@ class HomeCubit extends Cubit<HomeState> {
       final reminderDelay = Duration(minutes: totalMinutes - reminderMinutes);
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        1, // Unique ID for reminder
-        'Timer Reminder',
-        'Your timer will complete in $reminderMinutes minutes',
-        tz.TZDateTime.now(tz.local).add(reminderDelay),
-        const NotificationDetails(
+        id: 1, // Unique ID for reminder
+        title: 'Timer Reminder',
+        body: 'Your timer will complete in $reminderMinutes minutes',
+        scheduledDate: tz.TZDateTime.now(tz.local).add(reminderDelay),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             'timer_reminder',
             'Timer Reminders',
