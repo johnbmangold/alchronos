@@ -23,9 +23,9 @@ workflows:
         - pull_request
         - tag
       branch_patterns: 
-        - pattern: '*'
-        - pattern: develop
-          include: false
+        - pattern: 'main'
+          include: true
+          source: true
       cancel_previous_builds: false
     scripts:
       - name: Set up local.properties
