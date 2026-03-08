@@ -220,8 +220,8 @@ class _HomeRunningViewState extends State<HomeRunningView>
                       label: Text(l10n.stopTimer),
                       key: const Key('stopButton'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                        foregroundColor: Theme.of(context).colorScheme.onError,
                       ),
                     ),
                   ),

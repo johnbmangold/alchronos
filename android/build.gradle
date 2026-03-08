@@ -10,7 +10,7 @@ ext {
         targetSdkVersion    = 36
         minSdkVersion       = 33
         appCompatVersion    = "1.6.1"
-        ndkVersion          = "27.0.12077973"
+        ndkVersion          = "28.2.13676358"
     }
 
 rootProject.layout.buildDirectory = '../build'

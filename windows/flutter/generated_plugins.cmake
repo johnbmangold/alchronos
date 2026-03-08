@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dynamic_color
   firebase_core
   flutter_secure_storage_windows
-  sqlite3_flutter_libs
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

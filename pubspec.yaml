@@ -13,7 +13,7 @@ dependencies:
   avatar_glow: ^3.0.1
   cupertino_icons: ^1.0.8
   drift: ^2.29.0
-  drift_flutter: ^0.2.7
+  drift_flutter: ^0.3.0
   dynamic_color: ^1.8.0
   firebase_core: ^4.2.0
   firebase_crashlytics: ^5.0.3

@@ -62,11 +62,21 @@ class HomeStartView extends StatelessWidget {
             child: StreamBuilder(
               stream: cubit.durationStream,
               builder: (buildContext, snapshot) {
+                String minutesText;
                 if (snapshot.hasData && snapshot.data != null) {
-                  return Text(l10n.minutesLabel(snapshot.data!));
+                  minutesText = l10n.minutesLabel(snapshot.data!);
+                } else {
+                  minutesText =
+                      l10n.minutesLabel(TimerDuration.standard.minutes);
                 }
 
-                return Text(l10n.minutesLabel(TimerDuration.standard.minutes));
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(minutesText),
+                    const Icon(Icons.arrow_drop_down, size: 20),
+                  ],
+                );
               },
             ),
           ),
@@ -295,7 +305,6 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: _currentDuration == TimerDuration.custom ? 400 : 300,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(28),
@@ -314,83 +323,89 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             await _setCurrentDuration(context, newDuration);
           }
         },
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(
-                widget.l10n.minutesLabel(TimerDuration.standard.minutes),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(
+                  widget.l10n.minutesLabel(TimerDuration.standard.minutes),
+                ),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.standard,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.standard);
+                },
               ),
-              leading: const Radio<TimerDuration>(
-                value: TimerDuration.standard,
+              ListTile(
+                title: Text(
+                  widget.l10n.minutesLabel(TimerDuration.longer.minutes),
+                ),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.longer,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.longer);
+                },
               ),
-              onTap: () async {
-                await _setCurrentDuration(context, TimerDuration.standard);
-              },
-            ),
-            ListTile(
-              title: Text(
-                widget.l10n.minutesLabel(TimerDuration.longer.minutes),
+              ListTile(
+                title: Text(
+                  widget.l10n.minutesLabel(TimerDuration.longest.minutes),
+                ),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.longest,
+                ),
+                onTap: () async {
+                  await _setCurrentDuration(context, TimerDuration.longest);
+                },
               ),
-              leading: const Radio<TimerDuration>(
-                value: TimerDuration.longer,
-              ),
-              onTap: () async {
-                await _setCurrentDuration(context, TimerDuration.longer);
-              },
-            ),
-            ListTile(
-              title: Text(
-                widget.l10n.minutesLabel(TimerDuration.longest.minutes),
-              ),
-              leading: const Radio<TimerDuration>(
-                value: TimerDuration.longest,
-              ),
-              onTap: () async {
-                await _setCurrentDuration(context, TimerDuration.longest);
-              },
-            ),
-            ListTile(
-              title: Text(widget.l10n.customDuration),
-              leading: const Radio<TimerDuration>(
-                value: TimerDuration.custom,
-              ),
-            ),
-            if (_currentDuration == TimerDuration.custom) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _customMinutesController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: widget.l10n.customMinutesLabel,
-                    hintText: '60',
-                    suffixText: widget.l10n.minutes,
-                  ),
-                  onChanged: (value) {
-                    final minutes = int.tryParse(value);
-                    if (minutes != null && minutes > 0) {
-                      setState(() {
-                        _customMinutes = minutes;
-                      });
-                    }
-                  },
+              ListTile(
+                title: Text(widget.l10n.customDuration),
+                leading: const Radio<TimerDuration>(
+                  value: TimerDuration.custom,
                 ),
               ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await _setCurrentDuration(context, TimerDuration.custom);
+              if (_currentDuration == TimerDuration.custom) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TextField(
+                    controller: _customMinutesController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: widget.l10n.customMinutesLabel,
+                      hintText: '60',
+                      suffixText: widget.l10n.minutes,
+                    ),
+                    onChanged: (value) {
+                      final minutes = int.tryParse(value);
+                      if (minutes != null && minutes > 0) {
+                        setState(() {
+                          _customMinutes = minutes;
+                        });
+                      }
                     },
-                    child: Text(widget.l10n.done),
                   ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        await _setCurrentDuration(
+                          context,
+                          TimerDuration.custom,
+                        );
+                      },
+                      child: Text(widget.l10n.done),
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
