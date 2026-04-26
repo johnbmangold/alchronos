@@ -1,6 +1,7 @@
 import 'package:alchronos/app_database.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for the shared [AppDatabase] instance.
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
   ref.onDispose(db.close);

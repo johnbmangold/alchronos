@@ -4,15 +4,19 @@ import 'package:alchronos/domain/repositories/history_repository.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for the [HistoryRepositoryImpl].
 final historyRepositoryProvider = Provider<HistoryRepository>((ref) {
   return HistoryRepositoryImpl(
     appDatabase: ref.watch(databaseProvider),
   );
 });
 
+/// Implementation of [HistoryRepository] utilizing a Drift database.
 class HistoryRepositoryImpl implements HistoryRepository {
+  /// Creates a [HistoryRepositoryImpl] with the given [appDatabase].
   HistoryRepositoryImpl({required this.appDatabase});
 
+  /// The Drift database instance.
   final AppDatabase appDatabase;
 
   @override

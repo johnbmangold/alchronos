@@ -12,6 +12,7 @@ import 'package:alchronos/infrastructure/services/notification_service.dart';
 import 'package:alchronos/infrastructure/services/performance_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for [StartTimerUseCase].
 final startTimerUseCaseProvider = Provider<StartTimerUseCase>((ref) {
   return StartTimerUseCase(
     settingsRepository: ref.watch(settingsRepositoryProvider),
@@ -24,7 +25,9 @@ final startTimerUseCaseProvider = Provider<StartTimerUseCase>((ref) {
   );
 });
 
+/// Use case that handles starting the timer.
 class StartTimerUseCase {
+  /// Creates a [StartTimerUseCase].
   StartTimerUseCase({
     required this.settingsRepository,
     required this.partialRunRepository,
@@ -35,14 +38,29 @@ class StartTimerUseCase {
     required this.performanceService,
   });
 
+  /// The settings repository to check reminder preferences.
   final SettingsRepository settingsRepository;
+
+  /// The repository for storing the ongoing partial run.
   final PartialRunRepository partialRunRepository;
+
+  /// The service for scheduling local notifications.
   final NotificationService notificationService;
+
+  /// The service for scheduling the background timer task.
   final BackgroundTaskService backgroundTaskService;
+
+  /// The service for haptic feedback.
   final HapticService hapticService;
+
+  /// The service for audio feedback.
   final AudioService audioService;
+
+  /// The service for tracking performance and analytics.
   final PerformanceService performanceService;
 
+  /// Executes the start timer logic for the given [minutes], with completion
+  /// text [drinkTimerComplete] and [notificationMessage].
   Future<PartialRunData> execute(
     int minutes,
     String drinkTimerComplete,
@@ -95,6 +113,7 @@ class StartTimerUseCase {
   }
 }
 
+/// Provider for [PauseTimerUseCase].
 final pauseTimerUseCaseProvider = Provider<PauseTimerUseCase>((ref) {
   return PauseTimerUseCase(
     performanceService: ref.watch(performanceServiceProvider),
@@ -102,15 +121,22 @@ final pauseTimerUseCaseProvider = Provider<PauseTimerUseCase>((ref) {
   );
 });
 
+/// Use case that handles pausing the timer.
 class PauseTimerUseCase {
+  /// Creates a [PauseTimerUseCase].
   PauseTimerUseCase({
     required this.performanceService,
     required this.hapticService,
   });
 
+  /// The service for tracking performance and analytics.
   final PerformanceService performanceService;
+
+  /// The service for haptic feedback.
   final HapticService hapticService;
 
+  /// Executes the pause timer logic for the current timer with
+  /// [totalDurationInSeconds].
   Future<void> execute(int totalDurationInSeconds) async {
     performanceService.trackTimerEvent(
       'pause',
@@ -120,6 +146,7 @@ class PauseTimerUseCase {
   }
 }
 
+/// Provider for [ResumeTimerUseCase].
 final resumeTimerUseCaseProvider = Provider<ResumeTimerUseCase>((ref) {
   return ResumeTimerUseCase(
     performanceService: ref.watch(performanceServiceProvider),
@@ -127,15 +154,22 @@ final resumeTimerUseCaseProvider = Provider<ResumeTimerUseCase>((ref) {
   );
 });
 
+/// Use case that handles resuming the timer.
 class ResumeTimerUseCase {
+  /// Creates a [ResumeTimerUseCase].
   ResumeTimerUseCase({
     required this.performanceService,
     required this.hapticService,
   });
 
+  /// The service for tracking performance and analytics.
   final PerformanceService performanceService;
+
+  /// The service for haptic feedback.
   final HapticService hapticService;
 
+  /// Executes the resume timer logic for the current timer with
+  /// [totalDurationInSeconds].
   Future<void> execute(int totalDurationInSeconds) async {
     performanceService.trackTimerEvent(
       'resume',
@@ -145,6 +179,7 @@ class ResumeTimerUseCase {
   }
 }
 
+/// Provider for [StopTimerUseCase].
 final stopTimerUseCaseProvider = Provider<StopTimerUseCase>((ref) {
   return StopTimerUseCase(
     partialRunRepository: ref.watch(partialRunRepositoryProvider),
@@ -156,7 +191,9 @@ final stopTimerUseCaseProvider = Provider<StopTimerUseCase>((ref) {
   );
 });
 
+/// Use case that handles stopping the timer and saving the session history.
 class StopTimerUseCase {
+  /// Creates a [StopTimerUseCase].
   StopTimerUseCase({
     required this.partialRunRepository,
     required this.historyRepository,
@@ -166,13 +203,26 @@ class StopTimerUseCase {
     required this.backgroundTaskService,
   });
 
+  /// The repository to clear the current partial run.
   final PartialRunRepository partialRunRepository;
+
+  /// The repository to save the completed session to history.
   final HistoryRepository historyRepository;
+
+  /// The service for haptic feedback.
   final HapticService hapticService;
+
+  /// The service for audio feedback.
   final AudioService audioService;
+
+  /// The service for tracking performance and analytics.
   final PerformanceService performanceService;
+
+  /// The service to cancel any pending background tasks.
   final BackgroundTaskService backgroundTaskService;
 
+  /// Executes the stop timer logic. Takes the [currentRun], the
+  /// [totalDurationInSeconds], and whether the timer [isPaused].
   Future<void> execute({
     required PartialRunData? currentRun,
     required int totalDurationInSeconds,

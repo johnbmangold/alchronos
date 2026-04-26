@@ -4,15 +4,19 @@ import 'package:alchronos/domain/repositories/partial_run_repository.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for the [PartialRunRepositoryImpl].
 final partialRunRepositoryProvider = Provider<PartialRunRepository>((ref) {
   return PartialRunRepositoryImpl(
     appDatabase: ref.watch(databaseProvider),
   );
 });
 
+/// Implementation of [PartialRunRepository] utilizing a Drift database.
 class PartialRunRepositoryImpl implements PartialRunRepository {
+  /// Creates a [PartialRunRepositoryImpl] with the given [appDatabase].
   PartialRunRepositoryImpl({required this.appDatabase});
 
+  /// The Drift database instance.
   final AppDatabase appDatabase;
 
   @override

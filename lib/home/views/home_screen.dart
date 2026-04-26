@@ -9,9 +9,12 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// The main screen of the application that displays the timer states.
 class HomeScreen extends ConsumerStatefulWidget {
+  /// Creates a [HomeScreen].
   const HomeScreen({super.key});
 
+  /// The default [MaterialPageRoute] for navigating to this screen.
   static MaterialPageRoute<HomeScreen> get route =>
       MaterialPageRoute(builder: (context) => const HomeScreen());
 
@@ -37,7 +40,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
+/// The body of the [HomeScreen] that transitions between different home states.
 class HomeBody extends ConsumerWidget {
+  /// Creates a [HomeBody].
   const HomeBody({super.key});
 
   @override

@@ -11,6 +11,7 @@ import 'package:alchronos/infrastructure/services/performance_service.dart';
 import 'package:alchronos/presentation/home/home_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for observing the current timer duration stream.
 final durationStreamProvider = StreamProvider<int>((ref) {
   final controller = StreamController<int>();
 
@@ -23,16 +24,19 @@ final durationStreamProvider = StreamProvider<int>((ref) {
   return controller.stream;
 });
 
+/// Notifier Provider responsible for state management on the Home screen.
 final homeNotifierProvider = NotifierProvider<HomeNotifier, HomeState>(() {
   return HomeNotifier();
 });
 
+/// The `Notifier` managing the business logic for the Home screen.
 class HomeNotifier extends Notifier<HomeState> {
   @override
   HomeState build() {
     return HomeInitial();
   }
 
+  /// Initializes the state by reading settings and partial runs.
   Future<void> init() async {
     final performanceService = ref.read(performanceServiceProvider)
       ..startTiming('init');
@@ -70,6 +74,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Resets the active timer and stops it immediately.
   Future<void> reset() async {
     try {
       final currentState = state;
@@ -101,6 +106,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Pauses the currently running timer.
   Future<void> pauseTimer() async {
     final currentState = state;
     if (currentState is HomeRunning && !currentState.isPaused) {
@@ -113,6 +119,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Resumes the currently paused timer.
   Future<void> resumeTimer() async {
     final currentState = state;
     if (currentState is HomeRunning && currentState.isPaused) {
@@ -124,6 +131,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Starts the timer using current preferences and updates the UI state.
   Future<void> start(
     String drinkTimerComplete,
     String notificationMessage, {
@@ -158,6 +166,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Writes a new preferred timer duration into settings.
   Future<void> writePreferredDuration(TimerDuration timerDuration) async {
     try {
       final settingsRepo = ref.read(settingsRepositoryProvider);
@@ -175,6 +184,7 @@ class HomeNotifier extends Notifier<HomeState> {
     }
   }
 
+  /// Writes a user-defined custom timer duration (in minutes) into settings.
   Future<void> writeCustomDuration(int minutes) async {
     try {
       if (minutes <= 0 || minutes > 1440) {
@@ -196,11 +206,13 @@ class HomeNotifier extends Notifier<HomeState> {
   }
 }
 
+/// Provider to get the latest configured timer duration.
 final currentTimerDurationProvider =
     AsyncNotifierProvider<CurrentTimerDurationNotifier, int>(() {
   return CurrentTimerDurationNotifier();
 });
 
+/// Async notifier for fetching and refreshing the current timer duration.
 class CurrentTimerDurationNotifier extends AsyncNotifier<int> {
   @override
   FutureOr<int> build() async {
@@ -216,6 +228,7 @@ class CurrentTimerDurationNotifier extends AsyncNotifier<int> {
     return timerDuration.minutes;
   }
 
+  /// Refreshes the currently cached duration setting.
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(_fetchDuration);

@@ -2,7 +2,9 @@ import 'package:alchronos/main.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 
+/// The view displayed when the home screen is in a loading state.
 class LoadingView extends StatelessWidget {
+  /// Creates a [LoadingView].
   const LoadingView({super.key});
 
   @override

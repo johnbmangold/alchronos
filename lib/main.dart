@@ -14,12 +14,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:workmanager/workmanager.dart';
 
+/// Key used to pass the notification title through Workmanager.
 const workmanagerTitleKey = 'title';
+
+/// Key used to pass the notification message through Workmanager.
 const workmanagerMessageKey = 'message';
+
+/// The fallback title used when no title is provided for the notification.
 const fallbackTitle = 'Drink Timer Complete';
+
+/// The fallback message used when no message is provided for the notification.
 const fallbackMessage =
     "You can order another drink when you're feeling up to it.";
 
+/// The main entry point for the Flutter application.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -35,6 +43,7 @@ Future<void> main() async {
   );
 }
 
+/// The callback dispatcher used by Workmanager to handle background tasks.
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -46,6 +55,7 @@ void callbackDispatcher() {
   });
 }
 
+/// Initializes Firebase services and Crashlytics error reporting.
 Future<void> initFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -59,7 +69,9 @@ Future<void> initFirebase() async {
   };
 }
 
+/// The root widget of the Alchronos application.
 class AlchronosApp extends ConsumerStatefulWidget {
+  /// Creates an [AlchronosApp] widget.
   const AlchronosApp({super.key});
 
   @override
@@ -161,6 +173,7 @@ class _AlchronosAppState extends ConsumerState<AlchronosApp> {
   }
 }
 
+/// Triggers a local notification when the app is in the background.
 Future<void> showNotificationInBackground(String title, String message) async {
   final logger = Logger(printer: PrettyPrinter())
     ..i('[BackgroundFetch] Headless event received');
@@ -180,6 +193,8 @@ Future<void> showNotificationInBackground(String title, String message) async {
   );
 }
 
+/// Callback triggered when a notification is tapped while the app
+/// is in the background.
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   final logger = Logger(printer: PrettyPrinter())
@@ -195,16 +210,23 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   }
 }
 
+/// Defines custom theme colors extending the standard ThemeData.
 @immutable
 class CustomColors extends ThemeExtension<CustomColors> {
+  /// Creates [CustomColors] with the specified brand and drink colors.
   const CustomColors({
     required this.brand,
     required this.drinkStartColor,
     required this.drinkEndColor,
   });
 
+  /// The primary brand color.
   final Color? brand;
+
+  /// The starting gradient color for the drink animation.
   final Color? drinkStartColor;
+
+  /// The ending gradient color for the drink animation.
   final Color? drinkEndColor;
 
   @override
@@ -232,6 +254,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
     );
   }
 
+  /// Harmonizes the custom colors with the given dynamic [ColorScheme].
   CustomColors harmonized(ColorScheme dynamic) {
     return copyWith(
       brand: brand!.harmonizeWith(dynamic.primary),

@@ -3,19 +3,27 @@ import 'package:alchronos/domain/repositories/settings_repository.dart';
 import 'package:alchronos/home/views/views.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+/// Provider for the [SettingsRepositoryImpl].
 final settingsRepositoryProvider = Provider<SettingsRepository>((ref) {
   return SettingsRepositoryImpl(
     dataSource: ref.watch(secureStorageDataSourceProvider),
   );
 });
 
+/// Implementation of [SettingsRepository] utilizing secure storage.
 class SettingsRepositoryImpl implements SettingsRepository {
+  /// Creates a [SettingsRepositoryImpl] with the given [dataSource].
   const SettingsRepositoryImpl({required this.dataSource});
 
+  /// The data source used for secure storage operations.
   final SecureStorageDataSource dataSource;
 
+  /// Key used for storing the timer duration preference.
   String get timerDurationKey => 'timer_duration_key';
+
+  /// Key used for storing the custom duration.
   String get customDurationKey => 'custom_duration_key';
+
   String get _reminderEnabledKey => 'reminder_enabled_key';
   String get _reminderMinutesKey => 'reminder_minutes_key';
 

@@ -10,14 +10,19 @@ import 'package:lottie/lottie.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
+/// The view displayed when a timer is currently running.
 class HomeRunningView extends ConsumerStatefulWidget {
+  /// Creates a [HomeRunningView] displaying the given [partialRunData].
   const HomeRunningView({
     required this.partialRunData,
     required this.totalDurationInSeconds,
     super.key,
   });
 
+  /// The data for the current partial run.
   final PartialRunData partialRunData;
+
+  /// The total duration of the timer in seconds.
   final int totalDurationInSeconds;
 
   @override
@@ -31,7 +36,10 @@ class _HomeRunningViewState extends ConsumerState<HomeRunningView>
   String _formattedDuration = '';
   double _opacity = 0;
   late int _timeInSeconds;
+
+  /// The width and height of the lottie animation.
   final double lottieWidthHeight = 100;
+
   late final AnimationController _controller;
   bool _isPaused = false;
 

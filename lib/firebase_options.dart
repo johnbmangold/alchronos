@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  /// Returns the correct [FirebaseOptions] configuration for the current platform.
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -44,6 +45,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+  /// The Firebase configuration for Web platforms.
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyChZOVRQzKRxvPJBtsdEoNVMxxEwPqBysE',
     appId: '1:19097124097:web:14b166ede554808287af00',
@@ -54,6 +56,7 @@ class DefaultFirebaseOptions {
     measurementId: 'G-L4YMM9CCFF',
   );
 
+  /// The Firebase configuration for Android platforms.
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA7-0q5shCrPIglnKW0lR-WlRtYknHpWSA',
     appId: '1:19097124097:android:6e65de480ce7cccc87af00',
@@ -62,6 +65,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'alchronos.appspot.com',
   );
 
+  /// The Firebase configuration for iOS platforms.
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDe4DNq7ulN5Gb0ubXK-ZJxxxFiwu1Srpc',
     appId: '1:19097124097:ios:86d68bdf5530622887af00',
@@ -73,6 +77,7 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.idlewild.alchronos',
   );
 
+  /// The Firebase configuration for macOS platforms.
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDe4DNq7ulN5Gb0ubXK-ZJxxxFiwu1Srpc',
     appId: '1:19097124097:ios:0ba419a0c5eb6a6587af00',

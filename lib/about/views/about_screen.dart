@@ -1,9 +1,12 @@
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+/// The screen displaying information about the Alchronos application.
 class AboutScreen extends StatelessWidget {
+  /// Creates an [AboutScreen].
   const AboutScreen({super.key});
 
+  /// The default [MaterialPageRoute] for navigating to this screen.
   static MaterialPageRoute<AboutScreen> get route =>
       MaterialPageRoute(builder: (context) => const AboutScreen());
 

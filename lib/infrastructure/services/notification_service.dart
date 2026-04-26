@@ -8,17 +8,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+/// Provider for the [NotificationService].
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   return NotificationService(
     flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin(),
   );
 });
 
+/// Service responsible for managing local notifications.
 class NotificationService {
+  /// Creates a [NotificationService] using the provided
+  /// [flutterLocalNotificationsPlugin].
   const NotificationService({required this.flutterLocalNotificationsPlugin});
 
+  /// The underlying [FlutterLocalNotificationsPlugin] used for notifications.
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  /// Initializes the notification service. Set [headless] if
+  /// running in the background.
   Future<void> initialize({required bool headless}) async {
     tz.initializeTimeZones();
 
@@ -59,17 +66,20 @@ class NotificationService {
     if (!headless) await _requestAndroidNotificationPermission();
   }
 
+  /// Returns the default notification details for when a timer is up.
   NotificationDetails getNotificationDetailsTimesUp() {
     return NotificationDetails(
       android: _getAndroidNotificationDetailsTimesUp(),
     );
   }
 
+  /// Generates a random notification ID to be used for local notifications.
   int getNotificationId() {
     final cryptoRandom = Random.secure();
     return cryptoRandom.nextInt(1000000);
   }
 
+  /// Schedules a reminder notification to trigger before the timer completes.
   Future<void> scheduleReminderNotification(
     int reminderMinutes,
     int totalMinutes,

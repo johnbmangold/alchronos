@@ -6,23 +6,26 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
+/// Provider for the [PerformanceService].
 final performanceServiceProvider = Provider<PerformanceService>((ref) {
   return PerformanceService(ref.watch(loggerProvider));
 });
 
+/// Service responsible for tracking application performance and analytics.
 class PerformanceService {
+  /// Creates a [PerformanceService] using the provided [_logger].
   PerformanceService(this._logger);
 
   final Logger _logger;
   final Map<String, DateTime> _startTimes = {};
   final Map<String, int> _eventCounts = {};
 
-  /// Start timing an operation
+  /// Starts timing an operation by [operation] name.
   void startTiming(String operation) {
     _startTimes[operation] = DateTime.now();
   }
 
-  /// End timing an operation and log the duration
+  /// Ends timing an operation by [operation] name and logs the duration.
   void endTiming(String operation) {
     final startTime = _startTimes.remove(operation);
     if (startTime != null) {
@@ -31,7 +34,8 @@ class PerformanceService {
     }
   }
 
-  /// Track an event occurrence
+  /// Tracks a generic event occurrence by [eventName] with optional
+  /// [parameters].
   void trackEvent(String eventName, {Map<String, dynamic>? parameters}) {
     _eventCounts[eventName] = (_eventCounts[eventName] ?? 0) + 1;
 
@@ -49,7 +53,7 @@ class PerformanceService {
     }
   }
 
-  /// Track timer-related events
+  /// Tracks timer-related events.
   void trackTimerEvent(String event, {int? duration, bool? isPaused}) {
     final parameters = <String, dynamic>{
       'timestamp': DateTime.now().toIso8601String(),
@@ -61,7 +65,7 @@ class PerformanceService {
     trackEvent('timer_$event', parameters: parameters);
   }
 
-  /// Track user interaction events
+  /// Tracks user interaction events.
   void trackUserInteraction(String action, {String? screen}) {
     final parameters = <String, dynamic>{
       'action': action,
@@ -73,7 +77,7 @@ class PerformanceService {
     trackEvent('user_interaction', parameters: parameters);
   }
 
-  /// Track app performance metrics
+  /// Tracks app performance metrics.
   void trackAppPerformance(String metric, dynamic value) {
     final parameters = <String, dynamic>{
       'metric': metric,
@@ -84,12 +88,12 @@ class PerformanceService {
     trackEvent('app_performance', parameters: parameters);
   }
 
-  /// Get event statistics
+  /// Retrieves the current event statistics.
   Map<String, int> getEventStats() {
     return Map.from(_eventCounts);
   }
 
-  /// Log performance metrics
+  /// Log performance metrics internally.
   void _logPerformance(String operation, Duration duration) {
     _logger.i('Performance: $operation took ${duration.inMilliseconds}ms');
 
@@ -102,7 +106,7 @@ class PerformanceService {
     }
   }
 
-  /// Track memory usage
+  /// Tracks the application's memory usage.
   void trackMemoryUsage() {
     // This is a simplified memory tracking
     // In a real app, you might use more sophisticated memory monitoring

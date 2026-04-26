@@ -7,10 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
+/// The default view displayed on the home screen when no timer is active.
 class HomeStartView extends ConsumerWidget {
+  /// Creates a [HomeStartView].
   const HomeStartView({super.key});
 
+  /// The dimensions of the inner animation asset.
   double get lottieWidthHeight => 100;
+
+  /// The dimension used for containing the overflowing animation box.
   double get lottieOverflowWidthHeight => 200;
 
   Future<void> _startQuickTimer(
@@ -180,7 +185,9 @@ class _OverflowLottieAsset extends StatelessWidget {
   }
 }
 
+/// The primary navigation drawer for the Home screen.
 class HomeDrawer extends StatelessWidget {
+  /// Creates a [HomeDrawer].
   const HomeDrawer({super.key});
 
   @override
@@ -216,31 +223,47 @@ class HomeDrawer extends StatelessWidget {
   }
 }
 
+/// Represents the available timer durations for the user to select from.
 enum TimerDuration implements Comparable<TimerDuration> {
+  /// Standard duration of 60 minutes.
   standard(minutes: 60),
+
+  /// Longer duration of 90 minutes.
   longer(minutes: 90),
+
+  /// Longest duration of 120 minutes.
   longest(minutes: 120),
+
+  /// A custom duration specified by the user.
   custom(minutes: 0);
 
+  /// Creates a [TimerDuration] specifying the length in [minutes].
   const TimerDuration({required this.minutes});
 
+  /// The duration length in minutes.
   final int minutes;
 
   @override
   int compareTo(TimerDuration other) => minutes - other.minutes;
 
+  /// Returns the enum value corresponding to the given string [name].
   static TimerDuration fromString(String name) =>
       TimerDuration.values.firstWhere(
         (element) => element.name == name,
         orElse: () => TimerDuration.standard,
       );
 
+  /// Retrieves the equivalent duration in seconds.
   int get minutesToSeconds => minutes * 60;
 
+  /// Returns true if this is the custom duration variant.
   bool get isCustom => this == TimerDuration.custom;
 }
 
+/// A bottom sheet for selecting the preferred timer duration.
 class HomeBottomSheet extends ConsumerStatefulWidget {
+  /// Creates a [HomeBottomSheet] with the given [initialDuration]
+  /// and [currentMinutes].
   const HomeBottomSheet({
     required this.l10n,
     required this.initialDuration,
@@ -248,8 +271,13 @@ class HomeBottomSheet extends ConsumerStatefulWidget {
     super.key,
   });
 
+  /// The app localizations.
   final AppLocalizations l10n;
+
+  /// The initial duration selected in the radio buttons.
   final TimerDuration initialDuration;
+
+  /// The current timer length in minutes if custom was selected.
   final int currentMinutes;
 
   @override
