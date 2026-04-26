@@ -9,8 +9,9 @@ class FakeAppDatabase implements AppDatabase {
   bool shouldThrow = false;
 
   @override
-  Future<PartialRunData?> getPartialRunAfterTime(
-      {required DateTime time,}) async {
+  Future<PartialRunData?> getPartialRunAfterTime({
+    required DateTime time,
+  }) async {
     if (shouldThrow) throw Exception('Database error');
 
     for (final run in runs) {
@@ -66,9 +67,10 @@ void main() {
     test('returns null if no run exists after time', () async {
       fakeDatabase.runs = [
         PartialRunData(
-            id: 1,
-            secondsRemaining: 60,
-            endTime: DateTime.now().subtract(const Duration(minutes: 5)),),
+          id: 1,
+          secondsRemaining: 60,
+          endTime: DateTime.now().subtract(const Duration(minutes: 5)),
+        ),
       ];
 
       final result = await repository.getPartialRunAfterTime(DateTime.now());
