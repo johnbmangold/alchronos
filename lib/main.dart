@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:alchronos/configurator.dart';
 import 'package:alchronos/firebase_options.dart';
 import 'package:alchronos/home/views/home_screen.dart';
+import 'package:alchronos/infrastructure/services/notification_service.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
-import 'package:alchronos/local_notifications.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -20,28 +20,21 @@ const fallbackTitle = 'Drink Timer Complete';
 const fallbackMessage =
     "You can order another drink when you're feeling up to it.";
 
-/// Streams are created so that app can respond to notification-related events
-/// since the plugin is initialised in the `main` function
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase and dependencies in parallel for better performance
-  await Future.wait([
-    initFirebase(),
-    Future(configureDependencies),
-  ]);
+  await initFirebase();
 
-  // Initialize notifications and workmanager in parallel
-  await Future.wait([
-    getIt.get<LocalNotifications>().initialize(headless: false),
-    Workmanager().initialize(callbackDispatcher),
-  ]);
+  // Initialize background tasks
+  await Workmanager().initialize(callbackDispatcher);
 
-  runApp(const AlchronosApp());
+  runApp(
+    const ProviderScope(
+      child: AlchronosApp(),
+    ),
+  );
 }
 
-// Mandatory if the App is obfuscated or using Flutter 3.1+
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -66,8 +59,23 @@ Future<void> initFirebase() async {
   };
 }
 
-class AlchronosApp extends StatelessWidget {
+class AlchronosApp extends ConsumerStatefulWidget {
   const AlchronosApp({super.key});
+
+  @override
+  ConsumerState<AlchronosApp> createState() => _AlchronosAppState();
+}
+
+class _AlchronosAppState extends ConsumerState<AlchronosApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize notifications
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.initialize(headless: false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +87,8 @@ class AlchronosApp extends StatelessWidget {
     );
     var darkCustomColors = CustomColors(
       brand: alchronosPink,
-      drinkStartColor:
-          Colors.amber.shade400, // Brighter for better contrast in dark mode
-      drinkEndColor: Colors.amberAccent.shade400, // Adjusted for dark mode
+      drinkStartColor: Colors.amber.shade400,
+      drinkEndColor: Colors.amberAccent.shade400,
     );
 
     return DynamicColorBuilder(
@@ -113,11 +120,9 @@ class AlchronosApp extends StatelessWidget {
             colorScheme: darkColorScheme,
             extensions: [darkCustomColors],
             useMaterial3: true,
-            // Enhanced dark mode contrast
             brightness: Brightness.dark,
             scaffoldBackgroundColor: darkColorScheme.surface,
             cardColor: darkColorScheme.surfaceContainerHighest,
-            // Better text contrast
             textTheme: TextTheme(
               bodyLarge: TextStyle(color: darkColorScheme.onSurface),
               bodyMedium: TextStyle(color: darkColorScheme.onSurface),
@@ -126,7 +131,6 @@ class AlchronosApp extends StatelessWidget {
               titleMedium: TextStyle(color: darkColorScheme.onSurface),
               titleSmall: TextStyle(color: darkColorScheme.onSurface),
             ),
-            // Enhanced button styles for dark mode
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
                 backgroundColor: darkColorScheme.primary,
@@ -161,17 +165,17 @@ Future<void> showNotificationInBackground(String title, String message) async {
   final logger = Logger(printer: PrettyPrinter())
     ..i('[BackgroundFetch] Headless event received');
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  final localNotifications = LocalNotifications(
+  final notificationService = NotificationService(
     flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
   );
   logger.i('[BackgroundFetch] Initializing notifications');
-  await localNotifications.initialize(headless: true);
+  await notificationService.initialize(headless: true);
   logger.i('[BackgroundFetch] Showing notification');
   await flutterLocalNotificationsPlugin.show(
-    id: localNotifications.getNotificationId(),
+    id: notificationService.getNotificationId(),
     title: title,
     body: message,
-    notificationDetails: localNotifications.getNotificationDetailsTimesUp(),
+    notificationDetails: notificationService.getNotificationDetailsTimesUp(),
     payload: 1.toString(),
   );
 }

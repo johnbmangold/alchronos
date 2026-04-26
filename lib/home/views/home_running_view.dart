@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:alchronos/app_database.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/main.dart';
+import 'package:alchronos/presentation/home/home_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
-class HomeRunningView extends StatefulWidget {
+class HomeRunningView extends ConsumerStatefulWidget {
   const HomeRunningView({
     required this.partialRunData,
     required this.totalDurationInSeconds,
@@ -21,17 +21,16 @@ class HomeRunningView extends StatefulWidget {
   final int totalDurationInSeconds;
 
   @override
-  State<StatefulWidget> createState() => _HomeRunningViewState();
+  ConsumerState<HomeRunningView> createState() => _HomeRunningViewState();
 }
 
-class _HomeRunningViewState extends State<HomeRunningView>
+class _HomeRunningViewState extends ConsumerState<HomeRunningView>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   late Timer _timer;
   final _oneSecond = const Duration(seconds: 1);
   String _formattedDuration = '';
   double _opacity = 0;
   late int _timeInSeconds;
-  late final HomeCubit cubit;
   final double lottieWidthHeight = 100;
   late final AnimationController _controller;
   bool _isPaused = false;
@@ -42,7 +41,6 @@ class _HomeRunningViewState extends State<HomeRunningView>
 
     _controller = AnimationController(vsync: this);
     WidgetsBinding.instance.addObserver(this);
-    cubit = BlocProvider.of<HomeCubit>(context);
     _getDurationSeconds();
   }
 
@@ -215,7 +213,8 @@ class _HomeRunningViewState extends State<HomeRunningView>
                     button: true,
                     label: 'Stop timer',
                     child: ElevatedButton.icon(
-                      onPressed: () => cubit.reset(),
+                      onPressed: () =>
+                          ref.read(homeNotifierProvider.notifier).reset(),
                       icon: const Icon(Icons.stop),
                       label: Text(l10n.stopTimer),
                       key: const Key('stopButton'),
@@ -251,7 +250,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
         _timer.cancel();
         // This is intentionally not awaited as we don't need
         // to wait for the reset to complete
-        unawaited(cubit.reset());
+        unawaited(ref.read(homeNotifierProvider.notifier).reset());
       } else if (!_isPaused) {
         _timeInSeconds--;
         _calculateTimeDisplay();
@@ -267,14 +266,14 @@ class _HomeRunningViewState extends State<HomeRunningView>
     setState(() {
       _isPaused = true;
     });
-    await cubit.pauseTimer();
+    await ref.read(homeNotifierProvider.notifier).pauseTimer();
   }
 
   Future<void> _resumeTimer() async {
     setState(() {
       _isPaused = false;
     });
-    await cubit.resumeTimer();
+    await ref.read(homeNotifierProvider.notifier).resumeTimer();
   }
 
   void _calculateTimeDisplay() {
@@ -326,7 +325,7 @@ class _HomeRunningViewState extends State<HomeRunningView>
     if (widget.partialRunData.endTime.isBefore(DateTime.now())) {
       // This is intentionally not awaited
       // as we don't need to wait for the reset to complete
-      unawaited(cubit.reset());
+      unawaited(ref.read(homeNotifierProvider.notifier).reset());
     }
     // get remaining seconds
     final seconds =

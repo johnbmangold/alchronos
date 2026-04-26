@@ -1,61 +1,69 @@
-import 'package:alchronos/configurator.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'dart:async';
+
 import 'package:alchronos/home/views/home_running_view.dart';
 import 'package:alchronos/home/views/home_start_view.dart';
 import 'package:alchronos/home/views/loading_view.dart';
+import 'package:alchronos/presentation/home/home_notifier.dart';
+import 'package:alchronos/presentation/home/home_state.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   static MaterialPageRoute<HomeScreen> get route =>
       MaterialPageRoute(builder: (context) => const HomeScreen());
 
   @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the home notifier
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(ref.read(homeNotifierProvider.notifier).init());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        /// ignoring discarded futures because the cubit is
-        ///  initialised in the main function
-        // ignore: discarded_futures
-        create: (_) => getIt.get<HomeCubit>()..init(),
-        child: const HomeBody(),
-      ),
+    return const Scaffold(
+      body: HomeBody(),
     );
   }
 }
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends ConsumerWidget {
   const HomeBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        return PageTransitionSwitcher(
-          duration: const Duration(milliseconds: 1000),
-          transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
-            return FadeThroughTransition(
-              animation: primaryAnimation,
-              secondaryAnimation: secondaryAnimation,
-              child: child,
-            );
-          },
-          child: switch (state) {
-            (HomeStart _) => const HomeStartView(),
-            (final HomeRunning runningState) => HomeRunningView(
-                partialRunData: runningState.partialRunData,
-                totalDurationInSeconds: runningState.totalDurationInSeconds,
-              ),
-            (final HomeError errorState) => _ErrorView(
-                message: errorState.message,
-                onRetry: () => context.read<HomeCubit>().init(),
-              ),
-            (_) => const LoadingView(),
-          },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(homeNotifierProvider);
+
+    return PageTransitionSwitcher(
+      duration: const Duration(milliseconds: 1000),
+      transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+        return FadeThroughTransition(
+          animation: primaryAnimation,
+          secondaryAnimation: secondaryAnimation,
+          child: child,
         );
+      },
+      child: switch (state) {
+        (HomeStart _) => const HomeStartView(),
+        (final HomeRunning runningState) => HomeRunningView(
+            partialRunData: runningState.partialRunData,
+            totalDurationInSeconds: runningState.totalDurationInSeconds,
+          ),
+        (final HomeError errorState) => _ErrorView(
+            message: errorState.message,
+            onRetry: () => ref.read(homeNotifierProvider.notifier).init(),
+          ),
+        (_) => const LoadingView(),
       },
     );
   }

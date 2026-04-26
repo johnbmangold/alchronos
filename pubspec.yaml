@@ -19,14 +19,14 @@ dependencies:
   firebase_crashlytics: ^5.0.3
   flutter:
     sdk: flutter
-  flutter_bloc: ^9.0.0
+  flutter_hooks: ^0.21.3+1
   flutter_local_notifications: ^21.0.0-dev.2
   flutter_localizations:
     sdk: flutter
+  flutter_riverpod: ^3.3.1
   flutter_secure_storage: ^10.0.0-beta.4
-  get_it: ^9.0.5
   haptic_feedback: ^0.6.4+3
-  injectable: ^3.0.0
+  hooks_riverpod: ^3.3.1
   intl: ^0.20.2
   logger: ^2.0.1
   lottie: ^3.1.2
@@ -40,7 +40,6 @@ dev_dependencies:
   drift_dev: ^2.29.0
   flutter_test:
     sdk: flutter
-  injectable_generator: ^3.0.2
   integration_test:
     sdk: flutter
   mockito: ^5.4.2

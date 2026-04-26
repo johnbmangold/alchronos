@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:injectable/injectable.dart';
 
 part 'app_database.g.dart';
 
@@ -20,7 +19,6 @@ class TimerSession extends Table {
   DateTimeColumn get createdAt => dateTime()();
 }
 
-@lazySingleton
 @DriftDatabase(tables: [PartialRun, TimerSession])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -30,6 +28,31 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'app_database');
+  }
+
+  // Partial Run methods
+  Future<PartialRunData?> getPartialRunAfterTime({
+    required DateTime time,
+  }) async {
+    final query = select(partialRun)
+      ..where((t) => t.endTime.isBiggerThanValue(time))
+      ..limit(1);
+    return query.getSingleOrNull();
+  }
+
+  Future<int> insertPartialRun(Insertable<PartialRunData> run) async {
+    return into(partialRun).insert(run);
+  }
+
+  Future<int> countPartialRuns() async {
+    final countExp = partialRun.id.count();
+    final query = selectOnly(partialRun)..addColumns([countExp]);
+    final result = await query.getSingle();
+    return result.read(countExp) ?? 0;
+  }
+
+  Future<int> clearAllPartialRuns() async {
+    return delete(partialRun).go();
   }
 
   // Timer Session methods

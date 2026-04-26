@@ -1,83 +1,83 @@
 import 'package:alchronos/about/views/about_screen.dart';
-import 'package:alchronos/configurator.dart';
-import 'package:alchronos/home/cubit/home_cubit.dart';
+import 'package:alchronos/infrastructure/services/performance_service.dart';
 import 'package:alchronos/l10n/app_localizations.dart';
 import 'package:alchronos/main.dart';
-import 'package:alchronos/services/audio_service.dart';
-import 'package:alchronos/services/haptic_service.dart';
-import 'package:alchronos/services/performance_service.dart';
+import 'package:alchronos/presentation/home/home_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
-class HomeStartView extends StatelessWidget {
+class HomeStartView extends ConsumerWidget {
   const HomeStartView({super.key});
 
   double get lottieWidthHeight => 100;
+  double get lottieOverflowWidthHeight => 200;
 
   Future<void> _startQuickTimer(
-    BuildContext context,
-    HomeCubit cubit,
+    WidgetRef ref,
     AppLocalizations l10n,
     int minutes,
   ) async {
-    // Add haptic and audio feedback
-    final hapticService = getIt.get<HapticService>();
-    final audioService = getIt.get<AudioService>();
-    getIt.get<PerformanceService>().trackUserInteraction(
+    final notifier = ref.read(homeNotifierProvider.notifier);
+
+    // Track interaction
+    ref.read(performanceServiceProvider).trackUserInteraction(
           'quick_preset_${minutes}min',
           screen: 'home_start',
         );
-    await hapticService.lightImpact();
-    await audioService.playButtonClickSound();
 
-    // Set custom duration and start timer
-    await cubit.writeCustomDuration(minutes);
-    await cubit.start(l10n.drinkTimerComplete, l10n.notificationMessage);
+    // Start timer (haptics and audio are handled in the use case)
+    await notifier.writeCustomDuration(minutes);
+    await notifier.start(l10n.drinkTimerComplete, l10n.notificationMessage);
   }
 
-  double get lottieOverflowWidthHeight => 200;
-
   @override
-  Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<HomeCubit>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+    final durationAsync = ref.watch(currentTimerDurationProvider);
+    final notifier = ref.read(homeNotifierProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
         actions: [
           TextButton(
             onPressed: () async {
-              final duration = await cubit.getPreferredDuration();
+              final durationValue = durationAsync.value ?? 60;
+              // Determine if it's standard, longer, longest, or custom
+              var initialDuration = TimerDuration.custom;
+              if (durationValue == 60) {
+                initialDuration = TimerDuration.standard;
+              } else if (durationValue == 90) {
+                initialDuration = TimerDuration.longer;
+              } else if (durationValue == 120) {
+                initialDuration = TimerDuration.longest;
+              }
+
               if (context.mounted) {
                 await showModalBottomSheet<Container>(
                   context: context,
                   builder: (localContext) => HomeBottomSheet(
-                    l10n: AppLocalizations.of(context)!,
-                    cubit: cubit,
-                    initialDuration: duration,
+                    l10n: l10n,
+                    initialDuration: initialDuration,
+                    currentMinutes: durationValue,
                   ),
                 );
               }
             },
-            child: StreamBuilder(
-              stream: cubit.durationStream,
-              builder: (buildContext, snapshot) {
-                String minutesText;
-                if (snapshot.hasData && snapshot.data != null) {
-                  minutesText = l10n.minutesLabel(snapshot.data!);
-                } else {
-                  minutesText =
-                      l10n.minutesLabel(TimerDuration.standard.minutes);
-                }
-
-                return Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(minutesText),
-                    const Icon(Icons.arrow_drop_down, size: 20),
-                  ],
-                );
-              },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                durationAsync.when(
+                  data: (minutes) => Text(l10n.minutesLabel(minutes)),
+                  loading: () => const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  error: (_, __) => Text(l10n.minutesLabel(60)),
+                ),
+                const Icon(Icons.arrow_drop_down, size: 20),
+              ],
             ),
           ),
         ],
@@ -108,15 +108,15 @@ class HomeStartView extends StatelessWidget {
               children: [
                 _QuickPresetButton(
                   minutes: 15,
-                  onPressed: () => _startQuickTimer(context, cubit, l10n, 15),
+                  onPressed: () => _startQuickTimer(ref, l10n, 15),
                 ),
                 _QuickPresetButton(
                   minutes: 30,
-                  onPressed: () => _startQuickTimer(context, cubit, l10n, 30),
+                  onPressed: () => _startQuickTimer(ref, l10n, 30),
                 ),
                 _QuickPresetButton(
                   minutes: 45,
-                  onPressed: () => _startQuickTimer(context, cubit, l10n, 45),
+                  onPressed: () => _startQuickTimer(ref, l10n, 45),
                 ),
               ],
             ),
@@ -125,17 +125,12 @@ class HomeStartView extends StatelessWidget {
             FilledButton(
               key: const Key('drinkButton'),
               onPressed: () async {
-                // Add haptic and audio feedback
-                final hapticService = getIt.get<HapticService>();
-                final audioService = getIt.get<AudioService>();
-                getIt.get<PerformanceService>().trackUserInteraction(
+                ref.read(performanceServiceProvider).trackUserInteraction(
                       'start_timer',
                       screen: 'home_start',
                     );
-                await hapticService.mediumImpact();
-                await audioService.playButtonClickSound();
 
-                await cubit.start(
+                await notifier.start(
                   l10n.drinkTimerComplete,
                   l10n.notificationMessage,
                 );
@@ -245,23 +240,23 @@ enum TimerDuration implements Comparable<TimerDuration> {
   bool get isCustom => this == TimerDuration.custom;
 }
 
-class HomeBottomSheet extends StatefulWidget {
+class HomeBottomSheet extends ConsumerStatefulWidget {
   const HomeBottomSheet({
     required this.l10n,
-    required this.cubit,
     required this.initialDuration,
+    required this.currentMinutes,
     super.key,
   });
 
   final AppLocalizations l10n;
-  final HomeCubit cubit;
   final TimerDuration initialDuration;
+  final int currentMinutes;
 
   @override
-  State<StatefulWidget> createState() => _HomeBottomSheetState();
+  ConsumerState<HomeBottomSheet> createState() => _HomeBottomSheetState();
 }
 
-class _HomeBottomSheetState extends State<HomeBottomSheet> {
+class _HomeBottomSheetState extends ConsumerState<HomeBottomSheet> {
   TimerDuration? _currentDuration = TimerDuration.standard;
   final TextEditingController _customMinutesController =
       TextEditingController();
@@ -272,27 +267,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
     super.initState();
     _currentDuration = widget.initialDuration;
     if (_currentDuration?.isCustom ?? false) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await _loadCustomDuration();
-      });
-    }
-  }
-
-  Future<void> _loadCustomDuration() async {
-    try {
-      // Access storage repository through the cubit
-      final storageRepo = widget.cubit.storageRepository;
-      final customMinutes = await storageRepo.readCustomDuration();
-      setState(() {
-        _customMinutes = customMinutes;
-        _customMinutesController.text = customMinutes.toString();
-      });
-    } on Exception {
-      // Fallback to default value if loading fails
-      setState(() {
-        _customMinutes = 60;
-        _customMinutesController.text = '60';
-      });
+      _customMinutes = widget.currentMinutes;
+      _customMinutesController.text = _customMinutes.toString();
     }
   }
 
@@ -315,7 +291,6 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         groupValue: _currentDuration,
         onChanged: (newDuration) async {
           if (newDuration == TimerDuration.custom) {
-            // Don't close the bottom sheet for custom duration
             setState(() {
               _currentDuration = newDuration;
             });
@@ -424,16 +399,15 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
       return;
     }
 
-    // For custom duration, we need to create a custom
-    // TimerDuration with the specified minutes
+    final notifier = ref.read(homeNotifierProvider.notifier);
+
     var durationToSave = _currentDuration!;
     if (_currentDuration == TimerDuration.custom) {
       durationToSave = TimerDuration.custom;
-      // We'll store the custom minutes separately
-      await widget.cubit.writeCustomDuration(_customMinutes);
+      await notifier.writeCustomDuration(_customMinutes);
     }
 
-    await widget.cubit.writedPreferredDuration(durationToSave);
+    await notifier.writePreferredDuration(durationToSave);
 
     if (context.mounted) Navigator.of(context).pop();
   }
